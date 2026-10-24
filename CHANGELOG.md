@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [1.5.0] - 2026-10-24
+
+### Fixed
+- **Settings Page Display Recovery**: Restored full-fidelity, rock-solid settings tab rendering using Obsidian's native imperative lifecycle (`display()`). Fixed the blank/black screen issue that occurred when opening Confitext settings in Obsidian 1.14+.
+- **Settings Architecture**: Replaced declarative interceptor with direct UI rendering, ensuring the interactive Live Matrix Sandbox, custom Unicode validator, preset loaders, and all 35 settings controls display immediately across all supported Obsidian versions.
+
+### Added
+- **Visual Preview Showcase**: Embedded high-resolution screenshots and feature previews (`assets/images/1.png` - `4.png`) illustrating before/after masking, paragraph selection reveal, and click-to-reveal word interactions in the README documentation.
+
+---
+
 ## [1.4.0] - 2026-10-24
 
 ### Added

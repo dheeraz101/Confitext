@@ -2,7 +2,7 @@
  * Confitext - Plugin Settings Tab
  */
 
-import { App, PluginSettingTab, Setting, SettingDefinitionItem } from 'obsidian';
+import { App, PluginSettingTab, Setting } from 'obsidian';
 import type ConfitextPlugin from './main';
 import { ConfitextMode, GlyphPaletteName, MaskColorTheme, AnimationSpeed } from './types';
 import {
@@ -28,291 +28,17 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
-	
-	override getSettingDefinitions(): SettingDefinitionItem[] {
-		return [
-			{
-				name: `Confitext v${this.plugin.manifest.version}`,
-				desc: 'An animated, Matrix-inspired visual masking layer for private-feeling writing.',
-				render: (setting: Setting) => {
-					setting.setHeading();
-				}
-			},
-			{
-				name: "What's new in v1.4.0",
-				desc: 'Obsidian 1.13+ settings search compatibility, native context menus, tab header shield action, Reading View masking, and emergency panic mode.',
-				action: () => {
-					void this.plugin.openWhatsNewTab();
-				}
-			},
-			{
-				type: 'group',
-				heading: 'Behavior & masking mode',
-				items: [
-					{
-						name: 'Enable Confitext',
-						desc: 'Master toggle to activate or deactivate visual masking layer across all notes.',
-						control: {
-							type: 'toggle',
-							key: 'enabled'
-						}
-					},
-					{
-						name: 'Default mode on startup',
-						desc: 'Initial masking mode when opening notes or starting Obsidian.',
-						control: {
-							type: 'dropdown',
-							key: 'defaultMode',
-							options: {
-								masking: 'Masking (visual mask active)',
-								revealed: 'Revealed (plain text visible)',
-								paused: 'Paused (temporarily suspended)'
-							}
-						}
-					},
-					{
-						name: 'Mask newly completed words on spacebar',
-						desc: 'Automatically mask words the moment you complete them by typing a space or punctuation.',
-						control: {
-							type: 'toggle',
-							key: 'maskNewlyCompletedWords'
-						}
-					},
-					{
-						name: 'Reveal text when selected',
-						desc: 'Reveal masked words under mouse or keyboard selection.',
-						control: {
-							type: 'toggle',
-							key: 'revealSelectedText'
-						}
-					},
-					{
-						name: 'Reveal entire word on selection',
-						desc: 'Selecting any part of a word reveals the complete word instead of only selected characters.',
-						control: {
-							type: 'toggle',
-							key: 'revealEntireWordOnSelection'
-						}
-					},
-					{
-						name: 'Reveal word when cursor is inside',
-						desc: 'Placing the caret inside a masked word reveals it for easy in-place editing.',
-						control: {
-							type: 'toggle',
-							key: 'revealOnCursorInsideWord'
-						}
-					},
-					{
-						name: 'Mask text in Reading View (Preview Mode)',
-						desc: 'Extend non-destructive visual masking into Obsidian Reading View (markdown preview). Click any word in Reading View to reveal/re-mask.',
-						control: {
-							type: 'toggle',
-							key: 'maskReadingView'
-						}
-					},
-					{
-						name: 'Tab header privacy shield action',
-						desc: 'Display a quick-toggle shield button in the tab title bar of active notes.',
-						control: {
-							type: 'toggle',
-							key: 'showTabHeaderAction'
-						}
-					},
-					{
-						name: 'Status bar indicator',
-						desc: 'Show an interactive status indicator in the bottom Obsidian status bar.',
-						control: {
-							type: 'toggle',
-							key: 'showStatusIndicator'
-						}
-					},
-					{
-						name: 'Activity ribbon icon',
-						desc: 'Show a quick-toggle binary glyph icon in the Obsidian left activity ribbon.',
-						control: {
-							type: 'toggle',
-							key: 'showRibbonIcon'
-						}
-					}
-				]
-			},
-			{
-				type: 'group',
-				heading: 'Appearance & glyph styles',
-				items: [
-					{
-						name: 'Glyph style palette',
-						desc: 'Visual character set used to mask words.',
-						control: {
-							type: 'dropdown',
-							key: 'glyphStyle',
-							options: {
-								matrix: 'Matrix Code (Halftone, Cyberpunk runes, Greek, Symbols)',
-								cyber: 'Cyber Runes (Elder Futhark and Ogham glyphs)',
-								geometric: 'Abstract Geometry (Sacred geometric and mathematical shapes)',
-								blocks: 'Digital Blocks (Unicode box-drawing and shade blocks)',
-								braille: 'Braille Script (Tactile digital patterns)',
-								morse: 'Morse Code (Dashes, dots, and digital bars)',
-								custom: 'Custom Glyph Set (User-Defined)'
-							}
-						}
-					},
-					{
-						name: 'Mask color theme',
-						desc: 'Color palette used for on-screen masked glyphs.',
-						control: {
-							type: 'dropdown',
-							key: 'maskColorTheme',
-							options: {
-								'matrix-green': 'Matrix Green (#65F59A / #0b7a3e)',
-								'theme-accent': 'Theme Accent (Follows Obsidian theme color)',
-								monochrome: 'Monochrome (Muted text foreground)',
-								custom: 'Custom Color'
-							}
-						}
-					},
-					{
-						name: 'Subtle glow effect',
-						desc: 'Adds a soft phosphor CRT bloom glow behind masked characters in dark mode.',
-						control: {
-							type: 'toggle',
-							key: 'subtleGlow'
-						}
-					},
-					{
-						name: 'Mask opacity',
-						desc: 'Adjust visual opacity of masked glyphs (0.4 to 1.0).',
-						control: {
-							type: 'slider',
-							key: 'maskOpacity',
-							min: 0.4,
-							max: 1.0,
-							step: 0.05
-						}
-					}
-				]
-			},
-			{
-				type: 'group',
-				heading: 'Animation & transitions',
-				items: [
-					{
-						name: 'Enable scramble animation on word completion',
-						desc: 'Play a cinematic scramble animation as newly typed words transition into glyphs.',
-						control: {
-							type: 'toggle',
-							key: 'enableAnimation'
-						}
-					},
-					{
-						name: 'Animation speed',
-						desc: 'Duration and frame rate of the scramble transition.',
-						control: {
-							type: 'dropdown',
-							key: 'animationSpeed',
-							options: {
-								fast: 'Fast (180ms - subtle & snappy)',
-								standard: 'Standard (280ms - balanced aesthetic)',
-								cinematic: 'Cinematic (420ms - retro terminal feel)'
-							}
-						}
-					},
-					{
-						name: 'Respect system reduced motion',
-						desc: 'Automatically skip animations if your operating system has "Reduce Motion" enabled.',
-						control: {
-							type: 'toggle',
-							key: 'respectReducedMotion'
-						}
-					}
-				]
-			},
-			{
-				type: 'group',
-				heading: 'Idle & inactivity protection',
-				items: [
-					{
-						name: 'Enable idle auto-masking timer',
-						desc: 'Automatically engage Masking mode after a period of keyboard and mouse inactivity.',
-						control: {
-							type: 'toggle',
-							key: 'idleAutoMask'
-						}
-					},
-					{
-						name: 'Idle timeout (minutes)',
-						desc: 'Minutes of inactivity before Confitext auto-engages masking mode.',
-						control: {
-							type: 'slider',
-							key: 'idleTimeoutMinutes',
-							min: 1,
-							max: 60,
-							step: 1
-						}
-					},
-					{
-						name: 'Auto-mask when Obsidian window loses focus',
-						desc: 'Immediately engage masking mode whenever Obsidian loses operating system window focus.',
-						control: {
-							type: 'toggle',
-							key: 'autoMaskOnBlur'
-						}
-					}
-				]
-			},
-			{
-				type: 'group',
-				heading: 'Per-note & per-folder masking rules',
-				items: [
-					{
-						name: 'Respect frontmatter exclusion (confitext: false)',
-						desc: 'Honor YAML frontmatter "confitext: false" tag to bypass masking on designated public notes.',
-						control: {
-							type: 'toggle',
-							key: 'respectFrontmatterExclusion'
-						}
-					}
-				]
-			},
-			{
-				name: 'Live Matrix privacy sandbox',
-				desc: 'Interactive preview and test station for live masking effects, scramble speeds, and custom palettes.',
-				render: (setting: Setting) => {
-					this.renderLiveSandbox(setting.settingEl);
-				}
-			}
-		];
-	}
-
-	override getControlValue(key: string): unknown {
-		return (this.plugin.settings as unknown as Record<string, unknown>)[key];
-	}
-
-	override async setControlValue(key: string, value: unknown): Promise<void> {
-		(this.plugin.settings as unknown as Record<string, unknown>)[key] = value;
-		await this.plugin.saveSettings();
-		this.plugin.applyCssVariables();
-		this.plugin.dispatchSettingsToEditors();
-		this.updateSandboxDisplay();
-	}
-
-	/**
-	 * Re-renders the settings tab when dynamic options change
-	 */
-	private refreshTab(): void {
-		if (typeof (this as unknown as { update?: () => void }).update === 'function') {
-			(this as unknown as { update: () => void }).update();
-		} else {
-			this.renderTab(this.containerEl);
-		}
-	}
-
 	display(): void {
-		this.renderTab(this.containerEl);
+		this.render();
 	}
 
-	private renderTab(containerEl: HTMLElement): void {
-				containerEl.empty();
+	private refreshTab(): void {
+		this.render();
+	}
+
+	private render(): void {
+		const { containerEl } = this;
+		containerEl.empty();
 		containerEl.addClass('confitext-settings');
 
 		// Header
@@ -322,8 +48,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setHeading();
 
 		new Setting(containerEl)
-			.setName("What's new in v1.4.0")
-			.setDesc('Obsidian 1.13+ settings search compatibility, native context menus, tab header shield action, Reading View masking, and emergency panic mode.')
+			.setName("What's new in v1.5.0")
+			.setDesc('Settings display recovery, preview screenshots showcase, native context menus, tab header shield action, Reading View masking, and emergency panic mode.')
 			.addButton(btn =>
 				btn
 					.setButtonText("Open What's New Tab")

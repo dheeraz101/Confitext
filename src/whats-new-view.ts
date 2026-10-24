@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v1.4.0";
+		return "What's New in Confitext v1.5.0";
 	}
 
 	getIcon(): string {
@@ -36,19 +36,28 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.4.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.5.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v1.4.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v1.5.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 1.4.0 brings declarative settings API support for native Obsidian settings search, tab header shields, Reading View masking, and emergency panic controls.'
+			text: 'Your thoughts. Your screen. Your code. Version 1.5.0 restores full settings display reliability across all Obsidian versions, introduces visual preview screenshots, native context menus, tab header shields, Reading View masking, and emergency panic controls.'
 		});
 
 		// Feature Grid
 		const grid = container.createDiv({ cls: 'confitext-wn-grid' });
 
-		// Card 1: Right-Click Context Menus
+		// Card 1: Settings Display Reliability
+		const card0 = grid.createDiv({ cls: 'confitext-wn-card' });
+		const h0 = card0.createDiv({ cls: 'confitext-wn-card-header' });
+		h0.createSpan({ text: '⚙️', cls: 'confitext-wn-card-icon' });
+		h0.createEl('h3', { text: 'Settings Display Recovery' });
+		card0.createEl('p', {
+			text: 'Restored robust, full-fidelity settings rendering across all Obsidian versions (including 1.14+). The interactive Live Matrix Sandbox, custom Unicode validator, preset loaders, and all configuration options now render cleanly and reliably with zero black screen glitches.'
+		});
+
+		// Card 2: Right-Click Context Menus
 		const card1 = grid.createDiv({ cls: 'confitext-wn-card' });
 		const h1 = card1.createDiv({ cls: 'confitext-wn-card-header' });
 		h1.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });

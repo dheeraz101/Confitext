@@ -1,7 +1,7 @@
 {
   "id": "confitext",
   "name": "Confitext",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "minAppVersion": "1.7.2",
   "description": "An animated, Matrix-inspired visual masking layer for private-feeling writing.",
   "author": "Dheeraz",

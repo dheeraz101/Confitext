@@ -44,6 +44,34 @@ When you highlight "extraordinary":
 
 ---
 
+## Visual Showcase
+
+### Before & After: Real-Time Shoulder-Surfing Deterrent
+
+<p align="center">
+  <img src="assets/images/1.png" alt="Without Confitext - Plain text exposed" width="48%">
+  &nbsp;
+  <img src="assets/images/2.png" alt="With Confitext - Matrix Privacy Scramble Active" width="48%">
+</p>
+
+<p align="center">
+  <em>Left: Plain text exposed to wandering eyes. Right: Real-time visual masking protects your notes on screen.</em>
+</p>
+
+### Non-Destructive In-Place Reveal
+
+<p align="center">
+  <img src="assets/images/3.png" alt="Selection Reveal - Drag over text to reveal paragraph" width="48%">
+  &nbsp;
+  <img src="assets/images/4.png" alt="Click to Reveal - Click single words in Reading View" width="48%">
+</p>
+
+<p align="center">
+  <em>Left: Drag over text or select paragraphs with keyboard to reveal and edit in-place. Right: Click any masked word in Reading View to toggle reveal.</em>
+</p>
+
+---
+
 ## Design Highlights
 
 - **Fluid Typing Flow:** Words remain readable while you type them. Pressing Space completes the word and triggers a quick, smooth scramble into glyphs.
