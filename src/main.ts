@@ -257,7 +257,7 @@ export default class ConfitextPlugin extends Plugin {
 	async openWhatsNewTab(): Promise<void> {
 		const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_WHATS_NEW);
 		if (existing.length > 0) {
-			this.app.workspace.revealLeaf(existing[0]);
+			await this.app.workspace.revealLeaf(existing[0]);
 			return;
 		}
 		const leaf = this.app.workspace.getLeaf('tab');
@@ -265,7 +265,7 @@ export default class ConfitextPlugin extends Plugin {
 			type: VIEW_TYPE_WHATS_NEW,
 			active: true
 		});
-		this.app.workspace.revealLeaf(leaf);
+		await this.app.workspace.revealLeaf(leaf);
 	}
 
 	/**

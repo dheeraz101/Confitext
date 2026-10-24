@@ -18,7 +18,7 @@
 <p align="center">
   <a href="https://github.com/dheeraz101/Confitext/releases"><img src="https://img.shields.io/github/v/release/dheeraz101/Confitext?include_prereleases&color=65F59A&label=Release" alt="GitHub Release"></a>
   <a href="https://obsidian.md"><img src="https://img.shields.io/badge/Obsidian-Community%20Plugin-7C3AED.svg" alt="Obsidian Plugin"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Tests-105%20Passed-10b981.svg" alt="Tests"></a>
+  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-110%20Passed-10b981.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-65F59A.svg" alt="License: MIT"></a>
   <a href="https://yabp.netlify.app/"><img src="https://img.shields.io/badge/Verified%20By-YABP-6366f1.svg" alt="Verified By YABP"></a>
 </p>
@@ -122,10 +122,11 @@ Choose from built-in character sets or create your own:
 
 ## Installation
 
-### Method 1: Obsidian Community Directory (Coming Soon)
+### Method 1: Obsidian Community Directory
 1. Open Obsidian **Settings > Community plugins**.
-2. Select **Browse** and search for `Confitext`.
-3. Select **Install**, then **Enable**.
+2. Turn off **Restricted mode** to allow community plugins.
+3. Select **Browse** and search for `Confitext`.
+4. Select **Install**, then **Enable**.
 
 ### Method 2: Via BRAT (Beta Reviewers Auto-update Tester)
 1. Install [BRAT](https://github.com/TfTHacker/obsidian-42-brat) from Community Plugins.
@@ -236,4 +237,4 @@ Confitext is an official project of the **YABP (Yet Another Boring Project)** in
 
 - **Initiative Repository:** [Yet-Another-Boring-Project on GitHub](https://github.com/dheeraz101/Yet-Another-Boring-Project)
 - **Official Website:** [yabp.netlify.app](https://yabp.netlify.app/)
-- **License:** [MIT License](LICENSE) (c) 2026 YABP.
+- **License:** [MIT License](LICENSE) (c) 2026 Dheeraz.

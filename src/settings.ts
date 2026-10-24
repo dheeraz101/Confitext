@@ -40,8 +40,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setHeading();
 
 		new Setting(containerEl)
-			.setName("What's new in v1.2.0")
-			.setDesc('Native right-click menus, tab header shield action, Reading View masking, and emergency panic mode.')
+			.setName("What's new in v1.3.0")
+			.setDesc('Obsidian 1.7+ core API compatibility, native context menus, tab header shield action, Reading View masking, and emergency panic mode.')
 			.addButton(btn =>
 				btn
 					.setButtonText("Open What's New Tab")
@@ -170,7 +170,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		// Custom Glyph Set Importer
 		if (this.plugin.settings.glyphStyle === 'custom') {
-			const customSection = containerEl.createEl('div', { cls: 'confitext-custom-importer' });
+			const customSection = containerEl.createDiv({ cls: 'confitext-custom-importer' });
 
 			const validation = validateCustomGlyphs(this.plugin.settings.customGlyphs);
 
@@ -204,7 +204,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				text.inputEl.addClass('confitext-glyph-textarea');
 			});
 
-			validationMsgEl = customSection.createEl('div', {
+			validationMsgEl = customSection.createDiv({
 				cls: 'confitext-validation-msg ' + (validation.valid ? 'confitext-validation-success' : 'confitext-validation-error'),
 				text: validation.valid
 					? `✓ Valid custom set: ${validation.count} unique glyphs.`
@@ -212,10 +212,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			});
 
 			// Preset Quick-Loader Buttons
-			const presetContainer = customSection.createEl('div', { cls: 'confitext-preset-section' });
-			presetContainer.createEl('span', { cls: 'confitext-preset-label', text: 'Quick Thematic Presets:' });
+			const presetContainer = customSection.createDiv({ cls: 'confitext-preset-section' });
+			presetContainer.createSpan({ cls: 'confitext-preset-label', text: 'Quick Thematic Presets:' });
 
-			const btnRow = presetContainer.createEl('div', { cls: 'confitext-preset-buttons' });
+			const btnRow = presetContainer.createDiv({ cls: 'confitext-preset-buttons' });
 			for (const preset of Object.values(GLYPH_PRESETS)) {
 				const btn = btnRow.createEl('button', {
 					cls: 'confitext-preset-btn',
@@ -515,7 +515,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		// ----------------------------------------------------
 		new Setting(containerEl).setName('Information & privacy').setHeading();
 
-		const noticeBox = containerEl.createEl('div', { cls: 'confitext-notice-box' });
+		const noticeBox = containerEl.createDiv({ cls: 'confitext-notice-box' });
 		noticeBox.createEl('strong', { text: 'Important Privacy Notice:' });
 		noticeBox.createEl('p', {
 			text: 'Confitext is a visual presentation and shoulder-surfing deterrent. It changes how text appears on screen. It does NOT encrypt your notes or protect the underlying Markdown files. Anyone with access to the file system, clipboard, or developer console can read the underlying text.'
@@ -547,21 +547,21 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	 * Renders the interactive Live Matrix Sandbox directly inside the settings tab
 	 */
 	private renderLiveSandbox(containerEl: HTMLElement): void {
-		const card = containerEl.createEl('div', { cls: 'confitext-sandbox-card' });
+		const card = containerEl.createDiv({ cls: 'confitext-sandbox-card' });
 
 		// HUD Title Bar
-		const hudBar = card.createEl('div', { cls: 'confitext-sandbox-hud' });
-		const hudLeft = hudBar.createEl('div', { cls: 'confitext-sandbox-hud-left' });
-		hudLeft.createEl('span', { cls: 'confitext-hud-dot dot-red' });
-		hudLeft.createEl('span', { cls: 'confitext-hud-dot dot-yellow' });
-		hudLeft.createEl('span', { cls: 'confitext-hud-dot dot-green' });
-		hudLeft.createEl('span', { cls: 'confitext-sandbox-hud-title', text: '⚡ LIVE MATRIX PRIVACY SANDBOX' });
+		const hudBar = card.createDiv({ cls: 'confitext-sandbox-hud' });
+		const hudLeft = hudBar.createDiv({ cls: 'confitext-sandbox-hud-left' });
+		hudLeft.createSpan({ cls: 'confitext-hud-dot dot-red' });
+		hudLeft.createSpan({ cls: 'confitext-hud-dot dot-yellow' });
+		hudLeft.createSpan({ cls: 'confitext-hud-dot dot-green' });
+		hudLeft.createSpan({ cls: 'confitext-sandbox-hud-title', text: '⚡ LIVE MATRIX PRIVACY SANDBOX' });
 
-		this.sandboxPillEl = hudBar.createEl('div', { cls: 'confitext-sandbox-pills' });
+		this.sandboxPillEl = hudBar.createDiv({ cls: 'confitext-sandbox-pills' });
 		this.updateSandboxPills();
 
 		// Interactive Display Screen
-		this.sandboxDisplayEl = card.createEl('div', { cls: 'confitext-sandbox-screen' });
+		this.sandboxDisplayEl = card.createDiv({ cls: 'confitext-sandbox-screen' });
 		this.sandboxDisplayEl.title = 'Click to toggle selection reveal';
 		this.sandboxDisplayEl.addEventListener('click', () => {
 			this.sandboxRevealed = !this.sandboxRevealed;
@@ -569,7 +569,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		});
 
 		// Controls Bar
-		const controls = card.createEl('div', { cls: 'confitext-sandbox-controls' });
+		const controls = card.createDiv({ cls: 'confitext-sandbox-controls' });
 
 		// Test Scramble Button
 		const scrambleBtn = controls.createEl('button', {
@@ -592,8 +592,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		});
 
 		// Editable Input for custom words
-		const inputRow = card.createEl('div', { cls: 'confitext-sandbox-input-row' });
-		inputRow.createEl('span', { cls: 'confitext-sandbox-input-label', text: 'Test text:' });
+		const inputRow = card.createDiv({ cls: 'confitext-sandbox-input-row' });
+		inputRow.createSpan({ cls: 'confitext-sandbox-input-label', text: 'Test text:' });
 		const inputEl = inputRow.createEl('input', {
 			cls: 'confitext-sandbox-input',
 			type: 'text',
@@ -619,17 +619,17 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		const palette = resolveGlyphPalette(this.plugin.settings.glyphStyle, this.plugin.settings.customGlyphs);
 		const paletteName = this.plugin.settings.glyphStyle.toUpperCase();
 
-		this.sandboxPillEl.createEl('span', {
+		this.sandboxPillEl.createSpan({
 			cls: 'confitext-pill confitext-pill-active',
 			text: `STYLE: ${paletteName}`
 		});
 
-		this.sandboxPillEl.createEl('span', {
+		this.sandboxPillEl.createSpan({
 			cls: 'confitext-pill',
 			text: `GLYPHS: ${palette.length}`
 		});
 
-		this.sandboxPillEl.createEl('span', {
+		this.sandboxPillEl.createSpan({
 			cls: 'confitext-pill',
 			text: `SPEED: ${this.plugin.settings.animationSpeed.toUpperCase()}`
 		});
@@ -648,7 +648,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		this.updateSandboxPills();
 
 		if (this.sandboxRevealed) {
-			this.sandboxDisplayEl.createEl('span', {
+			this.sandboxDisplayEl.createSpan({
 				cls: 'confitext-sandbox-revealed-text',
 				text: this.sandboxInput
 			});
@@ -662,7 +662,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			if (!part) continue;
 			if (/^(\s+|[.,!?;:"“”()[\]{}]+)$/u.test(part)) {
 				// Delimiter: render as plain whitespace/punctuation
-				this.sandboxDisplayEl.createEl('span', {
+				this.sandboxDisplayEl.createSpan({
 					cls: 'confitext-sandbox-delim',
 					text: part
 				});
@@ -687,7 +687,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				}
 
 				const stageCls = stage !== 'stable' ? ` confitext-${stage}` : '';
-				const glyphSpan = this.sandboxDisplayEl.createEl('span', {
+				const glyphSpan = this.sandboxDisplayEl.createSpan({
 					cls: `confitext-glyph${stageCls}`,
 					text: glyphs
 				});

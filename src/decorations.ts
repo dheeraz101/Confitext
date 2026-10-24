@@ -21,7 +21,7 @@ export class MaskWidget extends WidgetType {
 	}
 
 	toDOM(): HTMLElement {
-		return createEl('span', {
+		return createSpan({
 			cls: 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : ''),
 			attr: {
 				'aria-label': 'hidden text',

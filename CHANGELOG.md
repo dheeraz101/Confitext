@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [1.3.0] - 2026-10-24
+
+### Changed
+- **Raised Minimum App Version**: Updated minAppVersion to 1.7.2 to guarantee complete runtime compatibility with Obsidian core APIs (Workspace.revealLeaf, FileManager.processFrontMatter, View.addAction).
+- **Obsidian Native DOM Element Helpers**: Standardized all UI rendering in decorations, Reading View, Settings sandbox, and What's New tab to Obsidian's createDiv, createSpan, and createFragment helpers in strict compliance with obsidianmd/prefer-create-el.
+
+### Fixed
+- **Obsidian Community Review Compliance**:
+  - Awaited Workspace.revealLeaf promises in openWhatsNewTab to resolve floating promise warnings.
+  - Added strict type narrowing on MarkdownPostProcessorContext.frontmatter to resolve unsafe member access warnings.
+  - Replaced all document.createDocumentFragment calls with Obsidian's createFragment.
+  - Updated README links and badge anchors to remove placeholder warnings.
+
+---
+
 ## [1.2.0] - 2026-10-24
 
 ### Added

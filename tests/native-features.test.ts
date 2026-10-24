@@ -21,6 +21,21 @@ describe('Native Infusion Features - Reading View Post-Processor', () => {
 				return el;
 			};
 		}
+		if (typeof (globalThis as any).createSpan === 'undefined') {
+			(globalThis as any).createSpan = (o?: any) => {
+				return (globalThis as any).createEl('span', o);
+			};
+		}
+		if (typeof (globalThis as any).createDiv === 'undefined') {
+			(globalThis as any).createDiv = (o?: any) => {
+				return (globalThis as any).createEl('div', o);
+			};
+		}
+		if (typeof (globalThis as any).createFragment === 'undefined') {
+			(globalThis as any).createFragment = () => {
+				return document.createDocumentFragment();
+			};
+		}
 		mockPlugin = {
 			settings: {
 				...DEFAULT_SETTINGS,

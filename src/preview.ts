@@ -32,7 +32,8 @@ export function createPreviewMaskProcessor(plugin: ConfitextPlugin) {
 
 		// Check frontmatter exclusion
 		if (plugin.settings.respectFrontmatterExclusion && context.frontmatter) {
-			if (context.frontmatter['confitext'] === false) {
+			const fm = context.frontmatter as Record<string, unknown>;
+			if (fm['confitext'] === false) {
 				return;
 			}
 		}
@@ -88,7 +89,7 @@ export function maskElementNodes(element: HTMLElement, plugin: ConfitextPlugin):
 		const parts = text.split(WORD_SPLIT_REGEX);
 		if (parts.length <= 1 && !text.trim()) continue;
 
-		const fragment = document.createDocumentFragment();
+		const fragment = createFragment();
 		let hasMaskedWord = false;
 
 		for (const part of parts) {
@@ -106,7 +107,7 @@ export function maskElementNodes(element: HTMLElement, plugin: ConfitextPlugin):
 					plugin.settings.customGlyphs
 				);
 
-				const span = createEl('span', {
+				const span = createSpan({
 					cls: 'confitext-glyph confitext-preview-glyph',
 					attr: {
 						'aria-label': 'hidden text',
