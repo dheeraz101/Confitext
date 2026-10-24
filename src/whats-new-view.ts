@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v1.3.0";
+		return "What's New in Confitext v1.4.0";
 	}
 
 	getIcon(): string {
@@ -36,13 +36,13 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.3.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.4.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v1.3.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v1.4.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 1.3.0 infuses Confitext deeply into Obsidian with native menus, tab header shields, Reading View masking, and instant panic controls.'
+			text: 'Your thoughts. Your screen. Your code. Version 1.4.0 brings declarative settings API support for native Obsidian settings search, tab header shields, Reading View masking, and emergency panic controls.'
 		});
 
 		// Feature Grid

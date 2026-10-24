@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [1.4.0] - 2026-10-24
+
+### Added
+- **Declarative Settings API (getSettingDefinitions)**: Implemented Obsidian 1.13+ declarative settings schema on ConfitextSettingTab, enabling all Confitext options to be indexed and searchable via Obsidian's global settings search bar.
+
+### Changed
+- **Settings Re-rendering Architecture**: Replaced calls to deprecated this.display() with this.refreshTab() which seamlessly routes to this.update() on Obsidian 1.13+ or native imperative redraw on earlier versions.
+
+### Fixed
+- **Clean Release Distribution Package**: Removed auxiliary .zip asset from GitHub release assets to satisfy Obsidian Community Catalog distribution standards (main.js, manifest.json, styles.css only).
+- Resolved @deprecated warnings and prefer-setting-definitions scanner suggestions.
+
+---
+
 ## [1.3.0] - 2026-10-24
 
 ### Changed
