@@ -7,12 +7,7 @@ An installable Obsidian community plugin requires three core files:
 2. `manifest.json`: Plugin identification and version metadata.
 3. `styles.css`: CSS styling for masked glyphs, animations, status badges, and settings UI.
 
-Additionally, Confitext provides a ready-to-extract ZIP archive:
-- `Confitext-Obsidian-Plugin.zip`
-  └── `confitext/`
-      ├── `main.js`
-      ├── `manifest.json`
-      └── `styles.css`
+In strict compliance with Obsidian Community Plugin distribution standards, official GitHub Releases publish strictly these three assets (with verified GitHub build attestations). Users installing manually copy these three files into their vault's `.obsidian/plugins/confitext/` folder.
 
 ---
 

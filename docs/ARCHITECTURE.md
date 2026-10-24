@@ -93,6 +93,35 @@
   - Viewport changes (scrolling).
   - State effects (`setModeEffect`, `setSettingsEffect`, `setFilePathEffect`, `animationTickEffect`).
 
+### 3.8 Targeted Word Masking & Sensitive Data Shield (`src/tokenizer.ts`, `src/rules.ts`)
+- **Targeted Scope Tokenizer (`findTargetedTokens`):**
+  - Scans document text against combined targets (global word list, note-level frontmatter words, and sensitive regex patterns).
+  - Enforces word boundaries for plain words while allowing punctuation within phrases.
+  - Case-sensitivity is configurable (`caseSensitiveTargeting`).
+  - Strict overlap elimination and candidate sorting by start offset guarantees strictly monotonic decoration ranges in CodeMirror 6's `RangeSetBuilder`.
+- **Note-Level Frontmatter Memory (`getNoteMaskedWords`):**
+  - Extracts note-specific target words from `confitext-masked-words` YAML frontmatter (supporting inline YAML arrays, bulleted lists, and comma-separated strings).
+  - Memoized via `NOTE_WORDS_CACHE` LRU map keyed by document text slice.
+- **Sensitive Data Shield (`SENSITIVE_PATTERNS`):**
+  - High-precision regular expression presets for Emails, API keys (OpenAI, GitHub PATs, AWS, Bearer tokens), Credit Cards, Phone Numbers, and IPv4 addresses.
+  - Custom user regex engine with real-time compilation and syntax error validation.
+
+### 3.9 Granular Trigger Modes (`src/tokenizer.ts`, `src/decorations.ts`, `src/editor-extension.ts`)
+- **Mask Trigger Mode (`maskTriggerMode: 'word' | 'line' | 'paragraph'`):**
+  - `word`: Word delimiter entry (space, comma, punctuation) completes words immediately.
+  - `line`: Words on the line containing active selection carets remain unmasked while typing; moving the cursor off the line (`getLineRangeAt`) triggers masking and animation transitions.
+  - `paragraph`: Words in the paragraph block containing the cursor remain unmasked while drafting; masks only once a full blank line gap (`\n\n`) is formed or cursor navigates outside the paragraph (`getParagraphRangeAt`).
+- **Monotonic Range Merging:** Precomputes active trigger ranges and pre-merges overlapping/contiguous spans before decoration construction to prevent CM6 range builder exceptions.
+
+### 3.10 Apple HIG Settings Architecture (`src/settings.ts`, `styles.css`)
+- **macOS Sequoia Aesthetic:**
+  - Frosted glass hero card with Dynamic Island pulse indicators reflecting live protection mode and active trigger mode.
+  - Interactive macOS Terminal Sandbox with real-time typing simulation, character length verification, and selection reveal testing.
+  - Native Apple HIG segmented controls for trigger modes and glyph themes.
+  - Inset grouped cards (`confitext-card-group`, `confitext-setting-item`) with subtle borders, blur backgrounds, and responsive layouts.
+  - Token chip manager UI for adding and removing global and note-level target words.
+- **Zero Black Screen Invariant:** Uses pure imperative `display(): void` lifecycle calling internal `this.render()`, ensuring full compatibility across Obsidian 1.13, 1.14+, and future versions without relying on deprecated declarative interceptors.
+
 ---
 
 ## 4. Performance & Resource Characteristics

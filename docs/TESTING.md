@@ -94,11 +94,44 @@ Confitext maintains an automated test suite executed with Vitest and JSDOM, cove
 - **Stability After Edits:** Confirms untouched words retain identical glyph masks when earlier words are edited.
 - **Lifecycle Cleanup:** Tests `AnimationManager.destroy()` shuts down RAF loops without leaving dangling callbacks.
 
+### 2.7 Targeted Word Masking Suite (`tests/targeted-masking.test.ts` - 18 tests)
+- **YAML Frontmatter Parsing:**
+  - Extracts target words from inline YAML arrays (`[word1, word2]`).
+  - Extracts target words from bulleted YAML lists.
+  - Extracts target words from comma-separated strings.
+  - Handles UTF-8 BOM, inline comments, and `confitext_masked_words` aliases.
+- **Tokenizer & Pattern Detection:**
+  - Targeted words tokenization with word boundary enforcement.
+  - Case-sensitive and case-insensitive matching.
+  - Overlap elimination and candidate sorting for monotonic decorations.
+  - Sensitive regex patterns (emails, OpenAI/GitHub/AWS API keys, credit cards, phone numbers, IPv4).
+  - Custom regex patterns with syntax validation.
+- **Decorations & Reading View:**
+  - Targeted-only decorations suppress masking for non-target words.
+  - Reading view preview post-processor integration with click-to-reveal.
+
+### 2.8 Trigger Modes Suite (`tests/trigger-modes.test.ts` - 31 tests)
+- **Line Range Detection (`getLineRangeAt`):**
+  - Single line, LF newlines, CRLF newlines.
+  - Out of bounds and boundary clamping.
+  - Trailing newlines and empty lines.
+- **Paragraph Range Detection (`getParagraphRangeAt`):**
+  - Single paragraph, multi-paragraph separated by blank line gaps (`\n\n`).
+  - Multiline paragraphs with internal soft breaks.
+  - Rest at blank line gaps returning null.
+  - Cursor after single Enter continuing paragraph.
+- **Trigger Modes Decoration Behavior:**
+  - Word mode masking upon delimiter.
+  - Line mode keeping active typing line unmasked until cursor moves to another line.
+  - Paragraph mode keeping entire paragraph unmasked until full line gap or navigation outside block.
+  - Multi-cursor support across lines and paragraphs.
+  - Selection reveal interaction across trigger modes.
+
 ---
 
 ## 3. Running the Tests
 
-To run the complete automated test suite:
+To run the complete automated test suite (159 tests across 9 test files):
 
 ```bash
 npm test

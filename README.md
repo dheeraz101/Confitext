@@ -105,6 +105,45 @@ When you highlight "extraordinary":
 
 ---
 
+## Targeted Word Masking & Sensitive Data Shield
+
+Confitext gives you fine-grained control over what gets masked:
+
+### 1. Targeted Masking (Mask Specific Words or Phrases)
+Instead of masking the whole note, you can switch the masking scope to **Targeted Words Only** or use targeted words alongside full masking:
+- **Global Memory:** Words stored globally in plugin settings are remembered and masked across every note in your vault (past, present, and future).
+- **Per-Note Frontmatter Memory:** Words specific to a single note are saved into its YAML frontmatter under `confitext-masked-words`:
+
+```markdown
+---
+title: Quarterly Financial Plan
+confitext-masked-words: [Project Titan, confidential, $4,500,000, "Acme Corp"]
+---
+
+Our partnership with Acme Corp for Project Titan has an allocation of $4,500,000.
+```
+
+- **Right-Click Context Menu:** Highlight any word or phrase in the editor, right-click, and select:
+  - *Confitext: Mask this word globally (all notes)*
+  - *Confitext: Mask this word in active note*
+
+### 2. Granular Hide Triggers (Typing Rhythm Modes)
+Customize exactly when visual masking engages as you type:
+- **Word Mode (Default):** Hides words immediately upon typing a delimiter (Space, comma, period, or punctuation).
+- **Line Mode:** Keeps the line you are actively typing unmasked; masks the entire line the moment your cursor moves to another line (via Enter or navigation).
+- **Paragraph Mode:** Keeps the entire paragraph block unmasked while typing; masks the block once a full blank line gap (`\n\n`) is formed or when the cursor leaves the paragraph.
+
+### 3. Sensitive Data Shield (Automated PII Presets)
+Automatically protect sensitive credentials and personal information on screen in real time:
+- **Email Addresses** (`user@example.com`)
+- **API Keys & Authorization Tokens** (OpenAI, GitHub PATs, AWS Access Keys, Bearer tokens)
+- **Credit Card Numbers** (Visa, Mastercard, Amex, Discover)
+- **Phone Numbers** (International & national standard formats)
+- **IPv4 Addresses**
+- **Custom Regular Expressions:** Define custom regex patterns with live syntax validation directly within Settings.
+
+---
+
 ## Managing Public Notes and Folders
 
 ### Exclude Individual Notes
@@ -167,11 +206,11 @@ Choose from built-in character sets or create your own:
 4. Confitext installs immediately and updates automatically with every release.
 
 ### Method 3: Manual Installation
-1. Download `Confitext-Obsidian-Plugin.zip` from [Releases](https://github.com/dheeraz101/Confitext/releases).
+1. Download `main.js`, `manifest.json`, and `styles.css` directly from [Latest Release](https://github.com/dheeraz101/Confitext/releases/latest).
 2. Open your Obsidian vault in your file manager.
 3. Open `.obsidian/plugins/` (show hidden files if needed).
 4. Create a folder named `confitext`.
-5. Extract `main.js`, `manifest.json`, and `styles.css` into that folder.
+5. Copy `main.js`, `manifest.json`, and `styles.css` into that folder.
 6. In Obsidian, open **Settings > Community plugins**, click **Reload plugins**, and turn on **Confitext**.
 
 ---
@@ -187,29 +226,50 @@ Run these commands anytime from the Command Palette (<kbd>Ctrl/Cmd + P</kbd>):
 | **Confitext: Hide all text** | Mask all completed words in the active document. |
 | **Confitext: Pause masking** | Temporarily suspend masking without changing settings. |
 | **Confitext: Resume masking** | Resume visual masking after a pause. |
+| **Confitext: Panic: Instant hide & mask all text** | Emergency shortcut: clears selection and hides all text immediately. |
+| **Confitext: Mask selected word or phrase globally** | Remembers and masks the word across all notes vault-wide. |
+| **Confitext: Mask selected word or phrase in active note** | Saves the word to the active note's YAML frontmatter. |
+| **Confitext: Toggle masking scope** | Switch between All Words and Targeted Words Only. |
+| **Confitext: Set masking scope to targeted words only** | Activates Targeted Words Only mode. |
+| **Confitext: Set masking scope to all words** | Activates All Words masking mode. |
+| **Confitext: Clear all globally masked words** | Empties the global target word list. |
 | **Confitext: Toggle animation** | Toggle the word scramble animation on or off. |
 | **Confitext: Toggle idle auto-masking timer** | Enable or disable the inactivity timer. |
 | **Confitext: Toggle frontmatter exclusion for active note** | Add or remove `confitext: false` from the active note frontmatter. |
 | **Confitext: Open settings** | Open the Confitext configuration tab. |
+| **Confitext: What's new in Confitext (Release Notes)** | Open the interactive in-app release notes tab. |
 
 ---
 
 ## Settings Reference
 
-### Live Matrix Sandbox
-- **Interactive Preview:** Test scramble transitions and selection reveal live inside Settings.
-- **Custom Input:** Type test phrases to preview how glyphs look before returning to your notes.
+Confitext features a redesigned configuration panel inspired by **Apple Human Interface Guidelines** and **macOS Sequoia**, featuring frosted glass hero cards, Dynamic Island pulse indicators, interactive macOS terminal sandbox, segmented controls, and token chip managers.
 
-### Behavior
-- **Enable Confitext:** Master switch for the masking layer.
-- **Default Mode:** Initial state when opening notes (Masking, Revealed, or Paused).
-- **Mask Newly Completed Words:** Automatically mask words as soon as you type Space.
+### Live macOS Terminal Sandbox
+- **Interactive Playground:** Test scramble transitions, character lengths, and selection reveals before leaving Settings.
+- **Custom Input:** Type custom test phrases to preview how glyphs look in real time.
+
+### Targeted Masking & Sensitive Data Shield
+- **Masking Scope:** Switch between `All Words` (full document privacy) and `Targeted Words Only`.
+- **Global Masked Words:** View, add, and remove chips for words that should be masked across all notes.
+- **Active Note Masked Words:** View words extracted from the active note's `confitext-masked-words` YAML frontmatter.
+- **Case Sensitivity:** Toggle whether targeting distinguishes uppercase/lowercase.
+- **Automated PII Presets:** Individual toggles for Emails, API Keys & Tokens, Credit Cards, Phone Numbers, and IPv4 Addresses.
+- **Custom Regex Rules:** Add custom regular expressions with real-time syntax validation.
+
+### Typing Triggers & Behavior
+- **Mask Trigger Mode:** Apple-style segmented control to pick your privacy rhythm:
+  - **Word:** Hides immediately as a word is completed upon Space, comma, or punctuation.
+  - **Line:** Keeps the current line unmasked while typing; masks once the cursor moves to another line.
+  - **Paragraph:** Keeps the active paragraph block unmasked; masks once a full blank line gap is formed or cursor navigates away.
+- **Mask Newly Completed Words:** Automatically mask words as soon as completed.
+- **Quick Glance Hover Reveal:** Peek at masked words by hovering over them, with configurable delay (100ms – 2000ms).
 - **Reveal Selected Text:** Reveal masked words under mouse or keyboard selections.
 - **Reveal Entire Word on Selection:** Revealing any part of a word exposes the whole word.
 - **Reveal on Cursor Inside Word:** Placing the caret inside a word reveals it for easy editing.
 
 ### Appearance and Styles
-- **Glyph Style:** Pick Matrix Code, Cyber Runes, Geometry, Blocks, Braille, Morse, or Custom.
+- **Glyph Style:** Matrix Code, Cyber Runes, Geometry, Blocks, Braille, Morse, or Custom.
 - **Mask Color Theme:** Matrix Green, Theme Accent, Monochrome, or Custom Hex.
 - **Subtle Glow Effect:** Adds a soft phosphor glow to glyphs.
 - **Mask Opacity:** Adjust glyph visibility between 40% and 100%.
@@ -220,9 +280,8 @@ Run these commands anytime from the Command Palette (<kbd>Ctrl/Cmd + P</kbd>):
 - **Respect Reduced Motion:** Honors system reduced-motion settings automatically.
 
 ### Idle and Auto-Masking
-- **Enable Idle Auto-Masking:** Masks text after a set period of inactivity.
-- **Idle Timeout:** Choose from 1 to 60 minutes.
-- **Auto-Mask on Window Blur:** Masks notes when Obsidian loses focus.
+- **Enable Idle Auto-Masking:** Masks text after a set period of inactivity (1 to 60 minutes).
+- **Auto-Mask on Window Blur:** Masks notes when Obsidian loses OS window focus.
 
 ### Note and Folder Rules
 - **Respect Frontmatter Exclusion:** Honors `confitext: false`.
@@ -246,7 +305,7 @@ npm run dev
 # Run TypeScript compiler checks
 npm run typecheck
 
-# Run automated Vitest test suite (105 tests)
+# Run automated Vitest test suite (159 tests)
 npm test
 
 # Build production bundle and packages

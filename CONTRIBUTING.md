@@ -43,7 +43,7 @@ Before submitting any Pull Request:
    ```bash
    npm test
    ```
-   All 101+ tests must pass. When adding new features, include corresponding unit and integration tests in `tests/`.
+   All 159 tests must pass. When adding new features, include corresponding unit and integration tests in `tests/`.
 
 3. **Production Bundle Verification:**
    ```bash
