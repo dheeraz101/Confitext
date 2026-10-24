@@ -1,0 +1,448 @@
+/**
+ * Confitext - Matrix Visual Privacy Styles
+ */
+
+:root {
+	--confitext-color: #65f59a;
+	--confitext-bright: #b5ffc8;
+	--confitext-glow: 0 0 5px rgba(101, 245, 154, 0.5);
+	--confitext-opacity: 0.95;
+}
+
+/* Light Theme overrides for good contrast */
+.theme-light {
+	--confitext-color: #0b7a3e;
+	--confitext-bright: #055026;
+	--confitext-glow: 0 0 3px rgba(11, 122, 62, 0.3);
+}
+
+/* Masked Glyph Widget */
+.confitext-glyph {
+	color: var(--confitext-color);
+	opacity: var(--confitext-opacity);
+	font-family: var(--font-monospace, monospace);
+	letter-spacing: 0.04em;
+	display: inline;
+	user-select: none;
+	text-shadow: var(--confitext-glow);
+	transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+/* Scramble Phase */
+.confitext-glyph.confitext-scramble {
+	color: var(--confitext-bright);
+	text-shadow: 0 0 8px var(--confitext-bright), 0 0 12px var(--confitext-color);
+	filter: brightness(1.2);
+}
+
+/* Settling Phase */
+.confitext-glyph.confitext-settling {
+	color: var(--confitext-color);
+	text-shadow: var(--confitext-glow);
+	transition: color 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+	body .confitext-glyph {
+		transition: none;
+		animation: none;
+		text-shadow: none;
+	}
+}
+
+/* Status Bar Badge */
+.confitext-status-bar {
+	font-family: var(--font-monospace, monospace);
+	font-size: 11px;
+	letter-spacing: 0.05em;
+	cursor: pointer;
+	padding: 2px 6px;
+	border-radius: 3px;
+	display: inline-flex;
+	align-items: center;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.confitext-status-bar:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.confitext-status-bar.confitext-status-masking {
+	color: var(--confitext-color);
+	font-weight: 600;
+}
+
+.confitext-status-bar.confitext-status-revealed {
+	color: var(--text-muted);
+}
+
+.confitext-status-bar.confitext-status-paused {
+	color: var(--text-warning, #e5a50a);
+}
+
+.confitext-status-bar.confitext-status-off {
+	color: var(--text-faint);
+}
+
+/* Settings Styles */
+.confitext-settings-header {
+	margin-bottom: 1.5rem;
+}
+
+.confitext-subtitle {
+	color: var(--text-muted);
+	font-size: 0.9rem;
+	margin-top: 0.25rem;
+}
+
+.confitext-notice-box {
+	background-color: var(--background-secondary);
+	border-left: 4px solid var(--confitext-color);
+	padding: 0.85rem 1.1rem;
+	border-radius: 4px;
+	margin: 1rem 0;
+	font-size: 0.9rem;
+	line-height: 1.45;
+}
+
+.confitext-notice-box strong {
+	color: var(--text-normal);
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
+.confitext-notice-box p {
+	color: var(--text-muted);
+	margin: 0;
+}
+
+.confitext-info-list {
+	color: var(--text-muted);
+	font-size: 0.88rem;
+	padding-left: 1.25rem;
+	line-height: 1.5;
+}
+
+/* Custom Glyph Importer & Preset UI */
+.confitext-custom-importer {
+	background-color: var(--background-secondary-alt);
+	border-radius: 6px;
+	padding: 0.85rem 1rem;
+	margin-bottom: 1.25rem;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.confitext-glyph-textarea,
+.confitext-folders-textarea {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.85rem;
+	width: 100%;
+	resize: vertical;
+	letter-spacing: 0.05em;
+}
+
+.confitext-validation-msg {
+	font-size: 0.82rem;
+	margin-top: 0.35rem;
+	margin-bottom: 0.75rem;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+	font-family: var(--font-monospace, monospace);
+}
+
+.confitext-validation-success {
+	color: var(--text-success, #22c55e);
+	background-color: rgba(34, 197, 94, 0.1);
+}
+
+.confitext-validation-error {
+	color: var(--text-error, #ef4444);
+	background-color: rgba(239, 68, 68, 0.1);
+}
+
+.confitext-preset-section {
+	margin-top: 0.5rem;
+	padding-top: 0.5rem;
+	border-top: 1px dashed var(--background-modifier-border);
+}
+
+.confitext-preset-label {
+	font-size: 0.78rem;
+	color: var(--text-muted);
+	font-weight: 600;
+	display: block;
+	margin-bottom: 0.4rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.confitext-preset-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.confitext-preset-btn {
+	font-size: 0.78rem;
+	padding: 3px 8px;
+	border-radius: 4px;
+	background-color: var(--interactive-normal);
+	border: 1px solid var(--background-modifier-border);
+	color: var(--text-normal);
+	cursor: pointer;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.confitext-preset-btn:hover {
+	background-color: var(--interactive-hover);
+	border-color: var(--confitext-color);
+	color: var(--text-normal);
+}
+
+/* Header & Badges */
+.confitext-header-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 0.25rem;
+}
+
+.confitext-settings .confitext-title {
+	margin: 0;
+	font-weight: 800;
+	letter-spacing: 0.05em;
+}
+
+.confitext-version-badge {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.75rem;
+	padding: 2px 7px;
+	border-radius: 12px;
+	background-color: var(--background-secondary-alt);
+	color: var(--text-muted);
+	border: 1px solid var(--background-modifier-border);
+}
+
+.confitext-author-badge {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 2px 8px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, rgba(101, 245, 154, 0.15), rgba(16, 185, 129, 0.25));
+	color: var(--confitext-color);
+	border: 1px solid var(--confitext-color);
+	letter-spacing: 0.04em;
+}
+
+/* Live Matrix Sandbox Card */
+.confitext-sandbox-card {
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 10px;
+	padding: 1.1rem;
+	margin: 1.25rem 0 2rem 0;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+	position: relative;
+	overflow: hidden;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.confitext-sandbox-card:hover {
+	border-color: rgba(101, 245, 154, 0.45);
+	box-shadow: 0 4px 20px rgba(101, 245, 154, 0.08);
+}
+
+.confitext-sandbox-hud {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-bottom: 0.75rem;
+	margin-bottom: 0.85rem;
+	border-bottom: 1px dashed var(--background-modifier-border);
+}
+
+.confitext-sandbox-hud-left {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.confitext-hud-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.dot-red { background-color: #ef4444; }
+.dot-yellow { background-color: #eab308; }
+.dot-green { background-color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
+
+.confitext-sandbox-hud-title {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--confitext-color);
+	margin-left: 6px;
+}
+
+.confitext-sandbox-pills {
+	display: flex;
+	gap: 6px;
+}
+
+.confitext-pill {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.72rem;
+	padding: 2px 7px;
+	border-radius: 4px;
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+.confitext-pill-active {
+	color: var(--confitext-color);
+	border-color: var(--confitext-color);
+	background: rgba(101, 245, 154, 0.08);
+}
+
+.confitext-sandbox-screen {
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+	padding: 1.1rem 1.25rem;
+	min-height: 60px;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 2px;
+	cursor: pointer;
+	user-select: none;
+	font-size: 1.05rem;
+	letter-spacing: 0.06em;
+	transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.confitext-sandbox-screen:hover {
+	border-color: var(--confitext-color);
+	background-color: var(--background-primary-alt);
+}
+
+.confitext-sandbox-delim {
+	color: var(--text-muted);
+	white-space: pre-wrap;
+}
+
+.confitext-sandbox-revealed-text {
+	color: var(--text-normal);
+	font-family: var(--font-text, sans-serif);
+	letter-spacing: normal;
+	background-color: rgba(101, 245, 154, 0.15);
+	padding: 2px 6px;
+	border-radius: 3px;
+	border-bottom: 2px solid var(--confitext-color);
+}
+
+.confitext-sandbox-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 0.85rem;
+}
+
+.confitext-sandbox-btn {
+	font-size: 0.82rem;
+	font-weight: 500;
+	padding: 5px 12px;
+	border-radius: 5px;
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--interactive-normal);
+	color: var(--text-normal);
+	cursor: pointer;
+	transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.confitext-sandbox-btn:hover {
+	background-color: var(--interactive-hover);
+	transform: translateY(-1px);
+}
+
+.confitext-btn-primary {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(101, 245, 154, 0.25));
+	border-color: var(--confitext-color);
+	color: var(--confitext-color);
+	font-weight: 600;
+}
+
+.confitext-btn-primary:hover {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(101, 245, 154, 0.4));
+	box-shadow: 0 0 10px rgba(101, 245, 154, 0.35);
+}
+
+.confitext-sandbox-input-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 0.85rem;
+}
+
+.confitext-sandbox-input-label {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.confitext-sandbox-input {
+	flex: 1;
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.85rem;
+	padding: 4px 8px;
+	border-radius: 4px;
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--background-primary);
+	color: var(--text-normal);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.confitext-sandbox-input:focus {
+	border-color: var(--confitext-color);
+	box-shadow: 0 0 6px rgba(101, 245, 154, 0.3);
+	outline: none;
+}
+
+
+
+
+/* Reading View Preview Glyphs */
+.confitext-preview-glyph {
+	cursor: pointer;
+	user-select: text;
+	transition: background-color 0.15s ease;
+	border-radius: 2px;
+	padding: 0 1px;
+}
+
+.confitext-preview-glyph:hover {
+	background-color: rgba(101, 245, 154, 0.12);
+}
+
+.confitext-preview-glyph.confitext-preview-revealed {
+	color: inherit;
+	text-shadow: none;
+	opacity: 1;
+	background-color: transparent;
+}
+
+/* Tab Header Action Icon */
+.confitext-tab-action {
+	transition: color 0.15s ease;
+}
+
+.confitext-tab-action:hover {
+	color: var(--confitext-color);
+}

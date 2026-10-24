@@ -1,0 +1,10 @@
+{
+  "id": "confitext",
+  "name": "Confitext",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.0",
+  "description": "An animated, Matrix-inspired visual masking layer for private-feeling writing.",
+  "author": "Dheeraz",
+  "authorUrl": "https://yabp.netlify.app/",
+  "isDesktopOnly": false
+}

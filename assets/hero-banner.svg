@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06090e" />
+      <stop offset="50%" stop-color="#0b1118" />
+      <stop offset="100%" stop-color="#080d14" />
+    </linearGradient>
+
+    <radialGradient id="centerGlow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#65f59a" stop-opacity="0.18" />
+      <stop offset="45%" stop-color="#10b981" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Linear Accent for Borders -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#65f59a" stop-opacity="0.1" />
+      <stop offset="25%" stop-color="#65f59a" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#b5ffc8" stop-opacity="1" />
+      <stop offset="75%" stop-color="#65f59a" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#65f59a" stop-opacity="0.1" />
+    </linearGradient>
+
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#e6fff0" />
+      <stop offset="100%" stop-color="#65f59a" />
+    </linearGradient>
+
+    <!-- Filters for Glow Effects -->
+    <filter id="matrixGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#65f59a" stroke-width="0.75" stroke-opacity="0.04" />
+    </pattern>
+  </defs>
+
+  <!-- Deep Backdrop -->
+  <rect width="1280" height="420" fill="url(#bgGradient)" />
+  <rect width="1280" height="420" fill="url(#grid)" />
+  <rect width="1280" height="420" fill="url(#centerGlow)" />
+
+  <!-- Matrix Digital Glyph Streams (Background Atmosphere) -->
+  <g font-family="monospace" font-size="14" fill="#65f59a" opacity="0.18">
+    <text x="50" y="40">ⵙ Ϟ ⟁ Ж ᚷ ⌁ ░ ✦ ⵣ Ξ</text>
+    <text x="50" y="70">Ψ ⍜ ⍝ ⌖ ⌘ ⌬ ⏣ ⟐ ⟡ ⟢</text>
+    <text x="50" y="100">⠁ ⠃ ⠉ ⠙ ⠑ ⠋ ⠛ ⠓ ⠊ ⠚</text>
+    <text x="50" y="130">• − – · - / ⎻ ⎼ ⎽ ▪</text>
+    <text x="50" y="160">᚛ ᚜ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ</text>
+    <text x="50" y="190">░ ▒ ▓ █ ▀ ▄ ▌ ▐ ■ □</text>
+    <text x="50" y="220">ⵙ Ϟ ⟁ Ж ᚷ ⌁ ░ ✦ ⵣ Ξ</text>
+    <text x="50" y="250">⟁ ⟐ ⟡ ⟢ ⟤ ⌖ ⌬ ⏣ ⊞ ⊡</text>
+    <text x="50" y="280">⠁ ⠃ ⠉ ⠙ ⠑ ⠋ ⠛ ⠓ ⠊ ⠚</text>
+    <text x="50" y="310">᚛ ᚜ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ</text>
+    <text x="50" y="340">Ψ ⍜ ⍝ ⌖ ⌘ ⌬ ⏣ ⟐ ⟡ ⟢</text>
+    <text x="50" y="370">ⵙ Ϟ ⟁ Ж ᚷ ⌁ ░ ✦ ⵣ Ξ</text>
+  </g>
+
+  <g font-family="monospace" font-size="14" fill="#65f59a" opacity="0.18">
+    <text x="1080" y="40">Ψ ⍜ ⍝ ⌖ ⌘ ⌬ ⏣ ⟐ ⟡ ⟢</text>
+    <text x="1080" y="70">ⵙ Ϟ ⟁ Ж ᚷ ⌁ ░ ✦ ⵣ Ξ</text>
+    <text x="1080" y="100">• − – · - / ⎻ ⎼ ⎽ ▪</text>
+    <text x="1080" y="130">⠁ ⠃ ⠉ ⠙ ⠑ ⠋ ⠛ ⠓ ⠊ ⠚</text>
+    <text x="1080" y="160">░ ▒ ▓ █ ▀ ▄ ▌ ▐ ■ □</text>
+    <text x="1080" y="190">᚛ ᚜ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ</text>
+    <text x="1080" y="220">⟁ ⟐ ⟡ ⟢ ⟤ ⌖ ⌬ ⏣ ⊞ ⊡</text>
+    <text x="1080" y="250">ⵙ Ϟ ⟁ Ж ᚷ ⌁ ░ ✦ ⵣ Ξ</text>
+    <text x="1080" y="280">Ψ ⍜ ⍝ ⌖ ⌘ ⌬ ⏣ ⟐ ⟡ ⟢</text>
+    <text x="1080" y="310">⠁ ⠃ ⠉ ⠙ ⠑ ⠋ ⠛ ⠓ ⠊ ⠚</text>
+    <text x="1080" y="340">• − – · - / ⎻ ⎼ ⎽ ▪</text>
+    <text x="1080" y="370">᚛ ᚜ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ</text>
+  </g>
+
+  <!-- Ambient glowing horizontal beams -->
+  <line x1="0" y1="2" x2="1280" y2="2" stroke="url(#borderGrad)" stroke-width="2" />
+  <line x1="0" y1="418" x2="1280" y2="418" stroke="url(#borderGrad)" stroke-width="2" />
+
+  <!-- Center Card Frame / HUD Glass Outline -->
+  <g transform="translate(180, 45)">
+    <rect width="920" height="330" rx="16" fill="#0d1520" fill-opacity="0.75" stroke="#65f59a" stroke-width="1.5" stroke-opacity="0.35" filter="url(#softGlow)" />
+    
+    <!-- Corner HUD Accents -->
+    <path d="M 0 30 L 0 0 L 30 0" fill="none" stroke="#65f59a" stroke-width="3" />
+    <path d="M 890 0 L 920 0 L 920 30" fill="none" stroke="#65f59a" stroke-width="3" />
+    <path d="M 0 300 L 0 330 L 30 330" fill="none" stroke="#65f59a" stroke-width="3" />
+    <path d="M 890 330 L 920 330 L 920 300" fill="none" stroke="#65f59a" stroke-width="3" />
+
+    <!-- Terminal Status Header -->
+    <g transform="translate(40, 36)">
+      <circle cx="0" cy="0" r="5" fill="#ef4444" />
+      <circle cx="16" cy="0" r="5" fill="#eab308" />
+      <circle cx="32" cy="0" r="5" fill="#10b981" />
+      <text x="56" y="4" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#65f59a" letter-spacing="1.5">CONFITEXT // PROTOCOL v1.0 // OBSIDIAN PRIVATE LAYER</text>
+    </g>
+
+    <!-- Main Title -->
+    <text x="460" y="132" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace" font-size="64" font-weight="900" letter-spacing="8" fill="url(#textGrad)" filter="url(#matrixGlow)">
+      CONFITEXT
+    </text>
+
+    <!-- Matrix Glyphs Sub-ribbon under Title -->
+    <text x="460" y="165" text-anchor="middle" font-family="monospace" font-size="18" fill="#65f59a" letter-spacing="6" opacity="0.9">
+      [ ⵙ Ϟ ⟁ Ж ᚷ ⌁ ░ ✦ ⵣ Ξ Ψ ⍜ ]
+    </text>
+
+    <!-- Tagline -->
+    <text x="460" y="210" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="600" fill="#f8fafc" letter-spacing="3">
+      YOUR THOUGHTS. YOUR SCREEN. YOUR CODE.
+    </text>
+
+    <!-- Subtitle Description -->
+    <text x="460" y="240" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="400" fill="#94a3b8" letter-spacing="0.5">
+      An animated, Matrix-inspired visual privacy layer for private-feeling writing in Obsidian
+    </text>
+
+    <!-- Feature Pills / Badges -->
+    <g transform="translate(145, 275)">
+      <!-- Pill 1: 100% Text Integrity -->
+      <g transform="translate(0, 0)">
+        <rect width="180" height="28" rx="14" fill="#10b981" fill-opacity="0.12" stroke="#65f59a" stroke-width="1" stroke-opacity="0.4" />
+        <text x="90" y="18" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#65f59a" letter-spacing="0.5">🛡️ 100% Text Integrity</text>
+      </g>
+      <!-- Pill 2: CodeMirror 6 -->
+      <g transform="translate(195, 0)">
+        <rect width="130" height="28" rx="14" fill="#10b981" fill-opacity="0.12" stroke="#65f59a" stroke-width="1" stroke-opacity="0.4" />
+        <text x="65" y="18" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#65f59a" letter-spacing="0.5">⚡ CodeMirror 6</text>
+      </g>
+      <!-- Pill 3: Selection Reveal -->
+      <g transform="translate(340, 0)">
+        <rect width="145" height="28" rx="14" fill="#10b981" fill-opacity="0.12" stroke="#65f59a" stroke-width="1" stroke-opacity="0.4" />
+        <text x="72" y="18" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#65f59a" letter-spacing="0.5">👁️ Selection Reveal</text>
+      </g>
+      <!-- Pill 4: by YABP -->
+      <g transform="translate(500, 0)">
+        <rect width="130" height="28" rx="14" fill="#65f59a" fill-opacity="0.22" stroke="#65f59a" stroke-width="1" stroke-opacity="0.8" />
+        <text x="65" y="18" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#ffffff" letter-spacing="0.5">⚡ by YABP</text>
+      </g>
+    </g>
+  </g>
+</svg>

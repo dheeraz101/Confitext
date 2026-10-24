@@ -1,0 +1,44 @@
+{
+  "name": "confitext",
+  "version": "1.0.0",
+  "description": "An animated, Matrix-inspired visual masking layer for private-feeling writing.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "package": "npm run build && node scripts/package.mjs",
+    "typecheck": "tsc -noEmit -skipLibCheck",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "privacy",
+    "matrix",
+    "visual-mask",
+    "confitext"
+  ],
+  "author": "Dheeraz",
+  "homepage": "https://yabp.netlify.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dheeraz101/Confitext.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dheeraz101/Confitext/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@codemirror/language": "^6.10.8",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.4",
+    "@types/node": "^22.13.9",
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.0.0",
+    "obsidian": "^1.7.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
+  }
+}
