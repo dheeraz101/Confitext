@@ -147,10 +147,120 @@ export function registerCommands(plugin: ConfitextPlugin): void {
 		}
 	});
 
-	// 11. Open What's New tab
+	// 11. Mask selected word/phrase globally
+	plugin.addCommand({
+		id: 'mask-word-globally',
+		name: 'Mask selected word or phrase globally',
+		editorCallback: async (editor) => {
+			const selection = editor.getSelection().trim();
+			let targetWord = selection;
+			if (!targetWord) {
+				const cursor = editor.getCursor();
+				const wordRange = editor.wordAt(cursor);
+				if (wordRange) {
+					targetWord = editor.getRange(wordRange.from, wordRange.to).trim();
+				}
+			}
+			if (targetWord) {
+				await plugin.addMaskedWordGlobally(targetWord);
+				new Notice(`Confitext: "${targetWord}" will be masked globally across all notes`);
+			} else {
+				new Notice('Confitext: Please select a word or phrase to mask');
+			}
+		}
+	});
+
+	// 12. Mask selected word/phrase in active note
+	plugin.addCommand({
+		id: 'mask-word-locally',
+		name: 'Mask selected word or phrase in active note',
+		editorCallback: async (editor, view) => {
+			const file = view.file;
+			if (!file) {
+				new Notice('Confitext: No active note to save masked word into');
+				return;
+			}
+			const selection = editor.getSelection().trim();
+			let targetWord = selection;
+			if (!targetWord) {
+				const cursor = editor.getCursor();
+				const wordRange = editor.wordAt(cursor);
+				if (wordRange) {
+					targetWord = editor.getRange(wordRange.from, wordRange.to).trim();
+				}
+			}
+			if (targetWord) {
+				await plugin.addMaskedWordToNote(file, targetWord);
+				new Notice(`Confitext: "${targetWord}" will be masked in "${file.basename}"`);
+			} else {
+				new Notice('Confitext: Please select a word or phrase to mask');
+			}
+		}
+	});
+
+	// 13. Toggle masking scope
+	plugin.addCommand({
+		id: 'toggle-masking-scope',
+		name: 'Toggle masking scope (All words ⟷ Targeted words only)',
+		callback: async () => {
+			plugin.settings.maskingScope =
+				plugin.settings.maskingScope === 'targeted-only' ? 'all-words' : 'targeted-only';
+			await plugin.saveSettings();
+			plugin.dispatchSettingsToEditors();
+			plugin.updateStatusBar();
+			plugin.updateRibbonIcon();
+			new Notice(
+				`Confitext: Masking scope set to ${
+					plugin.settings.maskingScope === 'targeted-only'
+						? 'Targeted Words Only'
+						: 'All Words'
+				}`
+			);
+		}
+	});
+
+	// 14. Set masking scope to targeted words only
+	plugin.addCommand({
+		id: 'set-scope-targeted',
+		name: 'Set masking scope to targeted words only',
+		callback: async () => {
+			plugin.settings.maskingScope = 'targeted-only';
+			await plugin.saveSettings();
+			plugin.dispatchSettingsToEditors();
+			plugin.updateStatusBar();
+			plugin.updateRibbonIcon();
+			new Notice('Confitext: Masking scope set to Targeted Words Only');
+		}
+	});
+
+	// 15. Set masking scope to all words
+	plugin.addCommand({
+		id: 'set-scope-all',
+		name: 'Set masking scope to all words',
+		callback: async () => {
+			plugin.settings.maskingScope = 'all-words';
+			await plugin.saveSettings();
+			plugin.dispatchSettingsToEditors();
+			plugin.updateStatusBar();
+			plugin.updateRibbonIcon();
+			new Notice('Confitext: Masking scope set to All Words');
+		}
+	});
+
+	// 16. Clear all global masked words
+	plugin.addCommand({
+		id: 'clear-global-masked-words',
+		name: 'Clear all globally masked words',
+		callback: async () => {
+			await plugin.clearGlobalMaskedWords();
+			new Notice('Confitext: Cleared all globally masked words');
+		}
+	});
+
+	// 17. Open What's New tab
 	plugin.addCommand({
 		id: 'open-whats-new',
-		name: "What's new in v1.2.0 (Release Notes)",
+		name: "What's new in Confitext (Release Notes)",
 		callback: async () => {
 			await plugin.openWhatsNewTab();
 		}

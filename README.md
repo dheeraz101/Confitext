@@ -18,7 +18,7 @@
 <p align="center">
   <a href="https://github.com/dheeraz101/Confitext/releases"><img src="https://img.shields.io/github/v/release/dheeraz101/Confitext?include_prereleases&color=65F59A&label=Release" alt="GitHub Release"></a>
   <a href="https://obsidian.md"><img src="https://img.shields.io/badge/Obsidian-Community%20Plugin-7C3AED.svg" alt="Obsidian Plugin"></a>
-  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-110%20Passed-10b981.svg" alt="Tests"></a>
+  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-159%20Passed-10b981.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-65F59A.svg" alt="License: MIT"></a>
   <a href="https://yabp.netlify.app/"><img src="https://img.shields.io/badge/Verified%20By-YABP-6366f1.svg" alt="Verified By YABP"></a>
 </p>
@@ -74,7 +74,11 @@ When you highlight "extraordinary":
 
 ## Design Highlights
 
-- **Fluid Typing Flow:** Words remain readable while you type them. Pressing Space completes the word and triggers a quick, smooth scramble into glyphs.
+- **Targeted Word & Phrase Masking:** Mask specific sensitive words or phrases globally across all notes or locally via YAML frontmatter (`confitext-masked-words: [...]`), with right-click context menu integration.
+- **Granular Hide Triggers:** Choose your typing privacy rhythm: **Word** (masks on space/punctuation), **Line** (keeps line visible until moving to another line), or **Paragraph** (keeps paragraph block visible until a full blank line gap is formed).
+- **Sensitive Data Shield:** Automated real-time pattern shielding for emails, API keys/tokens, credit cards, phone numbers, IP addresses, plus custom regex.
+- **Apple HIG Settings Architecture:** A reimagined settings panel inspired by macOS Sequoia featuring frosted glass cards, Dynamic Island pulse indicators, segmented controls, and an interactive macOS Terminal Sandbox.
+- **Fluid Typing Flow:** Words remain readable while you type them. Completing a trigger boundary initiates a smooth scramble animation.
 - **Zero Note Modification:** Confitext never replaces characters inside your Markdown files. Notes remain standard plain text at all times.
 - **Live Matrix Sandbox:** An interactive playground built directly into Settings. Test animations, try different glyph sets, and feel selection reveal in real time.
 - **Per-Note Exclusions:** Disable masking for public notes by adding `confitext: false` to the YAML frontmatter.

@@ -31,22 +31,46 @@ export function createPreviewMaskProcessor(plugin: ConfitextPlugin) {
 		}
 
 		// Check frontmatter exclusion
-		if (plugin.settings.respectFrontmatterExclusion && context.frontmatter) {
+		let noteWords: string[] = [];
+		if (context.frontmatter) {
 			const fm = context.frontmatter as Record<string, unknown>;
-			if (fm['confitext'] === false) {
+			if (plugin.settings.respectFrontmatterExclusion && fm['confitext'] === false) {
 				return;
+			}
+			const rawWords = fm['confitext-masked-words'] ?? fm['confitext_masked_words'] ?? fm['masked-words'];
+			if (Array.isArray(rawWords)) {
+				noteWords = rawWords.map(x => String(x).trim()).filter(Boolean);
+			} else if (typeof rawWords === 'string') {
+				noteWords = rawWords.split(',').map(s => s.trim()).filter(Boolean);
 			}
 		}
 
 		// Mask text nodes in this container
-		maskElementNodes(element, plugin);
+		maskElementNodes(element, plugin, noteWords);
 	};
 }
 
 /**
  * Recursively inspects and masks text nodes in an element
  */
-export function maskElementNodes(element: HTMLElement, plugin: ConfitextPlugin): void {
+export function maskElementNodes(element: HTMLElement, plugin: ConfitextPlugin, noteWords: string[] = []): void {
+	const isTargetedOnly = plugin.settings.maskingScope === 'targeted-only';
+
+	const rawTargetSet = new Set<string>();
+	if (isTargetedOnly) {
+		for (const w of plugin.settings.globalMaskedWords || []) {
+			const t = w.trim();
+			if (t) rawTargetSet.add(plugin.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+		}
+		for (const w of noteWords || []) {
+			const t = w.trim();
+			if (t) rawTargetSet.add(plugin.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+		}
+		if (rawTargetSet.size === 0 && !plugin.settings.enablePatternMasking) {
+			return;
+		}
+	}
+
 	const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
 		acceptNode(node: Node) {
 			const parent = node.parentElement;
@@ -99,38 +123,50 @@ export function maskElementNodes(element: HTMLElement, plugin: ConfitextPlugin):
 				// Delimiter or whitespace
 				fragment.appendChild(document.createTextNode(part));
 			} else {
-				// Word to mask
-				hasMaskedWord = true;
-				const glyphs = getStableGlyphs(
-					part,
-					plugin.settings.glyphStyle,
-					plugin.settings.customGlyphs
-				);
-
-				const span = createSpan({
-					cls: 'confitext-glyph confitext-preview-glyph',
-					attr: {
-						'aria-label': 'hidden text',
-						role: 'presentation',
-						'data-confitext': 'preview-mask',
-						'data-word': part
-					},
-					text: glyphs
-				});
-
-				// Click-to-reveal interaction in Reading View
-				span.addEventListener('click', (e: MouseEvent) => {
-					e.stopPropagation();
-					if (span.classList.contains('confitext-preview-revealed')) {
-						span.classList.remove('confitext-preview-revealed');
-						span.textContent = glyphs;
-					} else {
-						span.classList.add('confitext-preview-revealed');
-						span.textContent = part;
+				// Determine if this word should be masked
+				let shouldMask = !isTargetedOnly;
+				if (isTargetedOnly) {
+					const checkKey = plugin.settings.caseSensitiveTargeting ? part : part.toLowerCase();
+					if (rawTargetSet.has(checkKey)) {
+						shouldMask = true;
 					}
-				});
+				}
 
-				fragment.appendChild(span);
+				if (shouldMask) {
+					hasMaskedWord = true;
+					const glyphs = getStableGlyphs(
+						part,
+						plugin.settings.glyphStyle,
+						plugin.settings.customGlyphs
+					);
+
+					const span = createSpan({
+						cls: 'confitext-glyph confitext-preview-glyph',
+						attr: {
+							'aria-label': 'hidden text',
+							role: 'presentation',
+							'data-confitext': 'preview-mask',
+							'data-word': part
+						},
+						text: glyphs
+					});
+
+					// Click-to-reveal interaction in Reading View
+					span.addEventListener('click', (e: MouseEvent) => {
+						e.stopPropagation();
+						if (span.classList.contains('confitext-preview-revealed')) {
+							span.classList.remove('confitext-preview-revealed');
+							span.textContent = glyphs;
+						} else {
+							span.classList.add('confitext-preview-revealed');
+							span.textContent = part;
+						}
+					});
+
+					fragment.appendChild(span);
+				} else {
+					fragment.appendChild(document.createTextNode(part));
+				}
 			}
 		}
 

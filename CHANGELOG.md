@@ -6,6 +6,45 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [1.6.0] - 2026-10-25
+
+### Added
+- **Targeted Word & Phrase Masking**:
+  - Mask individual target words or phrases while leaving the rest of the document readable, or mask entire documents while maintaining targeted rules.
+  - **Global Memory**: Words added globally are automatically masked across all current and future notes in your vault.
+  - **Note-Level Memory**: Words added locally are saved directly to the note's YAML frontmatter (`confitext-masked-words: [secret, credential]`).
+  - **Native Context Menus**: Right-click any selected word or phrase to "Mask this word globally" or "Mask this word in active note".
+  - **Command Palette Integration**: Added quick commands to mask/unmask selected words with immediate reactive redraw.
+  - **Configurable Sensitivity**: Optional toggle for case-sensitive targeting.
+- **Granular Hide Triggers (Typing Flow Modes)**:
+  - Added `maskTriggerMode` setting with three distinct typing rhythms:
+    - **Word (Default)**: Automatically hides completed words upon delimiter entry (space, comma, period, or punctuation).
+    - **Line**: Keeps the current line unmasked while actively typing; masks the line the moment the cursor moves away to another line.
+    - **Paragraph**: Keeps the current paragraph block unmasked while typing; masks the paragraph once a full blank line gap (`\n\n`) is formed or cursor navigates outside the paragraph block.
+  - Smooth animation integration: Scramble transitions trigger automatically when boundaries are crossed.
+- **Sensitive Data Shield (Automated PII Masking)**:
+  - Instant preset regex patterns for detecting and masking sensitive credentials and data on screen:
+    - Email addresses (`alice@example.com`)
+    - API keys and authorization tokens (OpenAI, GitHub, AWS, Bearer tokens)
+    - Credit card numbers (Visa, Mastercard, Amex, Discover)
+    - Phone numbers (international and national formats)
+    - IPv4 addresses
+  - **Custom Regex Engine**: Define custom regex patterns with a real-time syntax validator directly within settings.
+- **Apple HIG & macOS Sequoia Settings Redesign**:
+  - Rebuilt the entire settings experience following Apple Human Interface Guidelines:
+    - Frosted glass hero card with Dynamic Island real-time status pill badges.
+    - macOS Terminal Sandbox window with interactive preview controls.
+    - Apple-style segmented controls for Trigger Modes (`Word` / `Line` / `Paragraph`).
+    - Inset grouped cards with clean visual hierarchy, iconography, and documentation.
+    - Interactive token chips for managing global and note-level target words.
+- **Quick Glance Hover Reveal**:
+  - Option to peek at masked words by hovering over them with configurable hover delay (100ms - 2000ms).
+
+### Changed
+- Expanded automated unit test suite from 110 to 159 tests covering all targeted masking, trigger modes, and CodeMirror 6 edge cases.
+
+---
+
 ## [1.5.0] - 2026-10-24
 
 ### Fixed

@@ -19,16 +19,46 @@ export type AnimationSpeed = 'fast' | 'normal' | 'slow';
 
 export type AnimationIntensity = 'subtle' | 'standard' | 'intense';
 
+export type MaskingScope = 'all-words' | 'targeted-only';
+
+export type MaskTriggerMode = 'word' | 'line' | 'paragraph';
+
+export interface SensitivePatternConfig {
+	id: string;
+	name: string;
+	desc: string;
+	pattern: string;
+	flags: string;
+	enabled: boolean;
+}
+
 export interface ConfitextSettings {
-	// Group A - Behavior
+	// Group A - Behavior & Scope
 	enabled: boolean;
 	startAutomatically: boolean;
 	defaultMode: ConfitextMode;
+	maskingScope: MaskingScope;
+	maskTriggerMode: MaskTriggerMode;
 	maskNewlyCompletedWords: boolean;
 	revealSelectedText: boolean;
 	revealEntireWordOnSelection: boolean;
 	restoreMaskingAfterSelection: boolean;
 	revealOnCursorInsideWord: boolean;
+	enableHoverReveal: boolean;
+	hoverRevealDelayMs: number;
+
+	// Targeted Word Masking & Memory
+	globalMaskedWords: string[];
+	caseSensitiveTargeting: boolean;
+
+	// Sensitive Data Shield (Pattern & PII Masking)
+	enablePatternMasking: boolean;
+	maskEmails: boolean;
+	maskApiKeys: boolean;
+	maskCreditCards: boolean;
+	maskPhoneNumbers: boolean;
+	maskIpAddresses: boolean;
+	customPatterns: SensitivePatternConfig[];
 
 	// Group B - Appearance & Custom Glyphs
 	glyphStyle: GlyphPaletteName;
@@ -69,11 +99,26 @@ export const DEFAULT_SETTINGS: ConfitextSettings = {
 	enabled: true,
 	startAutomatically: true,
 	defaultMode: 'masking',
+	maskingScope: 'all-words',
+	maskTriggerMode: 'word',
 	maskNewlyCompletedWords: true,
 	revealSelectedText: true,
 	revealEntireWordOnSelection: true,
 	restoreMaskingAfterSelection: true,
 	revealOnCursorInsideWord: true,
+	enableHoverReveal: false,
+	hoverRevealDelayMs: 500,
+
+	globalMaskedWords: [],
+	caseSensitiveTargeting: false,
+
+	enablePatternMasking: true,
+	maskEmails: true,
+	maskApiKeys: true,
+	maskCreditCards: false,
+	maskPhoneNumbers: false,
+	maskIpAddresses: false,
+	customPatterns: [],
 
 	glyphStyle: 'matrix',
 	customGlyphs: '⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚⠅⠇⠍⠝⠕⠏⠟⠗⠎⠞⠥⠧⠺⠭⠽⠵',

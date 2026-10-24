@@ -111,8 +111,109 @@ export default class ConfitextPlugin extends Plugin {
 
 		// Register native right-click editor context menu
 		this.registerEvent(
-			this.app.workspace.on('editor-menu', (menu, _editor, view) => {
+			this.app.workspace.on('editor-menu', (menu, editor, view) => {
 				menu.addSeparator();
+
+				// Targeted word masking on current selection or word under cursor
+				const selection = editor.getSelection().trim();
+				let targetWord = selection;
+				if (!targetWord) {
+					const cursor = editor.getCursor();
+					const wordRange = editor.wordAt(cursor);
+					if (wordRange) {
+						targetWord = editor.getRange(wordRange.from, wordRange.to).trim();
+					}
+				}
+
+				if (targetWord) {
+					const displayWord = targetWord.length > 25 ? targetWord.slice(0, 22) + '...' : targetWord;
+					const isGlobal = this.settings.globalMaskedWords.some(
+						w => w.trim().toLowerCase() === targetWord.toLowerCase()
+					);
+
+					if (isGlobal) {
+						menu.addItem(item => {
+							item
+								.setTitle(`Confitext: Unmask "${displayWord}" (remove from global)`)
+								.setIcon('unlock')
+								.onClick(async () => {
+									await this.removeMaskedWordGlobally(targetWord);
+									new Notice(`Confitext: "${displayWord}" removed from global masked words`);
+								});
+						});
+					} else {
+						menu.addItem(item => {
+							item
+								.setTitle(`Confitext: Mask "${displayWord}" globally`)
+								.setIcon('globe')
+								.onClick(async () => {
+									await this.addMaskedWordGlobally(targetWord);
+									new Notice(`Confitext: "${displayWord}" added to global masked words`);
+								});
+						});
+					}
+
+					const file = view.file;
+					if (file) {
+						const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+						const rawWords = fm?.['confitext-masked-words'] ?? fm?.['confitext_masked_words'] ?? fm?.['masked-words'];
+						let noteWordsList: string[] = [];
+						if (Array.isArray(rawWords)) {
+							noteWordsList = rawWords.map(x => String(x).trim().toLowerCase());
+						} else if (typeof rawWords === 'string') {
+							noteWordsList = rawWords.split(',').map(s => s.trim().toLowerCase());
+						}
+						const isLocal = noteWordsList.includes(targetWord.toLowerCase());
+
+						if (isLocal) {
+							menu.addItem(item => {
+								item
+									.setTitle(`Confitext: Unmask "${displayWord}" in active note`)
+									.setIcon('file-minus')
+									.onClick(async () => {
+										await this.removeMaskedWordFromNote(file, targetWord);
+										new Notice(`Confitext: "${displayWord}" removed from note masked words`);
+									});
+							});
+						} else {
+							menu.addItem(item => {
+								item
+									.setTitle(`Confitext: Mask "${displayWord}" in active note`)
+									.setIcon('file-lock')
+									.onClick(async () => {
+										await this.addMaskedWordToNote(file, targetWord);
+										new Notice(`Confitext: "${displayWord}" added to note masked words`);
+									});
+							});
+						}
+					}
+					menu.addSeparator();
+				}
+
+				// Scope Toggle
+				menu.addItem(item => {
+					item
+						.setTitle(
+							this.settings.maskingScope === 'targeted-only'
+								? 'Confitext: Scope is TARGETED (Switch to All Words)'
+								: 'Confitext: Scope is ALL WORDS (Switch to Targeted Only)'
+						)
+						.setIcon('sliders')
+						.onClick(async () => {
+							this.settings.maskingScope =
+								this.settings.maskingScope === 'targeted-only' ? 'all-words' : 'targeted-only';
+							await this.saveSettings();
+							this.dispatchSettingsToEditors();
+							new Notice(
+								`Confitext: Masking scope set to ${
+									this.settings.maskingScope === 'targeted-only'
+										? 'Targeted Words Only'
+										: 'All Words'
+								}`
+							);
+						});
+				});
+
 				menu.addItem(item => {
 					item
 						.setTitle(this.currentMode === 'masking' ? 'Confitext: Reveal all text' : 'Confitext: Mask all text')
@@ -417,6 +518,93 @@ export default class ConfitextPlugin extends Plugin {
 	}
 
 	/**
+	 * Adds a word or phrase to global remembered masked words
+	 */
+	async addMaskedWordGlobally(word: string): Promise<void> {
+		const clean = word.trim();
+		if (!clean) return;
+		if (!this.settings.globalMaskedWords.some(w => w.toLowerCase() === clean.toLowerCase())) {
+			this.settings.globalMaskedWords.push(clean);
+			await this.saveSettings();
+			this.dispatchSettingsToEditors();
+		}
+	}
+
+	/**
+	 * Removes a word from global remembered masked words
+	 */
+	async removeMaskedWordGlobally(word: string): Promise<void> {
+		const clean = word.trim().toLowerCase();
+		this.settings.globalMaskedWords = this.settings.globalMaskedWords.filter(
+			w => w.trim().toLowerCase() !== clean
+		);
+		await this.saveSettings();
+		this.dispatchSettingsToEditors();
+	}
+
+	/**
+	 * Clears all globally remembered masked words
+	 */
+	async clearGlobalMaskedWords(): Promise<void> {
+		this.settings.globalMaskedWords = [];
+		await this.saveSettings();
+		this.dispatchSettingsToEditors();
+	}
+
+	/**
+	 * Adds a word to the active note's frontmatter confitext-masked-words list
+	 */
+	async addMaskedWordToNote(file: TFile, word: string): Promise<void> {
+		const clean = word.trim();
+		if (!clean) return;
+		await this.app.fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
+			let list: string[] = [];
+			const existing =
+				frontmatter['confitext-masked-words'] ??
+				frontmatter['confitext_masked_words'] ??
+				frontmatter['masked-words'];
+			if (Array.isArray(existing)) {
+				list = existing.map(x => String(x).trim()).filter(Boolean);
+			} else if (typeof existing === 'string') {
+				list = existing.split(',').map(s => s.trim()).filter(Boolean);
+			}
+			if (!list.some(w => w.toLowerCase() === clean.toLowerCase())) {
+				list.push(clean);
+			}
+			frontmatter['confitext-masked-words'] = list;
+		});
+		clearRulesCache();
+		this.dispatchSettingsToEditors();
+	}
+
+	/**
+	 * Removes a word from the active note's frontmatter confitext-masked-words list
+	 */
+	async removeMaskedWordFromNote(file: TFile, word: string): Promise<void> {
+		const clean = word.trim().toLowerCase();
+		await this.app.fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
+			const existing =
+				frontmatter['confitext-masked-words'] ??
+				frontmatter['confitext_masked_words'] ??
+				frontmatter['masked-words'];
+			if (Array.isArray(existing)) {
+				const updated = existing
+					.map(x => String(x).trim())
+					.filter(x => x && x.toLowerCase() !== clean);
+				if (updated.length > 0) {
+					frontmatter['confitext-masked-words'] = updated;
+				} else {
+					delete frontmatter['confitext-masked-words'];
+					delete frontmatter['confitext_masked_words'];
+					delete frontmatter['masked-words'];
+				}
+			}
+		});
+		clearRulesCache();
+		this.dispatchSettingsToEditors();
+	}
+
+	/**
 	 * Updates the ribbon icon with current state tooltip and icon
 	 */
 	updateRibbonIcon(): void {
@@ -438,9 +626,10 @@ export default class ConfitextPlugin extends Plugin {
 			});
 		}
 
+		const scopeLabel = this.settings.maskingScope === 'targeted-only' ? ' (Targeted)' : '';
 		const tooltip =
 			this.currentMode === 'masking'
-				? 'Confitext: Masking ON (Click to reveal all)'
+				? `Confitext: Masking ON${scopeLabel} (Click to reveal all)`
 				: this.currentMode === 'revealed'
 					? 'Confitext: REVEALED (Click to mask)'
 					: 'Confitext: PAUSED (Click to resume)';
@@ -480,8 +669,13 @@ export default class ConfitextPlugin extends Plugin {
 			label = '⚡ CONFITEXT: OFF';
 			statusClass = 'confitext-status-off';
 		} else if (this.currentMode === 'masking') {
-			label = '⚡ CONFITEXT: ON';
-			statusClass = 'confitext-status-masking';
+			if (this.settings.maskingScope === 'targeted-only') {
+				label = '⚡ CONFITEXT: TARGETED';
+				statusClass = 'confitext-status-targeted';
+			} else {
+				label = '⚡ CONFITEXT: ON';
+				statusClass = 'confitext-status-masking';
+			}
 		} else if (this.currentMode === 'revealed') {
 			label = '⚡ CONFITEXT: REVEALED';
 			statusClass = 'confitext-status-revealed';
@@ -494,7 +688,7 @@ export default class ConfitextPlugin extends Plugin {
 		this.statusBarItemEl.className = 'confitext-status-bar ' + statusClass;
 		this.statusBarItemEl.setAttribute(
 			'aria-label',
-			`Confitext mode: ${this.currentMode.toUpperCase()}. Click to toggle.`
+			`Confitext mode: ${this.currentMode.toUpperCase()}${this.settings.maskingScope === 'targeted-only' ? ' (TARGETED)' : ''}. Click to toggle.`
 		);
 	}
 

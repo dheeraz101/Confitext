@@ -73,6 +73,11 @@
 	font-weight: 600;
 }
 
+.confitext-status-bar.confitext-status-targeted {
+	color: #38bdf8;
+	font-weight: 600;
+}
+
 .confitext-status-bar.confitext-status-revealed {
 	color: var(--text-muted);
 }
@@ -85,176 +90,319 @@
 	color: var(--text-faint);
 }
 
-/* Settings Styles */
-.confitext-settings-header {
+/* Quick Glance Hover Reveal */
+.confitext-glyph.confitext-hover-revealed {
+	color: var(--text-normal) !important;
+	text-shadow: none !important;
+	opacity: 1 !important;
+	background: rgba(101, 245, 154, 0.18);
+	border-radius: 3px;
+	padding: 0 2px;
+	transition: background-color 0.15s ease;
+}
+
+/* =========================================================================
+   Apple HIG & macOS Sequoia Settings Styling
+   ========================================================================= */
+
+.confitext-settings-pane {
+	max-width: 820px;
+	margin: 0 auto;
+	padding: 0.5rem 0.5rem 2.5rem 0.5rem;
+	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+	color: var(--text-normal);
+}
+
+/* Pulse Keyframes */
+@keyframes confitext-pulse-glow {
+	0%, 100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(0.85);
+		opacity: 0.45;
+	}
+}
+
+/* 1. Hero Card & Dynamic Island Header */
+.confitext-hero-card {
+	background: linear-gradient(135deg, rgba(101, 245, 154, 0.08) 0%, rgba(56, 189, 248, 0.04) 100%);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 16px;
+	padding: 1.5rem;
 	margin-bottom: 1.5rem;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+	backdrop-filter: blur(10px);
 }
 
-.confitext-subtitle {
-	color: var(--text-muted);
-	font-size: 0.9rem;
-	margin-top: 0.25rem;
-}
-
-.confitext-notice-box {
-	background-color: var(--background-secondary);
-	border-left: 4px solid var(--confitext-color);
-	padding: 0.85rem 1.1rem;
-	border-radius: 4px;
-	margin: 1rem 0;
-	font-size: 0.9rem;
-	line-height: 1.45;
-}
-
-.confitext-notice-box strong {
-	color: var(--text-normal);
-	display: block;
-	margin-bottom: 0.25rem;
-}
-
-.confitext-notice-box p {
-	color: var(--text-muted);
-	margin: 0;
-}
-
-.confitext-info-list {
-	color: var(--text-muted);
-	font-size: 0.88rem;
-	padding-left: 1.25rem;
-	line-height: 1.5;
-}
-
-/* Custom Glyph Importer & Preset UI */
-.confitext-custom-importer {
-	background-color: var(--background-secondary-alt);
-	border-radius: 6px;
-	padding: 0.85rem 1rem;
+.confitext-hero-top {
 	margin-bottom: 1.25rem;
-	border: 1px solid var(--background-modifier-border);
 }
 
-.confitext-glyph-textarea,
-.confitext-folders-textarea {
-	font-family: var(--font-monospace, monospace);
-	font-size: 0.85rem;
-	width: 100%;
-	resize: vertical;
-	letter-spacing: 0.05em;
-}
-
-.confitext-validation-msg {
-	font-size: 0.82rem;
-	margin-top: 0.35rem;
-	margin-bottom: 0.75rem;
-	padding: 0.25rem 0.5rem;
-	border-radius: 4px;
-	font-family: var(--font-monospace, monospace);
-}
-
-.confitext-validation-success {
-	color: var(--text-success, #22c55e);
-	background-color: rgba(34, 197, 94, 0.1);
-}
-
-.confitext-validation-error {
-	color: var(--text-error, #ef4444);
-	background-color: rgba(239, 68, 68, 0.1);
-}
-
-.confitext-preset-section {
-	margin-top: 0.5rem;
-	padding-top: 0.5rem;
-	border-top: 1px dashed var(--background-modifier-border);
-}
-
-.confitext-preset-label {
-	font-size: 0.78rem;
-	color: var(--text-muted);
-	font-weight: 600;
-	display: block;
-	margin-bottom: 0.4rem;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-}
-
-.confitext-preset-buttons {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-}
-
-.confitext-preset-btn {
-	font-size: 0.78rem;
-	padding: 3px 8px;
-	border-radius: 4px;
-	background-color: var(--interactive-normal);
-	border: 1px solid var(--background-modifier-border);
-	color: var(--text-normal);
-	cursor: pointer;
-	transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.confitext-preset-btn:hover {
-	background-color: var(--interactive-hover);
-	border-color: var(--confitext-color);
-	color: var(--text-normal);
-}
-
-/* Header & Badges */
-.confitext-header-row {
+.confitext-hero-title-row {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	margin-bottom: 0.25rem;
+	margin-bottom: 0.35rem;
 }
 
-.confitext-settings .confitext-title {
+.confitext-hero-title {
 	margin: 0;
+	font-size: 1.75rem;
 	font-weight: 800;
-	letter-spacing: 0.05em;
+	letter-spacing: -0.03em;
+	color: var(--text-normal);
 }
 
-.confitext-version-badge {
+.confitext-pill-badge {
 	font-family: var(--font-monospace, monospace);
-	font-size: 0.75rem;
-	padding: 2px 7px;
-	border-radius: 12px;
-	background-color: var(--background-secondary-alt);
-	color: var(--text-muted);
-	border: 1px solid var(--background-modifier-border);
-}
-
-.confitext-author-badge {
-	font-family: var(--font-monospace, monospace);
-	font-size: 0.75rem;
+	font-size: 0.72rem;
 	font-weight: 600;
 	padding: 2px 8px;
-	border-radius: 12px;
-	background: linear-gradient(135deg, rgba(101, 245, 154, 0.15), rgba(16, 185, 129, 0.25));
-	color: var(--confitext-color);
-	border: 1px solid var(--confitext-color);
+	border-radius: 20px;
 	letter-spacing: 0.04em;
 }
 
-/* Live Matrix Sandbox Card */
-.confitext-sandbox-card {
-	background: var(--background-secondary);
+.badge-version {
+	background-color: var(--background-secondary);
 	border: 1px solid var(--background-modifier-border);
-	border-radius: 10px;
-	padding: 1.1rem;
-	margin: 1.25rem 0 2rem 0;
-	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-	position: relative;
+	color: var(--text-muted);
+}
+
+.badge-author {
+	background: rgba(101, 245, 154, 0.15);
+	color: var(--confitext-color);
+	border: 1px solid rgba(101, 245, 154, 0.3);
+}
+
+.confitext-hero-subtitle {
+	margin: 0;
+	font-size: 0.92rem;
+	color: var(--text-muted);
+	line-height: 1.45;
+}
+
+/* Dynamic Island Status Card */
+.confitext-island-card {
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 12px;
+	padding: 1rem 1.25rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.confitext-island-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.confitext-pulse-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.confitext-pulse-dot.pulse-green {
+	background-color: #10b981;
+	box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+	animation: confitext-pulse-glow 2s infinite ease-in-out;
+}
+
+.confitext-pulse-dot.pulse-cyan {
+	background-color: #06b6d4;
+	box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+	animation: confitext-pulse-glow 2s infinite ease-in-out;
+}
+
+.confitext-pulse-dot.pulse-amber {
+	background-color: #f59e0b;
+	box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+	animation: confitext-pulse-glow 2s infinite ease-in-out;
+}
+
+.confitext-pulse-dot.pulse-off {
+	background-color: var(--text-faint);
+}
+
+.confitext-island-text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.confitext-island-label {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	color: var(--text-normal);
+}
+
+.confitext-island-desc {
+	font-size: 0.82rem;
+	color: var(--text-muted);
+}
+
+.confitext-island-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* 2. Apple HIG Buttons & Controls */
+.confitext-btn {
+	font-size: 0.82rem;
+	font-weight: 500;
+	padding: 5px 12px;
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--interactive-normal);
+	color: var(--text-normal);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+	user-select: none;
+}
+
+.confitext-btn:hover {
+	background-color: var(--interactive-hover);
+	transform: translateY(-1px);
+}
+
+.confitext-btn:active {
+	transform: translateY(0);
+}
+
+.confitext-btn-primary {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(101, 245, 154, 0.3));
+	border-color: var(--confitext-color);
+	color: var(--confitext-color);
+	font-weight: 600;
+}
+
+.confitext-btn-primary:hover {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(101, 245, 154, 0.45));
+	box-shadow: 0 0 10px rgba(101, 245, 154, 0.3);
+}
+
+.confitext-btn-secondary {
+	background-color: var(--background-modifier-form-field);
+	border-color: var(--background-modifier-border);
+}
+
+.confitext-btn-panic {
+	background: rgba(239, 68, 68, 0.15);
+	border-color: rgba(239, 68, 68, 0.4);
+	color: #ef4444;
+	font-weight: 600;
+}
+
+.confitext-btn-panic:hover {
+	background: rgba(239, 68, 68, 0.25);
+	box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+.confitext-btn-ghost {
+	background: transparent;
+	border-color: var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+.confitext-btn-ghost:hover {
+	color: var(--text-normal);
+	border-color: var(--text-muted);
+}
+
+.confitext-btn-ghost-danger {
+	background: transparent;
+	border-color: transparent;
+	color: var(--text-error, #ef4444);
+	font-size: 0.78rem;
+}
+
+.confitext-btn-ghost-danger:hover {
+	background: rgba(239, 68, 68, 0.1);
+	border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 3. Inset Grouped Settings Cards */
+.confitext-card {
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 14px;
+	padding: 1.25rem 1.4rem;
+	margin-bottom: 1.5rem;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.confitext-card-desc {
+	font-size: 0.85rem;
+	color: var(--text-muted);
+	margin: 0 0 1rem 0;
+	line-height: 1.45;
+}
+
+.confitext-section-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 2rem 0 0.65rem 0;
+}
+
+.confitext-section-header h3 {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--text-normal);
+}
+
+.section-badge {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: rgba(101, 245, 154, 0.12);
+	color: var(--confitext-color);
+	border: 1px solid rgba(101, 245, 154, 0.25);
+}
+
+.section-badge.badge-security {
+	background: rgba(56, 189, 248, 0.12);
+	color: #38bdf8;
+	border-color: rgba(56, 189, 248, 0.25);
+}
+
+.confitext-setting-item {
+	padding: 0.75rem 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.confitext-setting-item:last-child {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+
+/* 4. macOS Terminal Sandbox Card */
+.confitext-sandbox-window {
+	border-radius: 12px;
 	overflow: hidden;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	padding: 1.1rem;
 }
 
-.confitext-sandbox-card:hover {
-	border-color: rgba(101, 245, 154, 0.45);
-	box-shadow: 0 4px 20px rgba(101, 245, 154, 0.08);
-}
-
-.confitext-sandbox-hud {
+.confitext-window-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -263,40 +411,39 @@
 	border-bottom: 1px dashed var(--background-modifier-border);
 }
 
-.confitext-sandbox-hud-left {
+.confitext-window-lights {
 	display: flex;
 	align-items: center;
 	gap: 6px;
 }
 
-.confitext-hud-dot {
-	width: 8px;
-	height: 8px;
+.window-dot {
+	width: 9px;
+	height: 9px;
 	border-radius: 50%;
 	display: inline-block;
 }
 
-.dot-red { background-color: #ef4444; }
-.dot-yellow { background-color: #eab308; }
-.dot-green { background-color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
+.dot-close { background-color: #ef4444; }
+.dot-min { background-color: #eab308; }
+.dot-max { background-color: #10b981; }
 
-.confitext-sandbox-hud-title {
+.confitext-window-title {
 	font-family: var(--font-monospace, monospace);
-	font-size: 0.78rem;
+	font-size: 0.75rem;
 	font-weight: 700;
 	letter-spacing: 0.08em;
 	color: var(--confitext-color);
-	margin-left: 6px;
 }
 
-.confitext-sandbox-pills {
+.confitext-window-pills {
 	display: flex;
 	gap: 6px;
 }
 
-.confitext-pill {
+.confitext-tag-pill {
 	font-family: var(--font-monospace, monospace);
-	font-size: 0.72rem;
+	font-size: 0.7rem;
 	padding: 2px 7px;
 	border-radius: 4px;
 	background-color: var(--background-primary);
@@ -304,7 +451,7 @@
 	color: var(--text-muted);
 }
 
-.confitext-pill-active {
+.confitext-tag-pill.active {
 	color: var(--confitext-color);
 	border-color: var(--confitext-color);
 	background: rgba(101, 245, 154, 0.08);
@@ -313,9 +460,9 @@
 .confitext-sandbox-screen {
 	background-color: var(--background-primary);
 	border: 1px solid var(--background-modifier-border);
-	border-radius: 6px;
+	border-radius: 8px;
 	padding: 1.1rem 1.25rem;
-	min-height: 60px;
+	min-height: 64px;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -340,7 +487,6 @@
 .confitext-sandbox-revealed-text {
 	color: var(--text-normal);
 	font-family: var(--font-text, sans-serif);
-	letter-spacing: normal;
 	background-color: rgba(101, 245, 154, 0.15);
 	padding: 2px 6px;
 	border-radius: 3px;
@@ -354,35 +500,6 @@
 	margin-top: 0.85rem;
 }
 
-.confitext-sandbox-btn {
-	font-size: 0.82rem;
-	font-weight: 500;
-	padding: 5px 12px;
-	border-radius: 5px;
-	border: 1px solid var(--background-modifier-border);
-	background-color: var(--interactive-normal);
-	color: var(--text-normal);
-	cursor: pointer;
-	transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.confitext-sandbox-btn:hover {
-	background-color: var(--interactive-hover);
-	transform: translateY(-1px);
-}
-
-.confitext-btn-primary {
-	background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(101, 245, 154, 0.25));
-	border-color: var(--confitext-color);
-	color: var(--confitext-color);
-	font-weight: 600;
-}
-
-.confitext-btn-primary:hover {
-	background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(101, 245, 154, 0.4));
-	box-shadow: 0 0 10px rgba(101, 245, 154, 0.35);
-}
-
 .confitext-sandbox-input-row {
 	display: flex;
 	align-items: center;
@@ -390,33 +507,303 @@
 	margin-top: 0.85rem;
 }
 
-.confitext-sandbox-input-label {
+.confitext-input-caption {
 	font-size: 0.8rem;
-	color: var(--text-muted);
 	font-weight: 600;
+	color: var(--text-muted);
 	white-space: nowrap;
 }
 
-.confitext-sandbox-input {
+.confitext-input-field {
 	flex: 1;
-	font-family: var(--font-monospace, monospace);
+	font-family: var(--font-text, sans-serif);
 	font-size: 0.85rem;
-	padding: 4px 8px;
-	border-radius: 4px;
+	padding: 6px 10px;
+	border-radius: 6px;
 	border: 1px solid var(--background-modifier-border);
 	background-color: var(--background-primary);
 	color: var(--text-normal);
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.confitext-sandbox-input:focus {
+.confitext-input-field:focus {
 	border-color: var(--confitext-color);
-	box-shadow: 0 0 6px rgba(101, 245, 154, 0.3);
+	box-shadow: 0 0 6px rgba(101, 245, 154, 0.25);
 	outline: none;
 }
 
+/* 5. Token & Targeted Word Manager */
+.confitext-token-manager {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--background-modifier-border);
+}
 
+.confitext-token-manager.note-level {
+	margin-top: 1.5rem;
+}
 
+.confitext-token-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+}
+
+.token-title {
+	font-size: 0.92rem;
+	font-weight: 700;
+	color: var(--text-normal);
+}
+
+.token-counter-pill {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.75rem;
+	padding: 2px 8px;
+	border-radius: 12px;
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+.confitext-add-row {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 0.85rem;
+}
+
+.confitext-chips-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	min-height: 40px;
+	padding: 0.65rem;
+	border-radius: 8px;
+	background: var(--background-primary);
+	border: 1px dashed var(--background-modifier-border);
+	margin-bottom: 0.75rem;
+}
+
+.confitext-word-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: 20px;
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	font-size: 0.82rem;
+	color: var(--text-normal);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	transition: all 0.15s ease;
+}
+
+.confitext-word-chip:hover {
+	border-color: var(--confitext-color);
+	transform: translateY(-1px);
+}
+
+.confitext-word-chip.chip-note {
+	background: rgba(56, 189, 248, 0.08);
+	border-color: rgba(56, 189, 248, 0.3);
+}
+
+.chip-icon {
+	font-size: 0.78rem;
+}
+
+.chip-text {
+	font-weight: 500;
+}
+
+.chip-remove {
+	cursor: pointer;
+	color: var(--text-muted);
+	font-weight: bold;
+	font-size: 0.9rem;
+	padding: 0 2px;
+	border-radius: 50%;
+	line-height: 1;
+	transition: color 0.15s ease, background 0.15s ease;
+}
+
+.chip-remove:hover {
+	color: #ef4444;
+	background: rgba(239, 68, 68, 0.15);
+}
+
+.confitext-empty-state {
+	font-size: 0.82rem;
+	color: var(--text-muted);
+	font-style: italic;
+	display: flex;
+	align-items: center;
+	padding: 0.5rem;
+}
+
+.confitext-clear-row {
+	display: flex;
+	justify-content: flex-end;
+}
+
+/* 6. Sensitive Data Shield Custom Regex */
+.confitext-switch-grid {
+	margin-top: 0.5rem;
+}
+
+.confitext-custom-regex-section {
+	margin-top: 1.25rem;
+	padding-top: 1rem;
+	border-top: 1px dashed var(--background-modifier-border);
+}
+
+.confitext-regex-add-row {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 0.85rem;
+}
+
+.name-field {
+	flex: 0.4;
+}
+
+.pattern-field {
+	flex: 0.6;
+	font-family: var(--font-monospace, monospace);
+}
+
+.confitext-regex-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.confitext-regex-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 6px 10px;
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+}
+
+.regex-name {
+	font-weight: 600;
+	font-size: 0.82rem;
+	margin-right: 8px;
+}
+
+.regex-pattern {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.78rem;
+	color: var(--text-muted);
+}
+
+.regex-controls {
+	display: flex;
+	gap: 6px;
+}
+
+/* 7. Custom Glyph Importer & Presets */
+.confitext-custom-importer {
+	background-color: var(--background-primary);
+	border-radius: 8px;
+	padding: 1rem;
+	margin: 0.75rem 0;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.confitext-glyph-textarea,
+.confitext-folders-textarea {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.85rem;
+	width: 100%;
+	resize: vertical;
+	letter-spacing: 0.05em;
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+}
+
+.confitext-validation-msg {
+	font-size: 0.82rem;
+	margin-top: 0.35rem;
+	margin-bottom: 0.75rem;
+	padding: 0.35rem 0.65rem;
+	border-radius: 4px;
+	font-family: var(--font-monospace, monospace);
+}
+
+.confitext-validation-success {
+	color: #10b981;
+	background-color: rgba(16, 185, 129, 0.1);
+	border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.confitext-validation-error {
+	color: #ef4444;
+	background-color: rgba(239, 68, 68, 0.1);
+	border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.confitext-preset-section {
+	margin-top: 0.5rem;
+	padding-top: 0.5rem;
+	border-top: 1px dashed var(--background-modifier-border);
+}
+
+.confitext-preset-label {
+	font-size: 0.75rem;
+	color: var(--text-muted);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	display: block;
+	margin-bottom: 0.4rem;
+}
+
+.confitext-preset-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+/* 8. Security Callout Card */
+.confitext-security-card {
+	background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(101, 245, 154, 0.04) 100%);
+	border-left: 4px solid #06b6d4;
+	padding: 1.25rem 1.4rem;
+}
+
+.security-header-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 0.5rem;
+}
+
+.security-header-row h4 {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: var(--text-normal);
+}
+
+.security-desc {
+	font-size: 0.85rem;
+	color: var(--text-muted);
+	margin: 0 0 0.75rem 0;
+	line-height: 1.45;
+}
+
+.security-list {
+	color: var(--text-muted);
+	font-size: 0.82rem;
+	padding-left: 1.25rem;
+	margin: 0;
+	line-height: 1.5;
+}
 
 /* Reading View Preview Glyphs */
 .confitext-preview-glyph {
@@ -446,7 +833,6 @@
 .confitext-tab-action:hover {
 	color: var(--confitext-color);
 }
-
 
 /* What's New Tab View Styling */
 .confitext-whats-new-container {
@@ -538,3 +924,85 @@
 	padding-top: 1rem;
 	border-top: 1px solid var(--background-modifier-border);
 }
+
+/* Apple HIG Segmented Control */
+.confitext-segmented-control {
+	display: inline-flex;
+	align-items: center;
+	background: var(--background-modifier-form-field);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	padding: 2px;
+	gap: 2px;
+	user-select: none;
+	margin-left: 8px;
+}
+
+.confitext-segment-btn {
+	background: transparent;
+	border: none;
+	border-radius: 6px;
+	padding: 4px 12px;
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--text-muted);
+	cursor: pointer;
+	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.confitext-segment-btn:hover {
+	color: var(--text-normal);
+	background: var(--background-modifier-hover);
+}
+
+.confitext-segment-btn.active {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent, #ffffff);
+	font-weight: 600;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.confitext-trigger-desc-box {
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	padding: 10px 14px;
+	margin: 0.5rem 0 1rem 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.confitext-trigger-desc-item {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	font-size: 0.82rem;
+	color: var(--text-muted);
+	opacity: 0.65;
+	transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.confitext-trigger-desc-item.is-active {
+	opacity: 1;
+	color: var(--text-normal);
+	font-weight: 500;
+}
+
+.confitext-trigger-desc-item .trigger-badge {
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.72rem;
+	font-weight: 700;
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: var(--background-modifier-form-field);
+	border: 1px solid var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+.confitext-trigger-desc-item.is-active .trigger-badge {
+	background: rgba(101, 245, 154, 0.15);
+	border-color: rgba(101, 245, 154, 0.4);
+	color: var(--confitext-color);
+}
+

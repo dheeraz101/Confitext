@@ -23,6 +23,8 @@ import {
 import { buildMaskDecorations } from './decorations';
 import { AnimationManager } from './animation';
 import { getStableGlyphs } from './glyphs';
+import { getNoteMaskedWords } from './rules';
+import { tokenizeWords, getLineRangeAt, getParagraphRangeAt } from './tokenizer';
 
 export class ConfitextViewPlugin implements PluginValue {
 	decorations: DecorationSet;
@@ -88,25 +90,115 @@ export class ConfitextViewPlugin implements PluginValue {
 			) {
 				const fullDoc = update.state.doc.toString();
 
+				const triggerMode = state.settings.maskTriggerMode || 'word';
+
 				update.changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
 					const insertedStr = inserted.toString();
-					// Delimiters that complete a word (space, newline, or clause/sentence punctuation)
-					// Excludes internal apostrophes and hyphens
-					if (/[\s.,!?;:"“”()[\]{}>/\\]/u.test(insertedStr) && fromB > 0) {
-						// Look backwards from fromB to find the completed word
-						const textBefore = fullDoc.slice(0, fromB);
-						const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*$/u);
-						if (wordMatch && wordMatch.index !== undefined) {
-							const word = wordMatch[0];
-							const wordFrom = wordMatch.index;
-							const wordTo = fromB;
 
-							const stable = getStableGlyphs(
-								word,
-								state.settings.glyphStyle,
-								state.settings.customGlyphs
-							);
-							this.animationManager.registerWordAnimation(wordFrom, wordTo, word, stable);
+					if (triggerMode === 'word') {
+						// Delimiters that complete a word (space, newline, or clause/sentence punctuation)
+						// Excludes internal apostrophes and hyphens
+						if (/[\s.,!?;:"“”()[\]{}>/\\]/u.test(insertedStr) && fromB > 0) {
+							// Look backwards from fromB to find the completed word
+							const textBefore = fullDoc.slice(0, fromB);
+							const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*$/u);
+							if (wordMatch && wordMatch.index !== undefined) {
+								const word = wordMatch[0];
+								const wordFrom = wordMatch.index;
+								const wordTo = fromB;
+
+								// If in targeted-only mode, only animate if word is in targeted list
+								if (state.settings.maskingScope === 'targeted-only') {
+									const noteWords = getNoteMaskedWords(fullDoc);
+									const targetSet = new Set<string>();
+									for (const w of state.settings.globalMaskedWords || []) {
+										const t = w.trim();
+										if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+									}
+									for (const w of noteWords || []) {
+										const t = w.trim();
+										if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+									}
+									const checkKey = state.settings.caseSensitiveTargeting ? word : word.toLowerCase();
+									if (!targetSet.has(checkKey)) {
+										return;
+									}
+								}
+
+								const stable = getStableGlyphs(
+									word,
+									state.settings.glyphStyle,
+									state.settings.customGlyphs
+								);
+								this.animationManager.registerWordAnimation(wordFrom, wordTo, word, stable);
+							}
+						}
+					} else if (triggerMode === 'line') {
+						// Line mode: Trigger masking/animation when user completes a line via newline (Enter)
+						if (/[\r\n]/u.test(insertedStr) && fromB > 0) {
+							const prevLine = getLineRangeAt(fullDoc, fromB - 1);
+							if (prevLine.from < prevLine.to) {
+								const lineTokens = tokenizeWords(fullDoc, prevLine.from, prevLine.to, state.settings);
+								for (const token of lineTokens) {
+									if (state.settings.maskingScope === 'targeted-only') {
+										const noteWords = getNoteMaskedWords(fullDoc);
+										const targetSet = new Set<string>();
+										for (const w of state.settings.globalMaskedWords || []) {
+											const t = w.trim();
+											if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+										}
+										for (const w of noteWords || []) {
+											const t = w.trim();
+											if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+										}
+										const checkKey = state.settings.caseSensitiveTargeting ? token.text : token.text.toLowerCase();
+										if (!targetSet.has(checkKey)) continue;
+									}
+									const stable = getStableGlyphs(
+										token.text,
+										state.settings.glyphStyle,
+										state.settings.customGlyphs
+									);
+									this.animationManager.registerWordAnimation(token.from, token.to, token.text, stable);
+								}
+							}
+						}
+					} else if (triggerMode === 'paragraph') {
+						// Paragraph mode: Trigger masking/animation when user creates a blank line gap
+						if (/[\r\n]/u.test(insertedStr) && fromB > 0) {
+							const textBefore = fullDoc.slice(0, fromB);
+							if (/\n[ \t]*$/u.test(textBefore)) {
+								// Preceding line was blank: a blank line gap is now formed!
+								const nonBlankIdx = textBefore.search(/\S[^\S\r\n]*\r?\n[ \t]*$/u);
+								if (nonBlankIdx !== -1) {
+									const paraRange = getParagraphRangeAt(fullDoc, nonBlankIdx);
+									if (paraRange) {
+										const paraTokens = tokenizeWords(fullDoc, paraRange.from, paraRange.to, state.settings);
+										for (const token of paraTokens) {
+											if (state.settings.maskingScope === 'targeted-only') {
+												const noteWords = getNoteMaskedWords(fullDoc);
+												const targetSet = new Set<string>();
+												for (const w of state.settings.globalMaskedWords || []) {
+													const t = w.trim();
+													if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+												}
+												for (const w of noteWords || []) {
+													const t = w.trim();
+													if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+												}
+												const checkKey = state.settings.caseSensitiveTargeting ? token.text : token.text.toLowerCase();
+												if (!targetSet.has(checkKey)) continue;
+											}
+											const stable = getStableGlyphs(
+												token.text,
+												state.settings.glyphStyle,
+												state.settings.customGlyphs
+											);
+											this.animationManager.registerWordAnimation(token.from, token.to, token.text, stable);
+										}
+									}
+								}
+							}
 						}
 					}
 				});

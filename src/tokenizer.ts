@@ -262,6 +262,153 @@ export function isRangeExcluded(from: number, to: number, excludedRanges: Exclud
 }
 
 /**
+ * Escapes special regex characters in user-provided strings
+ */
+export function escapeRegex(str: string): string {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Sensitive Data Detection Regexes
+ */
+export const SENSITIVE_PATTERNS = {
+	email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g,
+	apiKey: /\b(?:sk-[a-zA-Z0-9_\-]{20,}|(?:ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,}|xox[baprs]-[0-9a-zA-Z\-]{10,}|AKIA[0-9A-Z]{16})\b/g,
+	creditCard: /\b(?:\d{4}[ -]?){3}\d{4}\b/g,
+	phone: /\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g,
+	ipv4: /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g
+};
+
+/**
+ * Finds targeted words/phrases and sensitive pattern ranges within [rangeFrom, rangeTo].
+ * Strictly non-overlapping and sorted for RangeSetBuilder monotonicity.
+ */
+export function findTargetedTokens(
+	fullDocText: string,
+	rangeFrom: number = 0,
+	rangeTo: number = fullDocText.length,
+	settings: ConfitextSettings,
+	noteWords: string[] = [],
+	cachedExcludedRanges?: ExcludedRange[]
+): WordToken[] {
+	if (!fullDocText || rangeFrom >= rangeTo) return [];
+
+	const excludedRanges = cachedExcludedRanges ?? findExcludedRanges(fullDocText, settings);
+
+	// Combine global masked words and note-specific frontmatter masked words
+	const rawTargetSet = new Set<string>();
+	if (settings.globalMaskedWords) {
+		for (const w of settings.globalMaskedWords) {
+			const trimmed = w.trim();
+			if (trimmed) rawTargetSet.add(trimmed);
+		}
+	}
+	if (noteWords) {
+		for (const w of noteWords) {
+			const trimmed = w.trim();
+			if (trimmed) rawTargetSet.add(trimmed);
+		}
+	}
+
+	const candidates: WordToken[] = [];
+
+	// Expand range to safe line boundaries
+	const safeFrom = rangeFrom <= 0 ? 0 : fullDocText.lastIndexOf('\n', rangeFrom - 1) + 1;
+	const nextNl = fullDocText.indexOf('\n', rangeTo);
+	const safeTo = nextNl === -1 ? fullDocText.length : nextNl;
+
+	const sliceText = fullDocText.slice(safeFrom, safeTo);
+
+	// 1. Match targeted words and phrases
+	for (const target of rawTargetSet) {
+		const escaped = escapeRegex(target);
+		const flags = settings.caseSensitiveTargeting ? 'gu' : 'giu';
+		let regex: RegExp;
+		try {
+			regex = new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, flags);
+		} catch {
+			regex = new RegExp(`\\b${escaped}\\b`, settings.caseSensitiveTargeting ? 'g' : 'gi');
+		}
+
+		let match: RegExpExecArray | null;
+		while ((match = regex.exec(sliceText)) !== null) {
+			const wordFrom = safeFrom + match.index;
+			const wordTo = wordFrom + match[0].length;
+
+			if (isRangeExcluded(wordFrom, wordTo, excludedRanges)) {
+				continue;
+			}
+
+			candidates.push({
+				from: wordFrom,
+				to: wordTo,
+				text: match[0],
+				isCompleted: true
+			});
+		}
+	}
+
+	// 2. Sensitive Pattern Matching (if enabled)
+	if (settings.enablePatternMasking) {
+		const activePatterns: RegExp[] = [];
+		if (settings.maskEmails) activePatterns.push(SENSITIVE_PATTERNS.email);
+		if (settings.maskApiKeys) activePatterns.push(SENSITIVE_PATTERNS.apiKey);
+		if (settings.maskCreditCards) activePatterns.push(SENSITIVE_PATTERNS.creditCard);
+		if (settings.maskPhoneNumbers) activePatterns.push(SENSITIVE_PATTERNS.phone);
+		if (settings.maskIpAddresses) activePatterns.push(SENSITIVE_PATTERNS.ipv4);
+
+		if (settings.customPatterns) {
+			for (const cp of settings.customPatterns) {
+				if (cp.enabled && cp.pattern) {
+					try {
+						activePatterns.push(new RegExp(cp.pattern, cp.flags.includes('g') ? cp.flags : cp.flags + 'g'));
+					} catch {
+						// Ignore invalid custom regex
+					}
+				}
+			}
+		}
+
+		for (const pattern of activePatterns) {
+			pattern.lastIndex = 0;
+			let match: RegExpExecArray | null;
+			while ((match = pattern.exec(sliceText)) !== null) {
+				const patFrom = safeFrom + match.index;
+				const patTo = patFrom + match[0].length;
+
+				if (isRangeExcluded(patFrom, patTo, excludedRanges)) {
+					continue;
+				}
+
+				candidates.push({
+					from: patFrom,
+					to: patTo,
+					text: match[0],
+					isCompleted: true
+				});
+			}
+		}
+	}
+
+	if (candidates.length === 0) return [];
+
+	// Sort candidate ranges by start position, then longest range first
+	candidates.sort((a, b) => a.from - b.from || (b.to - b.from) - (a.to - a.from));
+
+	// Filter out overlapping ranges to ensure strictly monotonic decorations
+	const result: WordToken[] = [];
+	let lastTo = -1;
+	for (const cand of candidates) {
+		if (cand.from >= lastTo) {
+			result.push(cand);
+			lastTo = cand.to;
+		}
+	}
+
+	return result;
+}
+
+/**
  * Regex matching words: Unicode letters, digits, and allowed internal apostrophes/hyphens.
  * e.g. "Matrix", "don't", "state-of-the-art", "2026"
  */
@@ -410,4 +557,111 @@ export function isWordSelected(
 		}
 	}
 	return false;
+}
+
+/**
+ * Returns the character range [from, to] of the line at the given position in docText.
+ * Handles both LF and CRLF newlines.
+ * Range excludes trailing newline characters.
+ */
+export function getLineRangeAt(docText: string, pos: number): { from: number; to: number } {
+	if (!docText) return { from: 0, to: 0 };
+	const clampedPos = Math.max(0, Math.min(docText.length, pos));
+
+	// If clampedPos is resting on a newline character, it represents the end of the line preceding it.
+	let lineEnd: number;
+	let prevNl: number;
+
+	if (clampedPos < docText.length && docText[clampedPos] === '\n') {
+		lineEnd = clampedPos > 0 && docText[clampedPos - 1] === '\r' ? clampedPos - 1 : clampedPos;
+		prevNl = clampedPos > 0 ? docText.lastIndexOf('\n', clampedPos - 1) : -1;
+	} else if (
+		clampedPos < docText.length &&
+		docText[clampedPos] === '\r' &&
+		clampedPos + 1 < docText.length &&
+		docText[clampedPos + 1] === '\n'
+	) {
+		lineEnd = clampedPos;
+		prevNl = clampedPos > 0 ? docText.lastIndexOf('\n', clampedPos - 1) : -1;
+	} else {
+		prevNl = clampedPos > 0 ? docText.lastIndexOf('\n', clampedPos - 1) : -1;
+		const nextNl = docText.indexOf('\n', clampedPos);
+		lineEnd = nextNl === -1 ? docText.length : nextNl > 0 && docText[nextNl - 1] === '\r' ? nextNl - 1 : nextNl;
+	}
+
+	const lineStart = prevNl === -1 ? 0 : prevNl + 1;
+	return { from: lineStart, to: Math.max(lineStart, lineEnd) };
+}
+
+/**
+ * Returns the character range [from, to] of the active paragraph block containing pos.
+ * Paragraphs are delimited by blank line gaps (one or more blank/whitespace-only lines)
+ * or document boundaries.
+ * Returns null if pos is within a blank line gap (meaning no active paragraph).
+ */
+export function getParagraphRangeAt(docText: string, pos: number): { from: number; to: number } | null {
+	if (!docText) return null;
+	const clampedPos = Math.max(0, Math.min(docText.length, pos));
+
+	const curLine = getLineRangeAt(docText, clampedPos);
+	const curLineText = docText.slice(curLine.from, curLine.to);
+	const isCurLineBlank = /^[ \t]*$/.test(curLineText);
+
+	let startLineFrom = curLine.from;
+	let endLineTo = curLine.to;
+
+	if (isCurLineBlank) {
+		// If current line is blank, check if it's a soft continuation at the very end of doc
+		// (e.g. user typed a paragraph and pressed Enter once at end of doc, no following newline)
+		if (curLine.from > 0 && curLine.to >= docText.length) {
+			const prevLine = getLineRangeAt(docText, curLine.from - 1);
+			const prevLineText = docText.slice(prevLine.from, prevLine.to);
+			if (!/^[ \t]*$/.test(prevLineText)) {
+				// Single Enter at the end of a non-blank paragraph: still part of that paragraph!
+				startLineFrom = prevLine.from;
+				endLineTo = prevLine.to;
+			} else {
+				return null; // Preceding line was also blank: blank line gap!
+			}
+		} else {
+			// In the middle of document or preceded by blank line -> blank line gap!
+			return null;
+		}
+	}
+
+	// Expand backwards across contiguous non-blank lines
+	while (startLineFrom > 0) {
+		const prevLine = getLineRangeAt(docText, startLineFrom - 1);
+		const prevLineText = docText.slice(prevLine.from, prevLine.to);
+		if (/^[ \t]*$/.test(prevLineText)) {
+			break; // Hit blank line boundary
+		}
+		startLineFrom = prevLine.from;
+	}
+
+	// Expand forwards across contiguous non-blank lines
+	while (endLineTo < docText.length) {
+		const nlChar = docText[endLineTo];
+		let nextLineStart = endLineTo;
+		if (nlChar === '\r' && docText[endLineTo + 1] === '\n') {
+			nextLineStart = endLineTo + 2;
+		} else if (nlChar === '\n') {
+			nextLineStart = endLineTo + 1;
+		} else {
+			break;
+		}
+
+		if (nextLineStart >= docText.length) {
+			break;
+		}
+
+		const nextLine = getLineRangeAt(docText, nextLineStart);
+		const nextLineText = docText.slice(nextLine.from, nextLine.to);
+		if (/^[ \t]*$/.test(nextLineText)) {
+			break; // Hit blank line boundary
+		}
+		endLineTo = nextLine.to;
+	}
+
+	return { from: startLineFrom, to: endLineTo };
 }

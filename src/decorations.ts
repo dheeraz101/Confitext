@@ -6,9 +6,17 @@ import { WidgetType, Decoration, DecorationSet } from '@codemirror/view';
 import { RangeSetBuilder, EditorSelection } from '@codemirror/state';
 import { ConfitextMode, ConfitextSettings } from './types';
 import { getStableGlyphs } from './glyphs';
-import { tokenizeWords, isWordSelected, isWordBeingComposed, findExcludedRanges } from './tokenizer';
+import {
+	tokenizeWords,
+	findTargetedTokens,
+	isWordSelected,
+	isWordBeingComposed,
+	findExcludedRanges,
+	getLineRangeAt,
+	getParagraphRangeAt
+} from './tokenizer';
 import { AnimationManager } from './animation';
-import { isNoteMaskingDisabled } from './rules';
+import { isNoteMaskingDisabled, getNoteMaskedWords } from './rules';
 
 export class MaskWidget extends WidgetType {
 	constructor(
@@ -21,16 +29,50 @@ export class MaskWidget extends WidgetType {
 	}
 
 	toDOM(): HTMLElement {
-		return createSpan({
-			cls: 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : ''),
-			attr: {
-				'aria-label': 'hidden text',
-				role: 'presentation',
-				'data-confitext': 'mask',
-				'data-word-len': String(this.word.length)
-			},
-			text: this.glyphs
-		});
+		const span =
+			typeof createSpan !== 'undefined'
+				? createSpan({
+						cls: 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : ''),
+						attr: {
+							'aria-label': 'hidden text',
+							role: 'presentation',
+							'data-confitext': 'mask',
+							'data-word-len': String(this.word.length)
+						},
+						text: this.glyphs
+					})
+				: (() => {
+						const el = document.createElement('span');
+						el.className = 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : '');
+						el.setAttribute('aria-label', 'hidden text');
+						el.setAttribute('role', 'presentation');
+						el.setAttribute('data-confitext', 'mask');
+						el.setAttribute('data-word-len', String(this.word.length));
+						el.textContent = this.glyphs;
+						return el;
+					})();
+
+		if (this.settings.enableHoverReveal) {
+			let hoverTimer: number | null = null;
+			span.addEventListener('pointerenter', () => {
+				hoverTimer = window.setTimeout(() => {
+					span.textContent = this.word;
+					span.addClass('confitext-hover-revealed');
+				}, this.settings.hoverRevealDelayMs || 500);
+			});
+			span.addEventListener('pointerleave', () => {
+				if (hoverTimer) {
+					window.clearTimeout(hoverTimer);
+					hoverTimer = null;
+				}
+				if (span.hasClass('confitext-hover-revealed')) {
+					span.removeClass('confitext-hover-revealed');
+					span.textContent = this.glyphs;
+				}
+			});
+		}
+
+		return span;
 	}
 
 	eq(other: MaskWidget): boolean {
@@ -41,7 +83,9 @@ export class MaskWidget extends WidgetType {
 			this.settings.glyphStyle === other.settings.glyphStyle &&
 			this.settings.customGlyphs === other.settings.customGlyphs &&
 			this.settings.maskColorTheme === other.settings.maskColorTheme &&
-			this.settings.customColor === other.settings.customColor
+			this.settings.customColor === other.settings.customColor &&
+			this.settings.enableHoverReveal === other.settings.enableHoverReveal &&
+			this.settings.hoverRevealDelayMs === other.settings.hoverRevealDelayMs
 		);
 	}
 
@@ -94,8 +138,40 @@ export function buildMaskDecorations(
 	// Precompute/retrieve syntax exclusions once per document update pass
 	const syntaxExcludedRanges = findExcludedRanges(docText, settings);
 
+	// Retrieve note-specific frontmatter words
+	const noteWords = getNoteMaskedWords(docText);
+
+	// Precompute active unmasked ranges for line/paragraph trigger modes
+	const activeTriggerRanges: { from: number; to: number }[] = [];
+	if (settings.maskTriggerMode === 'line') {
+		for (const range of selection.ranges) {
+			const lineRange = getLineRangeAt(docText, range.head);
+			activeTriggerRanges.push(lineRange);
+			if (!range.empty) {
+				const anchorLine = getLineRangeAt(docText, range.anchor);
+				activeTriggerRanges.push(anchorLine);
+			}
+		}
+	} else if (settings.maskTriggerMode === 'paragraph') {
+		for (const range of selection.ranges) {
+			const paraRange = getParagraphRangeAt(docText, range.head);
+			if (paraRange) {
+				activeTriggerRanges.push(paraRange);
+			}
+			if (!range.empty) {
+				const anchorPara = getParagraphRangeAt(docText, range.anchor);
+				if (anchorPara) {
+					activeTriggerRanges.push(anchorPara);
+				}
+			}
+		}
+	}
+
 	for (const range of mergedRanges) {
-		const tokens = tokenizeWords(docText, range.from, range.to, settings, syntaxExcludedRanges);
+		const tokens =
+			settings.maskingScope === 'targeted-only'
+				? findTargetedTokens(docText, range.from, range.to, settings, noteWords, syntaxExcludedRanges)
+				: tokenizeWords(docText, range.from, range.to, settings, syntaxExcludedRanges);
 
 		for (const token of tokens) {
 			// Ensure strictly monotonic order and avoid duplicate decorations across ranges
@@ -115,12 +191,23 @@ export function buildMaskDecorations(
 				}
 			}
 
-			// 2. Composition Check: If word is being composed/edited at ANY active caret
-			const isComposing = selection.ranges.some(r =>
-				r.empty && isWordBeingComposed(token, r.head, docText, settings.revealOnCursorInsideWord)
-			);
-			if (isComposing) {
-				continue; // Do not mask; actively being typed
+			// 2. Trigger Mode & Composition Check
+			if (settings.maskTriggerMode === 'line' || settings.maskTriggerMode === 'paragraph') {
+				// In line/paragraph mode, if token is within any active cursor line/paragraph, keep unmasked
+				const isActive = activeTriggerRanges.some(
+					ar => token.from >= ar.from && token.to <= ar.to
+				);
+				if (isActive) {
+					continue; // Do not mask; line or paragraph is active
+				}
+			} else {
+				// Default 'word' mode: check if word is actively being composed/edited at ANY active caret
+				const isComposing = selection.ranges.some(r =>
+					r.empty && isWordBeingComposed(token, r.head, docText, settings.revealOnCursorInsideWord)
+				);
+				if (isComposing) {
+					continue; // Do not mask; actively being typed
+				}
 			}
 
 			// 3. Determine if word is in active scramble/settling animation

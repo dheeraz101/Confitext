@@ -13,6 +13,7 @@ const DISABLED_KEY_REGEX = /^\s*confitext\s*:\s*(?:false|off|0|no|disabled|none|
 // Bounded caches for fast memoized lookups
 const FRONTMATTER_CACHE = new Map<string, boolean>();
 const PATH_CACHE = new Map<string, boolean>();
+const NOTE_WORDS_CACHE = new Map<string, string[]>();
 
 interface FileNoteCacheEntry {
 	excludedFoldersKey: string;
@@ -31,6 +32,7 @@ export function clearRulesCache(): void {
 	FRONTMATTER_CACHE.clear();
 	PATH_CACHE.clear();
 	FILE_NOTE_CACHE.clear();
+	NOTE_WORDS_CACHE.clear();
 }
 
 /**
@@ -71,6 +73,89 @@ export function isFrontmatterDisabled(docText: string): boolean {
 
 	FRONTMATTER_CACHE.set(fmContent, isDisabled);
 	return isDisabled;
+}
+
+/**
+ * Extracts note-specific masked words from YAML frontmatter.
+ * Supports:
+ * confitext-masked-words: [word1, "phrase two"]
+ * confitext-masked-words:
+ *   - word1
+ *   - "phrase two"
+ * confitext-masked-words: word1, phrase two
+ */
+export function getNoteMaskedWords(docText: string): string[] {
+	if (!docText) return [];
+
+	const text = docText.charCodeAt(0) === 0xfeff ? docText.slice(1) : docText;
+	if (!text.startsWith('---')) return [];
+
+	const match = text.match(FRONTMATTER_BLOCK_REGEX);
+	if (!match) return [];
+
+	const fmContent = match[1];
+	const cached = NOTE_WORDS_CACHE.get(fmContent);
+	if (cached !== undefined) {
+		return cached;
+	}
+
+	const words: string[] = [];
+	const lines = fmContent.split(/\r?\n/);
+	let inListBlock = false;
+
+	const KEY_REGEX = /^\s*(?:confitext[-_])?masked[-_]words\s*:(.*)$/i;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+
+		if (inListBlock) {
+			const bulletMatch = line.match(/^\s*-\s+(.*)$/);
+			if (bulletMatch) {
+				const raw = bulletMatch[1].replace(/#.*$/, '').trim();
+				const unquoted = raw.replace(/^["'](.*)["']$/, '$1').trim();
+				if (unquoted) {
+					words.push(unquoted);
+				}
+				continue;
+			} else if (line.trim().length > 0) {
+				inListBlock = false;
+			}
+		}
+
+		const keyMatch = line.match(KEY_REGEX);
+		if (keyMatch) {
+			const rest = keyMatch[1].replace(/#.*$/, '').trim();
+			if (!rest) {
+				inListBlock = true;
+				continue;
+			}
+
+			if (rest.startsWith('[') && rest.endsWith(']')) {
+				const inner = rest.slice(1, -1);
+				const parts = inner.split(',');
+				for (const p of parts) {
+					const clean = p.trim().replace(/^["'](.*)["']$/, '$1').trim();
+					if (clean) words.push(clean);
+				}
+			} else {
+				const parts = rest.split(',');
+				for (const p of parts) {
+					const clean = p.trim().replace(/^["'](.*)["']$/, '$1').trim();
+					if (clean) words.push(clean);
+				}
+			}
+		}
+	}
+
+	if (NOTE_WORDS_CACHE.size >= MAX_CACHE_ENTRIES) {
+		const firstKey = NOTE_WORDS_CACHE.keys().next().value;
+		if (firstKey !== undefined) {
+			NOTE_WORDS_CACHE.delete(firstKey);
+		}
+	}
+
+	NOTE_WORDS_CACHE.set(fmContent, words);
+	return words;
 }
 
 /**
