@@ -146,4 +146,13 @@ export function registerCommands(plugin: ConfitextPlugin): void {
 			plugin.panicHide();
 		}
 	});
+
+	// 11. Open What's New tab
+	plugin.addCommand({
+		id: 'open-whats-new',
+		name: "What's new in v1.2.0 (Release Notes)",
+		callback: async () => {
+			await plugin.openWhatsNewTab();
+		}
+	});
 }

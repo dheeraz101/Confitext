@@ -39,6 +39,18 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setDesc('Your thoughts. Your screen. Your code. An animated, Matrix-inspired visual masking layer for private-feeling writing.')
 			.setHeading();
 
+		new Setting(containerEl)
+			.setName("What's new in v1.2.0")
+			.setDesc('Native right-click menus, tab header shield action, Reading View masking, and emergency panic mode.')
+			.addButton(btn =>
+				btn
+					.setButtonText("Open What's New Tab")
+					.setCta()
+					.onClick(async () => {
+						await this.plugin.openWhatsNewTab();
+					})
+			);
+
 		// ----------------------------------------------------
 		// LIVE MATRIX SANDBOX & INTERACTIVE PREVIEW STATION
 		// ----------------------------------------------------

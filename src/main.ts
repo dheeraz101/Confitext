@@ -14,6 +14,7 @@ import { clearRulesCache } from './rules';
 import { clearTokenizerCache } from './tokenizer';
 import { IdleManager } from './idle';
 import { createPreviewMaskProcessor } from './preview';
+import { WhatsNewView, VIEW_TYPE_WHATS_NEW } from './whats-new-view';
 
 interface EditorWithCm {
 	cm?: EditorView;
@@ -41,13 +42,16 @@ export default class ConfitextPlugin extends Plugin {
 		// 2. Register Reading View Markdown Post-Processor (Preview Mode)
 		this.registerMarkdownPostProcessor(createPreviewMaskProcessor(this));
 
-		// 3. Register Commands
+		// 3. Register What's New View Tab
+		this.registerView(VIEW_TYPE_WHATS_NEW, leaf => new WhatsNewView(leaf, this));
+
+		// 4. Register Commands
 		registerCommands(this);
 
-		// 4. Register Settings Tab
+		// 5. Register Settings Tab
 		this.addSettingTab(new ConfitextSettingTab(this.app, this));
 
-		// 5. Setup Visual Status & Ribbon Indicators
+		// 6. Setup Visual Status & Ribbon Indicators
 		this.updateRibbonIcon();
 		this.updateStatusBar();
 		this.applyCssVariables();
@@ -245,6 +249,23 @@ export default class ConfitextPlugin extends Plugin {
 		} else {
 			this.idleManager.stop();
 		}
+	}
+
+	/**
+	 * Opens What's New release notes in a dedicated native Obsidian tab
+	 */
+	async openWhatsNewTab(): Promise<void> {
+		const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_WHATS_NEW);
+		if (existing.length > 0) {
+			this.app.workspace.revealLeaf(existing[0]);
+			return;
+		}
+		const leaf = this.app.workspace.getLeaf('tab');
+		await leaf.setViewState({
+			type: VIEW_TYPE_WHATS_NEW,
+			active: true
+		});
+		this.app.workspace.revealLeaf(leaf);
 	}
 
 	/**

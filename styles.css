@@ -446,3 +446,95 @@
 .confitext-tab-action:hover {
 	color: var(--confitext-color);
 }
+
+
+/* What's New Tab View Styling */
+.confitext-whats-new-container {
+	padding: 2rem 2.5rem;
+	max-width: 900px;
+	margin: 0 auto;
+	overflow-y: auto;
+	font-family: var(--font-text);
+}
+
+.confitext-wn-hero {
+	background: linear-gradient(135deg, rgba(101, 245, 154, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+	border: 1px solid rgba(101, 245, 154, 0.25);
+	border-radius: 12px;
+	padding: 2rem;
+	margin-bottom: 2rem;
+	position: relative;
+}
+
+.confitext-wn-badge-row {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 0.85rem;
+}
+
+.confitext-wn-title {
+	margin: 0 0 0.5rem 0;
+	font-size: 1.85rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	color: var(--text-normal);
+}
+
+.confitext-wn-subtitle {
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: var(--text-muted);
+}
+
+.confitext-wn-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+	gap: 1.25rem;
+	margin-bottom: 2rem;
+}
+
+.confitext-wn-card {
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 10px;
+	padding: 1.25rem 1.4rem;
+	transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.confitext-wn-card:hover {
+	border-color: var(--confitext-color);
+	transform: translateY(-1px);
+}
+
+.confitext-wn-card-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 0.65rem;
+}
+
+.confitext-wn-card-icon {
+	font-size: 1.35rem;
+}
+
+.confitext-wn-card-header h3 {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--text-normal);
+}
+
+.confitext-wn-card p {
+	margin: 0;
+	font-size: 0.9rem;
+	line-height: 1.5;
+	color: var(--text-muted);
+}
+
+.confitext-wn-actions {
+	display: flex;
+	gap: 12px;
+	padding-top: 1rem;
+	border-top: 1px solid var(--background-modifier-border);
+}
