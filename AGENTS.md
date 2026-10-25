@@ -25,3 +25,11 @@
 ## 6. Robust YAML Frontmatter Matching
 - Notes may contain UTF-8 Byte Order Marks (`\uFEFF`), leading indentation, trailing spaces, inline comments, or alternative YAML closing tags (`...` as well as `---`).
 - Ensure frontmatter detection handles both boolean strings (`false`, `off`, `no`, `disabled`, `none`) and raw booleans, strips BOM, and tolerates whitespace.
+
+## 7. Obsidian Community Review & UI Guidelines
+- **Heading Standardization**: Never create HTML heading elements (`h1`–`h6`) directly in settings or UI panes. Always use `new Setting(containerEl).setName('...').setHeading()`.
+- **Command Naming**: Never prefix command names with the plugin name in `addCommand({ name: '...' })`. The plugin name is prepended automatically by Obsidian in the command palette UI.
+- **Void Event Listeners**: Never return a Promise in standard DOM event listeners (e.g. `addEventListener('click', async () => ...)`). Always wrap async logic in `() => { void (async () => { ... })(); }`.
+- **Zero `!important` in CSS**: Avoid `!important` in plugin stylesheets; override styles by increasing selector specificity (e.g. `.cm-editor .confitext-glyph`) or CSS variables.
+- **Native DOM Helpers**: Always use Obsidian's `createEl`, `createSpan`, `createDiv`, and `createFragment` helpers instead of native `document.createElement`.
+
