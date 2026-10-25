@@ -29,28 +29,16 @@ export class MaskWidget extends WidgetType {
 	}
 
 	toDOM(): HTMLElement {
-		const span =
-			typeof createSpan !== 'undefined'
-				? createSpan({
-						cls: 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : ''),
-						attr: {
-							'aria-label': 'hidden text',
-							role: 'presentation',
-							'data-confitext': 'mask',
-							'data-word-len': String(this.word.length)
-						},
-						text: this.glyphs
-					})
-				: (() => {
-						const el = document.createElement('span');
-						el.className = 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : '');
-						el.setAttribute('aria-label', 'hidden text');
-						el.setAttribute('role', 'presentation');
-						el.setAttribute('data-confitext', 'mask');
-						el.setAttribute('data-word-len', String(this.word.length));
-						el.textContent = this.glyphs;
-						return el;
-					})();
+		const span = createSpan({
+			cls: 'confitext-glyph' + (this.stage !== 'stable' ? ` confitext-${this.stage}` : ''),
+			attr: {
+				'aria-label': 'hidden text',
+				role: 'presentation',
+				'data-confitext': 'mask',
+				'data-word-len': String(this.word.length)
+			},
+			text: this.glyphs
+		});
 
 		if (this.settings.enableHoverReveal) {
 			let hoverTimer: number | null = null;

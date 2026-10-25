@@ -8,6 +8,23 @@ import { maskElementNodes } from '../src/preview';
 import { DEFAULT_SETTINGS, ConfitextSettings } from '../src/types';
 import type ConfitextPlugin from '../src/main';
 
+if (typeof (globalThis as any).createEl === 'undefined') {
+	(globalThis as any).createEl = (tag: string, o?: any) => {
+		const el = document.createElement(tag);
+		if (o?.cls) el.className = o.cls;
+		if (o?.text) el.textContent = o.text;
+		if (o?.attr) {
+			for (const [k, v] of Object.entries(o.attr)) {
+				el.setAttribute(k, String(v));
+			}
+		}
+		return el;
+	};
+}
+if (typeof (globalThis as any).createSpan === 'undefined') {
+	(globalThis as any).createSpan = (o?: any) => (globalThis as any).createEl('span', o);
+}
+
 describe('Targeted Word Masking - YAML Frontmatter Parsing', () => {
 	beforeEach(() => {
 		clearRulesCache();

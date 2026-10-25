@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [1.6.1] - 2026-10-25
+
+### Fixed
+- **Obsidian Review Compliance**:
+  - Replaced all manual HTML heading elements (`h2`, `h3`, `h4`) in `settings.ts` with Obsidian's native `new Setting(containerEl).setName(...).setHeading()` component API for theme-consistent UI rendering.
+  - Removed plugin name prefix from command name in `commands.ts` ("What's new (Release Notes)") per Obsidian command naming guidelines.
+  - Replaced fallback `document.createElement` in `decorations.ts` with Obsidian's native `createSpan` helper (`obsidianmd/prefer-create-el`).
+  - Resolved `@typescript-eslint/no-unsafe-assignment` warnings in `main.ts` and `settings.ts` for frontmatter metadata cache reads.
+  - Eliminated `Promise returned where void was expected` warnings across all interactive event listeners in `settings.ts`.
+  - Removed redundant escape characters (`\-`) in API key tokenization regular expressions in `tokenizer.ts`.
+  - Cleaned up unused imports (`clearRulesCache`, `getNoteMaskedWords`) in `settings.ts`.
+  - Removed all `!important` flags in `styles.css` in favor of enhanced selector specificity.
+
+---
+
 ## [1.6.0] - 2026-10-25
 
 ### Added

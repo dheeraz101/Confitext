@@ -260,7 +260,7 @@ export function registerCommands(plugin: ConfitextPlugin): void {
 	// 17. Open What's New tab
 	plugin.addCommand({
 		id: 'open-whats-new',
-		name: "What's new in Confitext (Release Notes)",
+		name: "What's new (Release Notes)",
 		callback: async () => {
 			await plugin.openWhatsNewTab();
 		}

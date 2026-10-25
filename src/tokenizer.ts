@@ -273,7 +273,7 @@ export function escapeRegex(str: string): string {
  */
 export const SENSITIVE_PATTERNS = {
 	email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g,
-	apiKey: /\b(?:sk-[a-zA-Z0-9_\-]{20,}|(?:ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,}|xox[baprs]-[0-9a-zA-Z\-]{10,}|AKIA[0-9A-Z]{16})\b/g,
+	apiKey: /\b(?:sk-[a-zA-Z0-9_-]{20,}|(?:ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,}|xox[baprs]-[0-9a-zA-Z-]{10,}|AKIA[0-9A-Z]{16})\b/g,
 	creditCard: /\b(?:\d{4}[ -]?){3}\d{4}\b/g,
 	phone: /\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g,
 	ipv4: /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g

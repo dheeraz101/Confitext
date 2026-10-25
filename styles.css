@@ -91,10 +91,12 @@
 }
 
 /* Quick Glance Hover Reveal */
+.cm-editor .confitext-glyph.confitext-hover-revealed,
+.markdown-rendered .confitext-glyph.confitext-hover-revealed,
 .confitext-glyph.confitext-hover-revealed {
-	color: var(--text-normal) !important;
-	text-shadow: none !important;
-	opacity: 1 !important;
+	color: var(--text-normal);
+	text-shadow: none;
+	opacity: 1;
 	background: rgba(101, 245, 154, 0.18);
 	border-radius: 3px;
 	padding: 0 2px;
@@ -359,7 +361,18 @@
 	margin: 2rem 0 0.65rem 0;
 }
 
-.confitext-section-header h3 {
+.confitext-section-header.setting-item-heading {
+	border-top: none;
+	padding-top: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+.confitext-section-header h3,
+.confitext-section-header .setting-item-name {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
 	margin: 0;
 	font-size: 1.05rem;
 	font-weight: 700;
@@ -783,7 +796,8 @@
 	margin-bottom: 0.5rem;
 }
 
-.security-header-row h4 {
+.security-header-row h4,
+.security-header-row .security-title {
 	margin: 0;
 	font-size: 0.95rem;
 	font-weight: 700;

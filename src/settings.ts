@@ -23,7 +23,6 @@ import {
 	resolveGlyphPalette
 } from './glyphs';
 import { DURATION_MAP } from './animation';
-import { clearRulesCache, getNoteMaskedWords } from './rules';
 
 export class ConfitextSettingTab extends PluginSettingTab {
 	plugin: ConfitextPlugin;
@@ -119,7 +118,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		const titleGroup = topRow.createDiv({ cls: 'confitext-hero-title-group' });
 
 		const titleRow = titleGroup.createDiv({ cls: 'confitext-hero-title-row' });
-		titleRow.createEl('h2', { cls: 'confitext-hero-title', text: 'Confitext' });
+		titleRow.createDiv({ cls: 'confitext-hero-title', text: 'Confitext' });
 		titleRow.createSpan({ cls: 'confitext-pill-badge badge-version', text: `v${this.plugin.manifest.version}` });
 		titleRow.createSpan({ cls: 'confitext-pill-badge badge-author', text: 'By Dheeraz' });
 
@@ -197,8 +196,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			cls: 'confitext-btn confitext-btn-ghost',
 			text: "What's New"
 		});
-		whatsNewBtn.addEventListener('click', async () => {
-			await this.plugin.openWhatsNewTab();
+		whatsNewBtn.addEventListener('click', () => {
+			void this.plugin.openWhatsNewTab();
 		});
 	}
 
@@ -382,9 +381,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 3. REDACTION STRATEGY & TARGETED WORDS (Requirement 1)
 	// =========================================================================
 	private renderRedactionStrategyCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'STRATEGY' });
-		groupHeader.createEl('h3', { text: 'Redaction Strategy & Targeted Words' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Redaction Strategy & Targeted Words')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'STRATEGY' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -482,10 +483,12 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				chip.createSpan({ cls: 'chip-text', text: word });
 				const removeBtn = chip.createSpan({ cls: 'chip-remove', text: '×' });
 				removeBtn.title = `Remove "${word}"`;
-				removeBtn.addEventListener('click', async (e: MouseEvent) => {
+				removeBtn.addEventListener('click', (e: MouseEvent) => {
 					e.stopPropagation();
-					await this.plugin.removeMaskedWordGlobally(word);
-					this.refreshTab();
+					void (async () => {
+						await this.plugin.removeMaskedWordGlobally(word);
+						this.refreshTab();
+					})();
 				});
 			}
 		}
@@ -496,10 +499,12 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				cls: 'confitext-btn confitext-btn-ghost-danger',
 				text: 'Clear All Global Words'
 			});
-			clearBtn.addEventListener('click', async () => {
-				await this.plugin.clearGlobalMaskedWords();
-				new Notice('Confitext: Cleared all globally remembered words');
-				this.refreshTab();
+			clearBtn.addEventListener('click', () => {
+				void (async () => {
+					await this.plugin.clearGlobalMaskedWords();
+					new Notice('Confitext: Cleared all globally remembered words');
+					this.refreshTab();
+				})();
 			});
 		}
 
@@ -522,10 +527,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			});
 
 			const fm = this.app.metadataCache.getFileCache(activeFile)?.frontmatter;
-			const rawWords = fm?.['confitext-masked-words'] ?? fm?.['confitext_masked_words'] ?? fm?.['masked-words'];
+			const rawWords: unknown = fm?.['confitext-masked-words'] ?? fm?.['confitext_masked_words'] ?? fm?.['masked-words'];
 			let noteWords: string[] = [];
 			if (Array.isArray(rawWords)) {
-				noteWords = rawWords.map(x => String(x).trim()).filter(Boolean);
+				noteWords = (rawWords as unknown[]).map(x => String(x).trim()).filter(Boolean);
 			} else if (typeof rawWords === 'string') {
 				noteWords = rawWords.split(',').map(s => s.trim()).filter(Boolean);
 			}
@@ -572,10 +577,12 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					chip.createSpan({ cls: 'chip-text', text: word });
 					const removeBtn = chip.createSpan({ cls: 'chip-remove', text: '×' });
 					removeBtn.title = `Remove "${word}" from note`;
-					removeBtn.addEventListener('click', async (e: MouseEvent) => {
+					removeBtn.addEventListener('click', (e: MouseEvent) => {
 						e.stopPropagation();
-						await this.plugin.removeMaskedWordFromNote(activeFile, word);
-						this.refreshTab();
+						void (async () => {
+							await this.plugin.removeMaskedWordFromNote(activeFile, word);
+							this.refreshTab();
+						})();
 					});
 				}
 			}
@@ -591,9 +598,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 4. SENSITIVE DATA SHIELD (Pattern/PII Masking - Requirement 2)
 	// =========================================================================
 	private renderSensitiveShieldCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'SHIELD' });
-		groupHeader.createEl('h3', { text: 'Sensitive Data Shield & Pattern Masking' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Sensitive Data Shield & Pattern Masking')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'SHIELD' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -697,31 +706,33 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				text: 'Add Pattern'
 			});
 
-			addPatternBtn.addEventListener('click', async () => {
-				const name = nameInput.value.trim();
-				const pattern = patternInput.value.trim();
-				if (!name || !pattern) {
-					new Notice('Confitext: Please provide both name and regular expression');
-					return;
-				}
-				try {
-					new RegExp(pattern);
-				} catch {
-					new Notice('Confitext: Invalid regular expression syntax');
-					return;
-				}
-				const newConfig: SensitivePatternConfig = {
-					id: `custom_${Date.now()}`,
-					name,
-					desc: '',
-					pattern,
-					flags: 'gu',
-					enabled: true
-				};
-				this.plugin.settings.customPatterns.push(newConfig);
-				await this.plugin.saveSettings();
-				this.plugin.dispatchSettingsToEditors();
-				this.refreshTab();
+			addPatternBtn.addEventListener('click', () => {
+				void (async () => {
+					const name = nameInput.value.trim();
+					const pattern = patternInput.value.trim();
+					if (!name || !pattern) {
+						new Notice('Confitext: Please provide both name and regular expression');
+						return;
+					}
+					try {
+						new RegExp(pattern);
+					} catch {
+						new Notice('Confitext: Invalid regular expression syntax');
+						return;
+					}
+					const newConfig: SensitivePatternConfig = {
+						id: `custom_${Date.now()}`,
+						name,
+						desc: '',
+						pattern,
+						flags: 'gu',
+						enabled: true
+					};
+					this.plugin.settings.customPatterns.push(newConfig);
+					await this.plugin.saveSettings();
+					this.plugin.dispatchSettingsToEditors();
+					this.refreshTab();
+				})();
 			});
 
 			// Display list of active custom patterns
@@ -738,24 +749,28 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						cls: `confitext-btn ${cp.enabled ? 'confitext-btn-secondary' : 'confitext-btn-ghost'}`,
 						text: cp.enabled ? 'Enabled' : 'Disabled'
 					});
-					toggleBtn.addEventListener('click', async () => {
-						cp.enabled = !cp.enabled;
-						await this.plugin.saveSettings();
-						this.plugin.dispatchSettingsToEditors();
-						this.refreshTab();
+					toggleBtn.addEventListener('click', () => {
+						void (async () => {
+							cp.enabled = !cp.enabled;
+							await this.plugin.saveSettings();
+							this.plugin.dispatchSettingsToEditors();
+							this.refreshTab();
+						})();
 					});
 
 					const delBtn = itemControls.createEl('button', {
 						cls: 'confitext-btn confitext-btn-ghost-danger',
 						text: 'Delete'
 					});
-					delBtn.addEventListener('click', async () => {
-						this.plugin.settings.customPatterns = this.plugin.settings.customPatterns.filter(
-							p => p.id !== cp.id
-						);
-						await this.plugin.saveSettings();
-						this.plugin.dispatchSettingsToEditors();
-						this.refreshTab();
+					delBtn.addEventListener('click', () => {
+						void (async () => {
+							this.plugin.settings.customPatterns = this.plugin.settings.customPatterns.filter(
+								p => p.id !== cp.id
+							);
+							await this.plugin.saveSettings();
+							this.plugin.dispatchSettingsToEditors();
+							this.refreshTab();
+						})();
 					});
 				}
 			}
@@ -766,9 +781,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 5. BEHAVIOR & GLANCE INTERACTIONS
 	// =========================================================================
 	private renderBehaviorCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'BEHAVIOR' });
-		groupHeader.createEl('h3', { text: 'Behavior & Glance Controls' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Behavior & Glance Controls')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'BEHAVIOR' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -849,12 +866,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				text: m.label
 			});
 			btn.title = m.desc;
-			btn.addEventListener('click', async () => {
+			btn.addEventListener('click', () => {
 				if (this.plugin.settings.maskTriggerMode === m.id) return;
 				this.plugin.settings.maskTriggerMode = m.id;
-				await this.plugin.saveSettings();
-				this.plugin.dispatchSettingsToEditors();
-				this.refreshTab();
+				void (async () => {
+					await this.plugin.saveSettings();
+					this.plugin.dispatchSettingsToEditors();
+					this.refreshTab();
+				})();
 			});
 		}
 
@@ -961,9 +980,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 6. VISUAL AESTHETICS & GLYPH PALETTES
 	// =========================================================================
 	private renderAppearanceCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'APPEARANCE' });
-		groupHeader.createEl('h3', { text: 'Aesthetics & Glyph Palettes' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Aesthetics & Glyph Palettes')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'APPEARANCE' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1121,9 +1142,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 7. ANIMATION & MOTION
 	// =========================================================================
 	private renderAnimationCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'MOTION' });
-		groupHeader.createEl('h3', { text: 'Animation & Scramble Effects' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Animation & Scramble Effects')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'MOTION' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1177,9 +1200,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 8. IDLE, BLUR & FOCUS AUTOMATIONS
 	// =========================================================================
 	private renderAutomationCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'AUTOMATION' });
-		groupHeader.createEl('h3', { text: 'Idle, Blur & Focus Automations' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Idle, Blur & Focus Automations')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'AUTOMATION' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1231,9 +1256,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 9. EXCLUSIONS & SYNTAX PRESERVATION
 	// =========================================================================
 	private renderRulesAndSyntaxCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge', text: 'RULES' });
-		groupHeader.createEl('h3', { text: 'Workspace Rules & Syntax Preservation' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Workspace Rules & Syntax Preservation')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'RULES' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1369,14 +1396,16 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 10. SECURITY & PRIVACY ARCHITECTURE CALLOUT
 	// =========================================================================
 	private renderSecurityCard(containerEl: HTMLElement): void {
-		const groupHeader = containerEl.createDiv({ cls: 'confitext-section-header' });
-		groupHeader.createSpan({ cls: 'section-badge badge-security', text: 'SECURITY' });
-		groupHeader.createEl('h3', { text: 'Privacy & Architecture Guarantees' });
+		const groupHeader = new Setting(containerEl)
+			.setName('Privacy & Architecture Guarantees')
+			.setHeading();
+		groupHeader.setClass('confitext-section-header');
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-security', text: 'SECURITY' }));
 
 		const noticeBox = containerEl.createDiv({ cls: 'confitext-card confitext-security-card' });
 		const headerRow = noticeBox.createDiv({ cls: 'security-header-row' });
 		headerRow.createSpan({ cls: 'security-icon', text: '🛡️' });
-		headerRow.createEl('h4', { text: '100% Local Execution • Zero Telemetry' });
+		headerRow.createDiv({ cls: 'security-title', text: '100% Local Execution • Zero Telemetry' });
 
 		noticeBox.createEl('p', {
 			cls: 'security-desc',

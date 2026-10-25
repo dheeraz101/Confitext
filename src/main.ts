@@ -156,10 +156,10 @@ export default class ConfitextPlugin extends Plugin {
 					const file = view.file;
 					if (file) {
 						const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
-						const rawWords = fm?.['confitext-masked-words'] ?? fm?.['confitext_masked_words'] ?? fm?.['masked-words'];
+						const rawWords: unknown = fm?.['confitext-masked-words'] ?? fm?.['confitext_masked_words'] ?? fm?.['masked-words'];
 						let noteWordsList: string[] = [];
 						if (Array.isArray(rawWords)) {
-							noteWordsList = rawWords.map(x => String(x).trim().toLowerCase());
+							noteWordsList = (rawWords as unknown[]).map(x => String(x).trim().toLowerCase());
 						} else if (typeof rawWords === 'string') {
 							noteWordsList = rawWords.split(',').map(s => s.trim().toLowerCase());
 						}
