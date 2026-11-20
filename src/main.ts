@@ -2,7 +2,7 @@
  * Confitext - Main Plugin Entrypoint
  */
 
-import { Plugin, WorkspaceLeaf, MarkdownView, TFile, TFolder, Notice, View } from 'obsidian';
+import { Plugin, WorkspaceLeaf, MarkdownView, TFile, TFolder, Notice, View, Platform } from 'obsidian';
 import { EditorView } from '@codemirror/view';
 import { ConfitextMode, ConfitextSettings, DEFAULT_SETTINGS } from './types';
 import { ConfitextSettingTab } from './settings';
@@ -323,6 +323,7 @@ export default class ConfitextPlugin extends Plugin {
 
 	onunload(): void {
 		setInitialStateProvider(null);
+		this.removeTabHeaderActions();
 
 		if (this.idleManager) {
 			this.idleManager.destroy();
@@ -493,11 +494,23 @@ export default class ConfitextPlugin extends Plugin {
 	 * Configures privacy action button on a MarkdownView tab header
 	 */
 	setupTabHeaderAction(view: MarkdownView): void {
-		if (!this.settings.showTabHeaderAction) return;
+		if (Platform.isPhone || !this.settings.showTabHeaderAction) {
+			// On phones (no tabs) or when disabled, ensure no stray action buttons exist
+			view.containerEl?.querySelectorAll('.confitext-tab-action, .view-action[aria-label*="Confitext"]').forEach(btn => btn.remove());
+			return;
+		}
+
+		// Prevent duplicate action buttons in DOM
+		const existingAction = view.containerEl?.querySelector('.confitext-tab-action, .view-action[aria-label*="Confitext"]');
+		if (existingAction) {
+			this.viewsWithAction.add(view);
+			return;
+		}
+
 		if (this.viewsWithAction.has(view)) return;
 		this.viewsWithAction.add(view);
 
-		view.addAction('shield', 'Confitext: Toggle masking', () => {
+		const actionBtn = view.addAction('shield', 'Confitext: Toggle masking', () => {
 			if (this.currentMode === 'masking') {
 				this.setMode('revealed');
 				new Notice('Confitext: All text revealed');
@@ -506,18 +519,33 @@ export default class ConfitextPlugin extends Plugin {
 				new Notice('Confitext: Masking enabled');
 			}
 		});
+		actionBtn.addClass('confitext-tab-action');
 	}
 
 	/**
 	 * Sets up tab header actions across all currently open leaves
 	 */
-	private setupAllTabHeaderActions(): void {
-		if (!this.settings.showTabHeaderAction) return;
+	setupAllTabHeaderActions(): void {
+		if (Platform.isPhone || !this.settings.showTabHeaderAction) {
+			this.removeTabHeaderActions();
+			return;
+		}
 		this.app.workspace.iterateAllLeaves(leaf => {
 			if (leaf.view instanceof MarkdownView) {
 				this.setupTabHeaderAction(leaf.view);
 			}
 		});
+	}
+
+	/**
+	 * Removes all active tab header action buttons from open views
+	 */
+	removeTabHeaderActions(): void {
+		this.viewsWithAction = new WeakSet<View>();
+		if (typeof document !== 'undefined') {
+			const btns = document.querySelectorAll('.confitext-tab-action, .view-action[aria-label*="Confitext"]');
+			btns.forEach(btn => btn.remove());
+		}
 	}
 
 	/**
@@ -634,6 +662,9 @@ export default class ConfitextPlugin extends Plugin {
 				this.ribbonIconEl.remove();
 				this.ribbonIconEl = null;
 			}
+			if (typeof document !== 'undefined') {
+				document.querySelectorAll('.confitext-ribbon-icon, .side-dock-ribbon-action[aria-label*="Confitext"]').forEach(el => el.remove());
+			}
 			return;
 		}
 
@@ -645,6 +676,19 @@ export default class ConfitextPlugin extends Plugin {
 					this.setMode('masking');
 				}
 			});
+			this.ribbonIconEl.addClass('confitext-ribbon-icon');
+		}
+
+		// Ensure no stray duplicate ribbon icons exist in the DOM
+		if (typeof document !== 'undefined') {
+			const ribbons = document.querySelectorAll('.confitext-ribbon-icon, .side-dock-ribbon-action[aria-label*="Confitext"]');
+			if (ribbons.length > 1) {
+				ribbons.forEach((r, idx) => {
+					if (r !== this.ribbonIconEl || idx > 0) {
+						r.remove();
+					}
+				});
+			}
 		}
 
 		const scopeLabel = this.settings.maskingScope === 'targeted-only' ? ' (Targeted)' : '';

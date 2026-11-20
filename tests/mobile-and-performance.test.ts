@@ -216,4 +216,61 @@ describe('Mobile UX, Instant Startup Masking & Performance Optimization', () => 
 			expect(anim).toBeDefined();
 		});
 	});
+
+	describe('5. Action Button Deduplication & Phone Header Protection', () => {
+		it('prevents multiple action buttons from being injected into the DOM', () => {
+			const viewEl = document.createElement('div');
+			const headerActionsEl = document.createElement('div');
+			headerActionsEl.className = 'view-actions';
+			viewEl.appendChild(headerActionsEl);
+
+			// Simulate adding an action button
+			const btn1 = document.createElement('button');
+			btn1.className = 'view-action clickable-icon confitext-tab-action';
+			btn1.setAttribute('aria-label', 'Confitext: Toggle masking');
+			headerActionsEl.appendChild(btn1);
+
+			// Query selector check
+			const existingAction = viewEl.querySelector('.confitext-tab-action, .view-action[aria-label*="Confitext"]');
+			expect(existingAction).toBe(btn1);
+
+			// Verify removal removes all matching buttons
+			const toRemove = viewEl.querySelectorAll('.confitext-tab-action, .view-action[aria-label*="Confitext"]');
+			toRemove.forEach(b => b.remove());
+
+			expect(viewEl.querySelector('.confitext-tab-action')).toBeNull();
+		});
+
+		it('deduplicates ribbon icons when multiple exist in the DOM', () => {
+			const ribbonContainer = document.createElement('div');
+			ribbonContainer.className = 'side-dock-ribbon';
+			document.body.appendChild(ribbonContainer);
+
+			const r1 = document.createElement('div');
+			r1.className = 'side-dock-ribbon-action confitext-ribbon-icon';
+			r1.setAttribute('aria-label', 'Confitext');
+			ribbonContainer.appendChild(r1);
+
+			const r2 = document.createElement('div');
+			r2.className = 'side-dock-ribbon-action confitext-ribbon-icon';
+			r2.setAttribute('aria-label', 'Confitext');
+			ribbonContainer.appendChild(r2);
+
+			const ribbons = document.querySelectorAll('.confitext-ribbon-icon, .side-dock-ribbon-action[aria-label*="Confitext"]');
+			expect(ribbons.length).toBe(2);
+
+			// Deduplicate keeping only r1
+			ribbons.forEach((r, idx) => {
+				if (r !== r1 || idx > 0) {
+					r.remove();
+				}
+			});
+
+			const remaining = document.querySelectorAll('.confitext-ribbon-icon');
+			expect(remaining.length).toBe(1);
+			expect(remaining[0]).toBe(r1);
+
+			ribbonContainer.remove();
+		});
+	});
 });

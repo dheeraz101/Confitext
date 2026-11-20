@@ -1045,57 +1045,205 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 }
 
 /* =========================================================================
-   Mobile UI/UX, Alignment & iOS HIG Guidelines
+   Apple HIG & iOS Mobile UI/UX Engine (iOS 18 Inset Grouped Architecture)
    ========================================================================= */
 
+/* Mobile & Touch Viewport Rules */
 @media (max-width: 768px), (pointer: coarse) {
-	/* 1. Touch Target Standardization (44px Minimum Touch Target) */
-	.confitext-btn,
-	.confitext-segment-btn,
-	.confitext-quick-add-btn {
-		min-height: 42px;
-		padding: 8px 14px;
-		font-size: 0.88rem;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+	/* Universal Box Sizing & Anti-Overflow Protection */
+	.confitext-settings-pane,
+	.confitext-settings-pane * {
+		box-sizing: border-box;
+		max-width: 100%;
 	}
 
-	.confitext-chip {
-		min-height: 38px;
-		padding: 6px 12px;
-	}
-
-	.confitext-chip-delete {
-		min-width: 28px;
-		min-height: 28px;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	/* Text inputs: 16px to prevent iOS Safari auto-zoom */
-	.confitext-input,
-	.confitext-quick-add-input {
-		min-height: 42px;
-		font-size: 16px;
-		padding: 8px 12px;
-	}
-
-	/* 2. Responsive Settings Layout */
 	.confitext-settings-pane {
-		padding: 0.5rem 0.25rem 3rem 0.25rem;
+		width: 100%;
+		padding: 0.5rem 0.25rem 4rem 0.25rem;
+		overflow-x: hidden;
 	}
 
+	/* Inset Grouped Section Headers (iOS Style) */
+	.confitext-section-header {
+		margin: 1.75rem 0 0.5rem 0.25rem;
+		padding: 0 4px;
+	}
+
+	.confitext-section-header h3,
+	.confitext-section-header .setting-item-name {
+		font-size: 0.85rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--text-muted);
+	}
+
+	/* Inset Grouped Cards */
+	.confitext-card {
+		background-color: var(--background-secondary);
+		border-radius: 14px;
+		border: 0.5px solid var(--background-modifier-border);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+		padding: 4px 14px;
+		margin-bottom: 1rem;
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.confitext-card-desc {
+		font-size: 0.82rem;
+		line-height: 1.4;
+		margin: 8px 0 12px 0;
+		color: var(--text-muted);
+	}
+
+	/* Setting Items: Stacked Layout For Full Width Readability */
+	.confitext-settings-pane .setting-item {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: flex-start;
+		gap: 8px;
+		padding: 12px 0;
+		border-bottom: 0.5px solid var(--background-modifier-border);
+		width: 100%;
+	}
+
+	.confitext-settings-pane .setting-item:last-child {
+		border-bottom: none;
+	}
+
+	.confitext-settings-pane .setting-item-info {
+		width: 100%;
+		flex: 1 1 100%;
+		padding-right: 0;
+		margin-right: 0;
+	}
+
+	.confitext-settings-pane .setting-item-name {
+		font-size: 0.95rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--text-normal);
+		margin-bottom: 2px;
+	}
+
+	.confitext-settings-pane .setting-item-description {
+		font-size: 0.82rem;
+		line-height: 1.4;
+		color: var(--text-muted);
+	}
+
+	.confitext-settings-pane .setting-item-control {
+		width: 100%;
+		margin-left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: stretch;
+		gap: 8px;
+	}
+
+	/* Full-width Form Controls (44px Minimum Touch Targets) */
+	.confitext-settings-pane .setting-item-control select,
+	.confitext-settings-pane .setting-item-control .dropdown {
+		width: 100%;
+		min-height: 44px;
+		font-size: 15px;
+		padding: 10px 14px;
+		border-radius: 10px;
+		background-color: var(--background-modifier-form-field);
+		border: 1px solid var(--background-modifier-border);
+	}
+
+	.confitext-settings-pane .setting-item-control input[type="range"] {
+		width: 100%;
+		height: 28px;
+	}
+
+	.confitext-settings-pane .setting-item-control textarea {
+		width: 100%;
+		min-height: 70px;
+		font-size: 15px;
+		border-radius: 10px;
+		padding: 10px 12px;
+	}
+
+	/* Toggle Switch Rows Stay Horizontal (True iOS Settings Look) */
+	.confitext-settings-pane .confitext-setting-toggle,
+	.confitext-settings-pane .setting-item:has(.checkbox-container),
+	body.is-mobile .confitext-settings-pane .setting-item:has(.checkbox-container),
+	body.is-phone .confitext-settings-pane .setting-item:has(.checkbox-container) {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 12px 0;
+	}
+
+	.confitext-settings-pane .confitext-setting-toggle .setting-item-info,
+	.confitext-settings-pane .setting-item:has(.checkbox-container) .setting-item-info {
+		flex: 1 1 auto;
+		min-width: 0;
+		padding-right: 10px;
+	}
+
+	.confitext-settings-pane .confitext-setting-toggle .setting-item-control,
+	.confitext-settings-pane .setting-item:has(.checkbox-container) .setting-item-control {
+		flex: 0 0 auto;
+		width: auto;
+	}
+
+	/* Apple HIG Segmented Controls (Full Width) */
+	.confitext-segmented-control {
+		width: 100%;
+		display: flex;
+		margin: 6px 0 0 0;
+		background: var(--background-modifier-form-field);
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 10px;
+		padding: 3px;
+		gap: 3px;
+		box-sizing: border-box;
+	}
+
+	.confitext-segment-btn {
+		flex: 1;
+		min-height: 40px;
+		padding: 6px 10px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		border-radius: 8px;
+		text-align: center;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.confitext-segment-btn.active {
+		background: var(--interactive-accent);
+		color: var(--text-on-accent, #ffffff);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	/* Dynamic Island & Hero Banner Mobile Refinements */
 	.confitext-hero-card {
 		padding: 1.25rem 1rem;
 		border-radius: 14px;
+		margin-bottom: 1rem;
 	}
 
-	.confitext-hero-top {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 12px;
+	.confitext-hero-title-row {
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.confitext-hero-title {
+		font-size: 1.5rem;
+	}
+
+	.confitext-hero-subtitle {
+		font-size: 0.85rem;
+		line-height: 1.4;
 	}
 
 	.confitext-island-card {
@@ -1103,72 +1251,244 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		align-items: stretch;
 		padding: 1rem;
 		gap: 12px;
+		border-radius: 12px;
+	}
+
+	.confitext-island-left {
+		width: 100%;
+		gap: 10px;
+	}
+
+	.confitext-island-label {
+		font-size: 0.75rem;
+	}
+
+	.confitext-island-desc {
+		font-size: 0.82rem;
+		line-height: 1.35;
 	}
 
 	.confitext-island-actions {
 		width: 100%;
-		display: flex;
-		justify-content: stretch;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
 		gap: 8px;
 	}
 
 	.confitext-island-actions .confitext-btn {
-		flex: 1;
+		width: 100%;
+		min-height: 42px;
+		justify-content: center;
+		font-size: 0.82rem;
+		padding: 8px 6px;
 	}
 
-	/* 3. Sandbox Responsive Adapters */
-	.confitext-sandbox-controls {
+	/* Interactive Sandbox & Terminal Mobile Adapters */
+	.confitext-sandbox-window {
+		padding: 1rem 0.85rem;
+		border-radius: 12px;
+	}
+
+	.confitext-window-header {
 		flex-direction: column;
-		align-items: stretch;
-		width: 100%;
+		align-items: flex-start;
 		gap: 8px;
+		padding-bottom: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.confitext-window-header-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.confitext-window-title {
+		font-size: 0.75rem;
+	}
+
+	/* Horizontal Scrollable Pills */
+	.confitext-window-pills {
+		display: flex;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		gap: 6px;
+		padding: 4px 0 8px 0;
+		width: 100%;
+		white-space: nowrap;
+	}
+
+	.confitext-window-pills::-webkit-scrollbar {
+		display: none;
+	}
+
+	.confitext-tag-pill {
+		flex-shrink: 0;
+		font-size: 0.72rem;
+		padding: 3px 8px;
+	}
+
+	.confitext-sandbox-screen {
+		font-size: 0.95rem;
+		padding: 0.85rem 1rem;
+		min-height: 56px;
+		line-height: 1.5;
+	}
+
+	.confitext-sandbox-controls {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+		width: 100%;
 	}
 
 	.confitext-sandbox-controls .confitext-btn {
 		width: 100%;
+		min-height: 44px;
+		justify-content: center;
 	}
 
 	.confitext-sandbox-input-row {
 		flex-direction: column;
 		align-items: stretch;
-		gap: 8px;
-	}
-
-	.confitext-sandbox-input-row .confitext-input {
+		gap: 6px;
 		width: 100%;
 	}
 
-	/* 4. Quick Add & Tag Clouds on Mobile */
-	.confitext-quick-add-row {
+	.confitext-sandbox-input-row .confitext-input-field {
+		width: 100%;
+		min-height: 44px;
+		font-size: 16px;
+		padding: 8px 12px;
+		border-radius: 10px;
+	}
+
+	/* Quick Add Rows (Targeted Words & Patterns) */
+	.confitext-add-row {
 		flex-direction: column;
 		align-items: stretch;
 		gap: 8px;
-	}
-
-	.confitext-quick-add-row .confitext-quick-add-input,
-	.confitext-quick-add-row .confitext-quick-add-btn {
 		width: 100%;
 	}
 
-	/* 5. Apple HIG Segmented Controls on Mobile */
-	.confitext-segmented-control {
+	.confitext-add-row input,
+	.confitext-add-row button {
 		width: 100%;
+		min-height: 44px;
+		font-size: 15px;
+		border-radius: 10px;
+	}
+
+	.confitext-chips-grid {
 		display: flex;
-		margin-left: 0;
-		margin-top: 8px;
-		box-sizing: border-box;
+		flex-wrap: wrap;
+		gap: 6px;
+		width: 100%;
 	}
 
-	.confitext-segment-btn {
-		flex: 1;
-		min-height: 40px;
-		text-align: center;
+	.confitext-word-chip {
+		min-height: 36px;
+		padding: 6px 12px;
+		font-size: 0.85rem;
+		border-radius: 18px;
+		max-width: 100%;
+	}
+
+	.chip-text {
+		max-width: 220px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.chip-remove {
+		min-width: 26px;
+		min-height: 26px;
+		font-size: 16px;
+		display: inline-flex;
+		align-items: center;
 		justify-content: center;
 	}
 
-	/* 6. What's New Responsive Layout */
+	/* Custom Regex Pattern Manager on Mobile */
+	.confitext-regex-add-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 8px;
+		width: 100%;
+	}
+
+	.confitext-regex-add-row input,
+	.confitext-regex-add-row button {
+		width: 100%;
+		min-height: 44px;
+		font-size: 15px;
+		border-radius: 10px;
+	}
+
+	.confitext-regex-item {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+		padding: 10px 12px;
+		border-radius: 10px;
+		width: 100%;
+	}
+
+	.regex-info {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.regex-pattern {
+		word-break: break-all;
+	}
+
+	.regex-controls {
+		width: 100%;
+		display: flex;
+		gap: 8px;
+	}
+
+	.regex-controls button {
+		flex: 1;
+		min-height: 40px;
+		justify-content: center;
+	}
+
+	/* Preset Buttons Responsive Wrapping */
+	.confitext-preset-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		width: 100%;
+	}
+
+	.confitext-preset-buttons button {
+		min-height: 38px;
+		padding: 6px 12px;
+		border-radius: 16px;
+		font-size: 0.82rem;
+	}
+
+	/* Trigger Desc Box */
+	.confitext-trigger-desc-box {
+		padding: 10px 12px;
+		border-radius: 10px;
+	}
+
+	.confitext-trigger-desc-item {
+		font-size: 0.8rem;
+		line-height: 1.35;
+	}
+
+	/* What's New Responsive Layout */
 	.confitext-whats-new-container {
-		padding: 1.25rem 1rem;
+		padding: 1rem 0.75rem 3rem 0.75rem;
 	}
 
 	.confitext-wn-hero {
@@ -1177,12 +1497,21 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	}
 
 	.confitext-wn-title {
-		font-size: 1.5rem;
+		font-size: 1.4rem;
+	}
+
+	.confitext-wn-subtitle {
+		font-size: 0.85rem;
 	}
 
 	.confitext-wn-grid {
 		grid-template-columns: 1fr;
-		gap: 1rem;
+		gap: 0.85rem;
+	}
+
+	.confitext-wn-card {
+		padding: 1rem 1.1rem;
+		border-radius: 10px;
 	}
 }
 
@@ -1194,16 +1523,12 @@ body.is-phone .confitext-settings-pane {
 
 body.is-phone .confitext-card {
 	border-radius: 12px;
-	padding: 12px;
+	padding: 2px 12px;
 	margin-left: 0;
 	margin-right: 0;
 }
 
 body.is-phone .confitext-btn {
 	min-height: 44px;
-}
-
-body.is-phone .setting-item {
-	padding: 12px 0;
 }
 

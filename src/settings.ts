@@ -210,14 +210,15 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		// macOS Window Header
 		const winHeader = card.createDiv({ cls: 'confitext-window-header' });
-		const lights = winHeader.createDiv({ cls: 'confitext-window-lights' });
+		const winHeaderLeft = winHeader.createDiv({ cls: 'confitext-window-header-left' });
+		const lights = winHeaderLeft.createDiv({ cls: 'confitext-window-lights' });
 		lights.createSpan({ cls: 'window-dot dot-close' });
 		lights.createSpan({ cls: 'window-dot dot-min' });
 		lights.createSpan({ cls: 'window-dot dot-max' });
 
-		winHeader.createSpan({ cls: 'confitext-window-title', text: 'PRIVACY TERMINAL & LIVE PREVIEW' });
+		winHeaderLeft.createSpan({ cls: 'confitext-window-title', text: 'PRIVACY PREVIEW & SANDBOX' });
 
-		this.sandboxPillEl = winHeader.createDiv({ cls: 'confitext-window-pills' });
+		this.sandboxPillEl = card.createDiv({ cls: 'confitext-window-pills' });
 		this.updateSandboxPills();
 
 		// Interactive Display Screen
@@ -409,6 +410,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					})
 			);
 		scopeSetting.setClass('confitext-setting-item');
+		scopeSetting.setClass('confitext-setting-stacked');
 
 		new Setting(card)
 			.setName('Match case sensitive')
@@ -422,7 +424,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		// ----------------------------------------------------
 		// Global Remembered Masked Words Manager
@@ -620,7 +623,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.refreshTab();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		if (this.plugin.settings.enablePatternMasking) {
 			const grid = card.createDiv({ cls: 'confitext-switch-grid' });
@@ -635,7 +639,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
 
 			new Setting(grid)
 				.setName('🔑 API keys & developer secrets')
@@ -647,7 +652,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
 
 			new Setting(grid)
 				.setName('💳 Payment card numbers')
@@ -659,7 +665,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
 
 			new Setting(grid)
 				.setName('📞 Phone numbers')
@@ -671,7 +678,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
 
 			new Setting(grid)
 				.setName('🌐 IPv4 network addresses')
@@ -683,7 +691,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
 
 			// Custom Regex Patterns section
 			const customRegexSection = card.createDiv({ cls: 'confitext-custom-regex-section' });
@@ -802,7 +811,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					this.refreshTab();
 				})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Default mode')
@@ -818,46 +828,35 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 
-		// Apple HIG Segmented Control & Dropdown for Mask Trigger Mode
+		// Apple HIG Segmented Control for Mask Trigger Mode
 		const currentTriggerMode = this.plugin.settings.maskTriggerMode || 'word';
 
 		const triggerSetting = new Setting(card)
-			.setName('Mask trigger mode')
-			.setDesc('Choose when visual masking triggers: immediately per word, after moving off a line, or after creating a full blank line gap.')
-			.addDropdown(drop =>
-				drop
-					.addOption('word', 'Word (space / punctuation)')
-					.addOption('line', 'Line (move to next line)')
-					.addOption('paragraph', 'Paragraph (full line gap)')
-					.setValue(currentTriggerMode)
-					.onChange(async (val: string) => {
-						this.plugin.settings.maskTriggerMode = val as MaskTriggerMode;
-						await this.plugin.saveSettings();
-						this.plugin.dispatchSettingsToEditors();
-						this.refreshTab();
-					})
-			);
+			.setName('Mask trigger rhythm')
+			.setDesc('Select when visual masking triggers: as you type words, when moving to a new line, or after completing a paragraph block.');
 		triggerSetting.setClass('confitext-setting-item');
+		triggerSetting.setClass('confitext-setting-stacked');
 
 		// Apple HIG Segmented Control
 		const segControl = triggerSetting.controlEl.createDiv({ cls: 'confitext-segmented-control' });
 		const triggerModes: { id: MaskTriggerMode; label: string; desc: string }[] = [
 			{
 				id: 'word',
-				label: 'Word',
-				desc: 'Hides immediately as you finish typing a word (upon space, comma, or punctuation).'
+				label: 'Per Word',
+				desc: 'Masks immediately as you complete each word with Space or punctuation.'
 			},
 			{
 				id: 'line',
-				label: 'Line',
-				desc: 'Hides the current line once the cursor moves to another line (e.g., on Enter or navigation).'
+				label: 'Per Line',
+				desc: 'Keeps the active line readable while typing; masks when moving cursor to another line.'
 			},
 			{
 				id: 'paragraph',
-				label: 'Paragraph',
-				desc: 'Hides the block once a blank line gap is created or cursor leaves the paragraph.'
+				label: 'Per Paragraph',
+				desc: 'Keeps the block readable; masks once you press Enter twice for a blank line gap.'
 			}
 		];
 
@@ -900,7 +899,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Reveal selected text')
@@ -914,7 +914,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Reveal entire word on selection')
@@ -928,7 +929,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Reveal on cursor inside word')
@@ -942,7 +944,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Quick peek on hover')
@@ -957,7 +960,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.refreshTab();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		if (this.plugin.settings.enableHoverReveal) {
 			new Setting(card)
@@ -973,7 +977,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 							this.plugin.dispatchSettingsToEditors();
 						})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-stacked');
 		}
 	}
 
@@ -1011,7 +1016,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.refreshTab();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 
 		if (this.plugin.settings.glyphStyle === 'custom') {
 			const customSection = card.createDiv({ cls: 'confitext-custom-importer' });
@@ -1019,7 +1025,9 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 			const customSetting = new Setting(customSection)
 				.setName('Custom Unicode glyphs')
-				.setDesc('Supply arbitrary Unicode symbols for thematic masking (requires at least 2 unique characters).');
+				.setDesc('Supply arbitrary Unicode symbols for thematic masking (requires at least 2 unique characters).')
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-stacked');
 
 			let validationMsgEl: HTMLElement;
 
@@ -1095,7 +1103,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.refreshTab();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 
 		if (this.plugin.settings.maskColorTheme === 'custom') {
 			new Setting(card)
@@ -1108,7 +1117,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.applyCssVariables();
 					})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-stacked');
 		}
 
 		new Setting(card)
@@ -1121,7 +1131,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					this.plugin.applyCssVariables();
 				})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Mask opacity')
@@ -1136,7 +1147,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.applyCssVariables();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 	}
 
 	// =========================================================================
@@ -1163,7 +1175,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Animation speed')
@@ -1180,7 +1193,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 
 		new Setting(card)
 			.setName('Respect reduced motion')
@@ -1194,7 +1208,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Device performance & battery mode')
@@ -1214,7 +1229,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						})();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 	}
 
 	// =========================================================================
@@ -1241,7 +1257,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.refreshTab();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		if (this.plugin.settings.idleAutoMask) {
 			new Setting(card)
@@ -1256,7 +1273,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-stacked');
 
 			new Setting(card)
 				.setName('Auto-mask on window blur')
@@ -1269,7 +1287,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						})
 				)
-				.setClass('confitext-setting-item');
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
 		}
 	}
 
@@ -1297,7 +1316,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Excluded folder paths')
@@ -1317,7 +1337,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				text.inputEl.rows = 4;
 				text.inputEl.addClass('confitext-folders-textarea');
 			})
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-stacked');
 
 		new Setting(card)
 			.setName('Show ribbon icon')
@@ -1329,7 +1350,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					this.plugin.updateRibbonIcon();
 				})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Show status bar indicator')
@@ -1343,20 +1365,27 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.updateStatusBar();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Show tab header shield button')
-			.setDesc('Add a quick-toggle shield button to the title bar of note tabs.')
+			.setDesc('Add a quick-toggle shield button to the title bar of note tabs (desktop only).')
 			.addToggle(toggle =>
 				toggle
 					.setValue(this.plugin.settings.showTabHeaderAction)
 					.onChange(async value => {
 						this.plugin.settings.showTabHeaderAction = value;
 						await this.plugin.saveSettings();
+						if (value) {
+							this.plugin.setupAllTabHeaderActions();
+						} else {
+							this.plugin.removeTabHeaderActions();
+						}
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Mask in Reading View')
@@ -1370,7 +1399,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.rerenderPreviewViews();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Preserve Markdown syntax')
@@ -1384,7 +1414,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Preserve code blocks')
@@ -1398,7 +1429,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.dispatchSettingsToEditors();
 					})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 
 		new Setting(card)
 			.setName('Preserve URLs & links')
@@ -1410,7 +1442,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					this.plugin.dispatchSettingsToEditors();
 				})
 			)
-			.setClass('confitext-setting-item');
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
 	}
 
 	// =========================================================================
