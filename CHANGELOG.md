@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.0.0] - 2026-11-20
+
+### Added
+- **Apple HIG / iOS Inset Grouped Settings Architecture**:
+  - Redesigned settings UI with iOS Inset Grouped cards featuring 14px rounded corners and subtle border dividers.
+  - Implemented `.confitext-setting-stacked` layout for dropdowns, sliders, segmented controls, and textareas, eliminating squished vertical text wrapping on mobile phone screens.
+  - Full-width controls with 44px minimum touch targets compliant with Apple Human Interface Guidelines.
+  - Native iOS horizontal toggle switch rows (`.confitext-setting-toggle`) with clear visual hierarchy.
+  - Added smooth horizontal momentum touch scrolling (`-webkit-overflow-scrolling: touch`) for badge pills, tag clouds, and thematic presets.
+
+### Fixed
+- **Mobile Phone Action Button Deduplication**:
+  - Suppressed tab header action button on mobile phones via Obsidian `Platform.isPhone`, preventing duplicate and competing buttons on phone screens where note tabs do not exist.
+  - Implemented DOM deduplication and cleanup routines for tab header actions and mobile ribbon icons.
+  - Toggling "Show tab header shield button" off in settings now immediately removes all tab header buttons across all leaves without requiring a vault reload.
+
+---
+
 ## [1.7.0] - 2026-10-25
 
 ### Fixed

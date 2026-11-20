@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v1.7.0";
+		return "What's New in Confitext v2.0.0";
 	}
 
 	getIcon(): string {
@@ -36,13 +36,13 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.7.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.0.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v1.7.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.0.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 1.7.0 brings comprehensive mobile UI/UX and iOS HIG alignment, instant zero-delay startup masking, selection-based restore scramble animations, powerful virtual keyboard texting, and battery-saver optimization for low-end hardware.'
+			text: 'Your thoughts. Your screen. Your code. Version 2.0.0 brings a complete mobile UI/UX overhaul with Apple HIG Inset Grouped cards, button deduplication on phone screens, instant startup privacy masking, and battery-saver performance mode.'
 		});
 
 		// Feature Grid
