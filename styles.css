@@ -26,6 +26,7 @@
 	user-select: none;
 	text-shadow: var(--confitext-glow);
 	transition: color 0.15s ease, opacity 0.15s ease;
+	transform: translateZ(0);
 }
 
 /* Scramble Phase */
@@ -48,7 +49,30 @@
 		transition: none;
 		animation: none;
 		text-shadow: none;
+		filter: none;
 	}
+}
+
+/* Battery Saver & Low-End Performance Override */
+body.confitext-battery-saver .confitext-glyph,
+.confitext-battery-saver .confitext-glyph {
+	transition: none;
+	animation: none;
+	text-shadow: none;
+	filter: none;
+	transform: translateZ(0);
+}
+
+body.confitext-battery-saver .confitext-glyph.confitext-scramble,
+.confitext-battery-saver .confitext-glyph.confitext-scramble {
+	text-shadow: none;
+	filter: none;
+}
+
+body.confitext-battery-saver .confitext-glyph.confitext-settling,
+.confitext-battery-saver .confitext-glyph.confitext-settling {
+	text-shadow: none;
+	filter: none;
 }
 
 /* Status Bar Badge */
@@ -1018,5 +1042,168 @@
 	background: rgba(101, 245, 154, 0.15);
 	border-color: rgba(101, 245, 154, 0.4);
 	color: var(--confitext-color);
+}
+
+/* =========================================================================
+   Mobile UI/UX, Alignment & iOS HIG Guidelines
+   ========================================================================= */
+
+@media (max-width: 768px), (pointer: coarse) {
+	/* 1. Touch Target Standardization (44px Minimum Touch Target) */
+	.confitext-btn,
+	.confitext-segment-btn,
+	.confitext-quick-add-btn {
+		min-height: 42px;
+		padding: 8px 14px;
+		font-size: 0.88rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.confitext-chip {
+		min-height: 38px;
+		padding: 6px 12px;
+	}
+
+	.confitext-chip-delete {
+		min-width: 28px;
+		min-height: 28px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Text inputs: 16px to prevent iOS Safari auto-zoom */
+	.confitext-input,
+	.confitext-quick-add-input {
+		min-height: 42px;
+		font-size: 16px;
+		padding: 8px 12px;
+	}
+
+	/* 2. Responsive Settings Layout */
+	.confitext-settings-pane {
+		padding: 0.5rem 0.25rem 3rem 0.25rem;
+	}
+
+	.confitext-hero-card {
+		padding: 1.25rem 1rem;
+		border-radius: 14px;
+	}
+
+	.confitext-hero-top {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
+	.confitext-island-card {
+		flex-direction: column;
+		align-items: stretch;
+		padding: 1rem;
+		gap: 12px;
+	}
+
+	.confitext-island-actions {
+		width: 100%;
+		display: flex;
+		justify-content: stretch;
+		gap: 8px;
+	}
+
+	.confitext-island-actions .confitext-btn {
+		flex: 1;
+	}
+
+	/* 3. Sandbox Responsive Adapters */
+	.confitext-sandbox-controls {
+		flex-direction: column;
+		align-items: stretch;
+		width: 100%;
+		gap: 8px;
+	}
+
+	.confitext-sandbox-controls .confitext-btn {
+		width: 100%;
+	}
+
+	.confitext-sandbox-input-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 8px;
+	}
+
+	.confitext-sandbox-input-row .confitext-input {
+		width: 100%;
+	}
+
+	/* 4. Quick Add & Tag Clouds on Mobile */
+	.confitext-quick-add-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 8px;
+	}
+
+	.confitext-quick-add-row .confitext-quick-add-input,
+	.confitext-quick-add-row .confitext-quick-add-btn {
+		width: 100%;
+	}
+
+	/* 5. Apple HIG Segmented Controls on Mobile */
+	.confitext-segmented-control {
+		width: 100%;
+		display: flex;
+		margin-left: 0;
+		margin-top: 8px;
+		box-sizing: border-box;
+	}
+
+	.confitext-segment-btn {
+		flex: 1;
+		min-height: 40px;
+		text-align: center;
+		justify-content: center;
+	}
+
+	/* 6. What's New Responsive Layout */
+	.confitext-whats-new-container {
+		padding: 1.25rem 1rem;
+	}
+
+	.confitext-wn-hero {
+		padding: 1.25rem 1rem;
+		border-radius: 12px;
+	}
+
+	.confitext-wn-title {
+		font-size: 1.5rem;
+	}
+
+	.confitext-wn-grid {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+}
+
+/* Dedicated Phone Refinements (.is-phone Obsidian body class) */
+body.is-phone .confitext-settings-pane {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+body.is-phone .confitext-card {
+	border-radius: 12px;
+	padding: 12px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+body.is-phone .confitext-btn {
+	min-height: 44px;
+}
+
+body.is-phone .setting-item {
+	padding: 12px 0;
 }
 

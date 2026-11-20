@@ -19,6 +19,8 @@ export type AnimationSpeed = 'fast' | 'normal' | 'slow';
 
 export type AnimationIntensity = 'subtle' | 'standard' | 'intense';
 
+export type PerformanceMode = 'auto' | 'high' | 'battery-saver';
+
 export type MaskingScope = 'all-words' | 'targeted-only';
 
 export type MaskTriggerMode = 'word' | 'line' | 'paragraph';
@@ -68,11 +70,12 @@ export interface ConfitextSettings {
 	subtleGlow: boolean;
 	maskOpacity: number;
 
-	// Group C - Animation
+	// Group C - Animation & Performance
 	enableAnimation: boolean;
 	animationSpeed: AnimationSpeed;
 	animationIntensity: AnimationIntensity;
 	respectReducedMotion: boolean;
+	performanceMode: PerformanceMode;
 
 	// Group D - Idle & Auto-Masking
 	idleAutoMask: boolean;
@@ -131,6 +134,7 @@ export const DEFAULT_SETTINGS: ConfitextSettings = {
 	animationSpeed: 'normal',
 	animationIntensity: 'standard',
 	respectReducedMotion: true,
+	performanceMode: 'auto',
 
 	idleAutoMask: false,
 	idleTimeoutMinutes: 5,

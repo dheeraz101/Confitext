@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [1.7.0] - 2026-10-25
+
+### Fixed
+- **Instant Mobile & Desktop Startup Masking (Zero Plaintext Exposure)**:
+  - Fixed a critical issue on mobile app launch where notes displayed in plain cleartext for ~1 second before abruptly snapping into masked glyphs.
+  - Implemented safe early viewport fallback in `buildMaskDecorations`: when CodeMirror has not yet completed DOM layout measurement (`visibleRanges` is empty `[]` or `0..0`), the document is immediately masked on frame 0.
+  - Connected `setInitialStateProvider` to `confitextStateField` so newly instantiated editors immediately receive user saved settings, mode, and active file path without waiting for `onLayoutReady`.
+  - Added immediate state dispatch in `onload()` to existing editor leaves.
+
+### Added
+- **Selection-Based Restore Scramble Animation**:
+  - When tapping or clicking away from a selection to read text, previously revealed words now smoothly scramble and cascade back into matrix glyphs instead of snapping instantly.
+  - Fully compatible with `settings.restoreMaskingAfterSelection` on mobile and desktop.
+- **iOS Human Interface Guidelines (HIG) & Mobile UI/UX Overhaul**:
+  - Enforced Apple HIG 44px minimum touch targets across all buttons, segmented controls, chips, and quick-add inputs on mobile touch screens (`@media (max-width: 768px)`, `.is-mobile`, `.is-phone`).
+  - Added 16px font-size guarantee on mobile text inputs to eliminate annoying iOS Safari automatic viewport zoom on focus.
+  - Designed responsive single-column adaptors for Hero Island, Live Matrix Sandbox, Tag Cloud, and What's New view with zero horizontal overflow or clipping on phones (320px–390px screens).
+  - Cleaned up inset grouped card styles with iOS-native 12px radii.
+- **Powerful Mobile & Virtual Keyboard Texting**:
+  - Expanded word delimiters to support Unicode non-breaking spaces (`\u00A0`, `\u202F`), thin spaces (`\u2009`), zero-width spaces (`\u200B`), smart quotes (`“`, `”`, `„`), ellipses (`…`), em-dashes (`—`), and CJK punctuation.
+  - Added support for contractions with smart apostrophes (`don’t`, `it’s`, `we’re`) as cohesive single tokens in `tokenizer.ts` and `editor-extension.ts`.
+  - Enhanced IME composition tracking to ensure seamless typing without dropped frames or cursor jumps.
+- **Low-End Hardware & Mobile Battery Saver Mode**:
+  - Added new `performanceMode` setting: `'auto'` (default), `'high'`, and `'battery-saver'`.
+  - Dynamic frame throttling to 30 FPS (~33ms intervals) on mobile or low-end hardware (detected via `hardwareConcurrency <= 4` or `.is-mobile`).
+  - Shortened scramble duration (140ms) and bypassed expensive GPU filter compositing / text-shadow blurs when battery saver mode is active.
+  - Added CSS hardware acceleration (`transform: translateZ(0)`).
+
+---
+
 ## [1.6.1] - 2026-10-25
 
 ### Fixed

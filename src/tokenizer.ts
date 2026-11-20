@@ -412,7 +412,7 @@ export function findTargetedTokens(
  * Regex matching words: Unicode letters, digits, and allowed internal apostrophes/hyphens.
  * e.g. "Matrix", "don't", "state-of-the-art", "2026"
  */
-const WORD_REGEX = /[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*/gu;
+const WORD_REGEX = /[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu;
 
 /**
  * Tokenizes text within [sliceFrom, sliceTo] into WordTokens.
@@ -530,7 +530,7 @@ export function isWordBeingComposed(
 	// If cursor is right after an internal apostrophe or hyphen (e.g. typing "don't" or "state-of-the-art")
 	if (cursorPos === word.to + 1 && word.to < fullDocText.length) {
 		const charAfterWord = fullDocText[word.to];
-		if (charAfterWord === "'" || charAfterWord === '-') {
+		if (charAfterWord === "'" || charAfterWord === '’' || charAfterWord === '-') {
 			return true; // Still composing the compound word
 		}
 	}

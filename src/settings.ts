@@ -12,6 +12,7 @@ import {
 	GlyphPaletteName,
 	MaskColorTheme,
 	AnimationSpeed,
+	PerformanceMode,
 	SensitivePatternConfig
 } from './types';
 import {
@@ -1191,6 +1192,26 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.settings.respectReducedMotion = value;
 						await this.plugin.saveSettings();
 						this.plugin.dispatchSettingsToEditors();
+					})
+			)
+			.setClass('confitext-setting-item');
+
+		new Setting(card)
+			.setName('Device performance & battery mode')
+			.setDesc('Optimize animation frame rate and GPU filter intensity for mobile devices and low-end hardware.')
+			.addDropdown(drop =>
+				drop
+					.addOption('auto', 'Auto (Detect mobile / low-end)')
+					.addOption('high', 'High fidelity (60 FPS, full glow)')
+					.addOption('battery-saver', 'Battery saver (30 FPS, lightweight)')
+					.setValue(this.plugin.settings.performanceMode || 'auto')
+					.onChange((value: string) => {
+						void (async () => {
+							this.plugin.settings.performanceMode = value as PerformanceMode;
+							await this.plugin.saveSettings();
+							this.plugin.dispatchSettingsToEditors();
+							this.plugin.applyCssVariables();
+						})();
 					})
 			)
 			.setClass('confitext-setting-item');

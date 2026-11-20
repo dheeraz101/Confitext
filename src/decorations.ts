@@ -123,6 +123,12 @@ export function buildMaskDecorations(
 		}
 	}
 
+	// Safe mobile & initial layout fallback: if visibleRanges has not yet been measured by CodeMirror
+	// (e.g. during app startup on mobile), immediately mask the document to prevent cleartext exposure flash.
+	if (mergedRanges.length === 0 && docText.length > 0) {
+		mergedRanges.push({ from: 0, to: docText.length });
+	}
+
 	// Precompute/retrieve syntax exclusions once per document update pass
 	const syntaxExcludedRanges = findExcludedRanges(docText, settings);
 

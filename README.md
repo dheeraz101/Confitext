@@ -18,7 +18,7 @@
 <p align="center">
   <a href="https://github.com/dheeraz101/Confitext/releases"><img src="https://img.shields.io/github/v/release/dheeraz101/Confitext?include_prereleases&color=65F59A&label=Release" alt="GitHub Release"></a>
   <a href="https://obsidian.md"><img src="https://img.shields.io/badge/Obsidian-Community%20Plugin-7C3AED.svg" alt="Obsidian Plugin"></a>
-  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-159%20Passed-10b981.svg" alt="Tests"></a>
+  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-170%20Passed-10b981.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-65F59A.svg" alt="License: MIT"></a>
   <a href="https://yabp.netlify.app/"><img src="https://img.shields.io/badge/Verified%20By-YABP-6366f1.svg" alt="Verified By YABP"></a>
 </p>

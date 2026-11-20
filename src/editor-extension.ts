@@ -10,7 +10,7 @@ import {
 	Decoration,
 	DecorationSet
 } from '@codemirror/view';
-import { Extension } from '@codemirror/state';
+import { Extension, EditorSelection } from '@codemirror/state';
 import {
 	confitextStateField,
 	animationTickEffect,
@@ -24,17 +24,19 @@ import { buildMaskDecorations } from './decorations';
 import { AnimationManager } from './animation';
 import { getStableGlyphs } from './glyphs';
 import { getNoteMaskedWords } from './rules';
-import { tokenizeWords, getLineRangeAt, getParagraphRangeAt } from './tokenizer';
+import { tokenizeWords, findTargetedTokens, getLineRangeAt, getParagraphRangeAt } from './tokenizer';
 
 export class ConfitextViewPlugin implements PluginValue {
 	decorations: DecorationSet;
 	private animationManager: AnimationManager;
+	private prevSelection: EditorSelection;
 
 	constructor(readonly view: EditorView) {
 		const getState = (): ConfitextEditorState => {
 			return view.state.field(confitextStateField, false) || initialEditorState;
 		};
 
+		this.prevSelection = view.state.selection;
 		this.animationManager = new AnimationManager(() => getState().settings);
 
 		// Frame callback for scrambling animation ticks
@@ -96,12 +98,12 @@ export class ConfitextViewPlugin implements PluginValue {
 					const insertedStr = inserted.toString();
 
 					if (triggerMode === 'word') {
-						// Delimiters that complete a word (space, newline, or clause/sentence punctuation)
+						// Delimiters that complete a word (space, non-breaking space, newline, or clause/sentence punctuation)
 						// Excludes internal apostrophes and hyphens
-						if (/[\s.,!?;:"“”()[\]{}>/\\]/u.test(insertedStr) && fromB > 0) {
+						if (/[\s\u00A0\u2000-\u200B\u202F.,!?;:"“”‘’„‟…—–\u3000-\u303F\uFF00-\uFF0F()[\]{}>/\\]/u.test(insertedStr) && fromB > 0) {
 							// Look backwards from fromB to find the completed word
 							const textBefore = fullDoc.slice(0, fromB);
-							const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*$/u);
+							const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*$/u);
 							if (wordMatch && wordMatch.index !== undefined) {
 								const word = wordMatch[0];
 								const wordFrom = wordMatch.index;
@@ -208,6 +210,52 @@ export class ConfitextViewPlugin implements PluginValue {
 		// 2. Selection changes (reveals selected words / restores masking on clear)
 		if (update.selectionSet) {
 			shouldRebuild = true;
+
+			// Selection restore animation: if user had selected text and now selection collapsed to an empty caret,
+			// trigger scramble animations for the previously revealed words if restoreMaskingAfterSelection is enabled.
+			if (
+				state.mode === 'masking' &&
+				state.settings.restoreMaskingAfterSelection &&
+				state.settings.enableAnimation &&
+				this.prevSelection &&
+				!this.prevSelection.main.empty &&
+				update.state.selection.main.empty
+			) {
+				const fullDoc = update.state.doc.toString();
+				const noteWords = getNoteMaskedWords(fullDoc);
+				for (const selRange of this.prevSelection.ranges) {
+					if (selRange.from < selRange.to) {
+						const revealedTokens =
+							state.settings.maskingScope === 'targeted-only'
+								? findTargetedTokens(
+										fullDoc,
+										selRange.from,
+										selRange.to,
+										state.settings,
+										noteWords
+								  )
+								: tokenizeWords(fullDoc, selRange.from, selRange.to, state.settings);
+
+						for (const token of revealedTokens) {
+							const stable = getStableGlyphs(
+								token.text,
+								state.settings.glyphStyle,
+								state.settings.customGlyphs
+							);
+							this.animationManager.registerWordAnimation(
+								token.from,
+								token.to,
+								token.text,
+								stable
+							);
+						}
+					}
+				}
+			}
+
+			this.prevSelection = update.state.selection;
+		} else if (update.docChanged) {
+			this.prevSelection = update.state.selection;
 		}
 
 		// 3. Viewport scrolling (virtualized rendering for huge documents)

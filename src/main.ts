@@ -8,7 +8,13 @@ import { ConfitextMode, ConfitextSettings, DEFAULT_SETTINGS } from './types';
 import { ConfitextSettingTab } from './settings';
 import { registerCommands } from './commands';
 import { createConfitextExtension } from './editor-extension';
-import { setModeEffect, setSettingsEffect, setFilePathEffect, confitextStateField } from './state';
+import {
+	setModeEffect,
+	setSettingsEffect,
+	setFilePathEffect,
+	confitextStateField,
+	setInitialStateProvider
+} from './state';
 import { clearGlyphCache } from './glyphs';
 import { clearRulesCache } from './rules';
 import { clearTokenizerCache } from './tokenizer';
@@ -35,6 +41,13 @@ export default class ConfitextPlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 		this.currentMode = this.settings.defaultMode;
+
+		// Initialize StateField initial state provider with live settings and active file
+		setInitialStateProvider(() => ({
+			mode: this.currentMode,
+			settings: this.settings,
+			filePath: this.app.workspace.getActiveFile()?.path || ''
+		}));
 
 		// 1. Register CodeMirror 6 Editor Extension (Live Preview & Source Mode)
 		this.registerEditorExtension(createConfitextExtension());
@@ -294,6 +307,11 @@ export default class ConfitextPlugin extends Plugin {
 			})
 		);
 
+		// Immediate dispatch to any editors already mounted on mobile/desktop startup
+		this.dispatchModeToEditors();
+		this.dispatchSettingsToEditors();
+		this.dispatchFilePathToEditors();
+
 		// Apply initial state and file paths to all already-loaded leaves
 		this.app.workspace.onLayoutReady(() => {
 			this.dispatchModeToEditors();
@@ -304,6 +322,8 @@ export default class ConfitextPlugin extends Plugin {
 	}
 
 	onunload(): void {
+		setInitialStateProvider(null);
+
 		if (this.idleManager) {
 			this.idleManager.destroy();
 			this.idleManager = null;
@@ -314,6 +334,7 @@ export default class ConfitextPlugin extends Plugin {
 		clearTokenizerCache();
 
 		document.body.classList.remove('confitext-active');
+		document.body.classList.remove('confitext-battery-saver');
 		const root = document.documentElement;
 		root.style.removeProperty('--confitext-color');
 		root.style.removeProperty('--confitext-bright');
@@ -734,7 +755,18 @@ export default class ConfitextPlugin extends Plugin {
 
 		root.style.setProperty('--confitext-color', color);
 		root.style.setProperty('--confitext-bright', bright);
-		root.style.setProperty('--confitext-glow', this.settings.subtleGlow ? glow : 'none');
+
+		const isMobile = typeof document !== 'undefined' && document.body?.classList.contains('is-mobile');
+		const isBatterySaver =
+			this.settings.performanceMode === 'battery-saver' ||
+			(this.settings.performanceMode === 'auto' && isMobile);
+
+		if (typeof document !== 'undefined' && document.body) {
+			document.body.classList.toggle('confitext-battery-saver', isBatterySaver);
+		}
+
+		const effectiveGlow = isBatterySaver ? 'none' : (this.settings.subtleGlow ? glow : 'none');
+		root.style.setProperty('--confitext-glow', effectiveGlow);
 		root.style.setProperty('--confitext-opacity', String(this.settings.maskOpacity));
 	}
 }

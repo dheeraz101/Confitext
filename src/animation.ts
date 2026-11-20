@@ -15,6 +15,7 @@ export class AnimationManager {
 	private activeAnimations = new Map<string, ActiveAnimation>();
 	private rafId: number | null = null;
 	private onFrameCallback: (() => void) | null = null;
+	private lastTickTime = 0;
 
 	constructor(private getSettings: () => ConfitextSettings) {}
 
@@ -23,6 +24,31 @@ export class AnimationManager {
 	 */
 	setFrameCallback(cb: () => void): void {
 		this.onFrameCallback = cb;
+	}
+
+	/**
+	 * Detects whether the current device/mode should run in low-power/throttled mode
+	 * (e.g. battery saver mode, mobile client, or hardware concurrency <= 4)
+	 */
+	isLowPowerOrThrottled(): boolean {
+		const settings = this.getSettings();
+		if (settings.performanceMode === 'battery-saver') return true;
+		if (settings.performanceMode === 'high') return false;
+
+		// 'auto' mode: check for mobile or low hardware concurrency
+		if (typeof window !== 'undefined') {
+			if (typeof document !== 'undefined' && document.body?.classList.contains('is-mobile')) {
+				return true;
+			}
+			if (
+				typeof navigator !== 'undefined' &&
+				navigator.hardwareConcurrency !== undefined &&
+				navigator.hardwareConcurrency <= 4
+			) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -48,7 +74,10 @@ export class AnimationManager {
 		if (!settings.enableAnimation) return;
 		if (settings.respectReducedMotion && this.isReducedMotionPreferred()) return;
 
-		const duration = DURATION_MAP[settings.animationSpeed] || 280;
+		let duration = DURATION_MAP[settings.animationSpeed] || 280;
+		if (this.isLowPowerOrThrottled()) {
+			duration = Math.min(duration, 160);
+		}
 		const wordKey = `${from}:${to}:${word}`;
 
 		// Don't restart if already actively animating
@@ -79,7 +108,8 @@ export class AnimationManager {
 		const progress = Math.min(1.0, elapsed / anim.duration);
 
 		const settings = this.getSettings();
-		const frameSeed = Math.floor(elapsed / 30); // update flicker every 30ms
+		const frameInterval = this.isLowPowerOrThrottled() ? 60 : 30;
+		const frameSeed = Math.floor(elapsed / frameInterval);
 		const glyphs = getScrambleGlyphs(
 			anim.word,
 			anim.stableGlyphs,
@@ -174,14 +204,21 @@ export class AnimationManager {
 			this.activeAnimations.delete(key);
 		}
 
-		if (this.onFrameCallback) {
-			this.onFrameCallback();
+		const isThrottled = this.isLowPowerOrThrottled();
+		const minInterval = isThrottled ? 33 : 16; // 30 FPS vs 60 FPS
+
+		if (now - this.lastTickTime >= minInterval) {
+			this.lastTickTime = now;
+			if (this.onFrameCallback) {
+				this.onFrameCallback();
+			}
 		}
 
 		if (this.activeAnimations.size > 0) {
 			this.rafId = window.requestAnimationFrame(this.rafLoop);
 		} else {
 			this.rafId = null;
+			this.lastTickTime = 0;
 		}
 	};
 }

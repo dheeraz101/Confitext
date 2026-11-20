@@ -23,9 +23,22 @@ export const initialEditorState: ConfitextEditorState = {
 	settings: DEFAULT_SETTINGS
 };
 
+let globalInitialStateProvider: (() => ConfitextEditorState) | null = null;
+
+export function setInitialStateProvider(provider: (() => ConfitextEditorState) | null): void {
+	globalInitialStateProvider = provider;
+}
+
 // CodeMirror StateField tracking Confitext mode, settings, and note path per editor
 export const confitextStateField = StateField.define<ConfitextEditorState>({
 	create() {
+		if (globalInitialStateProvider) {
+			try {
+				return globalInitialStateProvider();
+			} catch {
+				return initialEditorState;
+			}
+		}
 		return initialEditorState;
 	},
 	update(value, tr) {

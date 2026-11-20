@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v1.6.1";
+		return "What's New in Confitext v1.7.0";
 	}
 
 	getIcon(): string {
@@ -36,61 +36,61 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.6.1' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v1.7.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v1.6.1", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v1.7.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 1.6.1 brings official Obsidian review compliance, targeted word masking, sensitive data shield, granular hide triggers, and refined Apple HIG settings.'
+			text: 'Your thoughts. Your screen. Your code. Version 1.7.0 brings comprehensive mobile UI/UX and iOS HIG alignment, instant zero-delay startup masking, selection-based restore scramble animations, powerful virtual keyboard texting, and battery-saver optimization for low-end hardware.'
 		});
 
 		// Feature Grid
 		const grid = container.createDiv({ cls: 'confitext-wn-grid' });
 
-		// Card 1: Settings Display Reliability
+		// Card 1: Instant Startup Masking
 		const card0 = grid.createDiv({ cls: 'confitext-wn-card' });
 		const h0 = card0.createDiv({ cls: 'confitext-wn-card-header' });
-		h0.createSpan({ text: '⚙️', cls: 'confitext-wn-card-icon' });
-		h0.createEl('h3', { text: 'Settings Display Recovery' });
+		h0.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
+		h0.createEl('h3', { text: 'Instant Startup Masking' });
 		card0.createEl('p', {
-			text: 'Restored robust, full-fidelity settings rendering across all Obsidian versions (including 1.14+). The interactive Live Matrix Sandbox, custom Unicode validator, preset loaders, and all configuration options now render cleanly and reliably with zero black screen glitches.'
+			text: 'Resolved the 1-second plaintext exposure flash on mobile and desktop startup. Notes are now visually masked into matrix glyphs on the very first frame before layout measurement finishes.'
 		});
 
-		// Card 2: Right-Click Context Menus
+		// Card 2: Selection Restore Scramble Animation
 		const card1 = grid.createDiv({ cls: 'confitext-wn-card' });
 		const h1 = card1.createDiv({ cls: 'confitext-wn-card-header' });
-		h1.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
-		h1.createEl('h3', { text: 'Native Right-Click Context Menus' });
+		h1.createSpan({ text: '✨', cls: 'confitext-wn-card-icon' });
+		h1.createEl('h3', { text: 'Selection Restore Animation' });
 		card1.createEl('p', {
-			text: 'Confitext is now deeply infused into Obsidian menus. Right-click anywhere in an active note to toggle masking, trigger Panic Hide, or toggle note privacy. Right-click any folder or note in the File Navigation pane to exclude or include it immediately.'
+			text: 'When tapping or clicking away from a selection to read text, previously revealed words now smoothly scramble and cascade back into glyphs instead of snapping instantly.'
 		});
 
-		// Card 2: Tab Header Shield Action
+		// Card 3: iOS HIG & Touch Target Standardization
 		const card2 = grid.createDiv({ cls: 'confitext-wn-card' });
 		const h2 = card2.createDiv({ cls: 'confitext-wn-card-header' });
-		h2.createSpan({ text: '🛡️', cls: 'confitext-wn-card-icon' });
-		h2.createEl('h3', { text: 'Tab Header Privacy Shield' });
+		h2.createSpan({ text: '📱', cls: 'confitext-wn-card-icon' });
+		h2.createEl('h3', { text: 'iOS HIG Mobile Design & Touch Targets' });
 		card2.createEl('p', {
-			text: 'Every note tab now features an action button directly in its title bar. A single click toggles masking between Masked and Revealed modes for rapid visual privacy control.'
+			text: 'Enforced Apple Human Interface Guidelines across phone and tablet screens: 44px minimum touch targets, inset grouped cards, 16px inputs to prevent iOS auto-zoom, and zero horizontal clipping.'
 		});
 
-		// Card 3: Reading View Post-Processor
+		// Card 4: Powerful Mobile Virtual Keyboard Texting
 		const card3 = grid.createDiv({ cls: 'confitext-wn-card' });
 		const h3 = card3.createDiv({ cls: 'confitext-wn-card-header' });
-		h3.createSpan({ text: '👁️', cls: 'confitext-wn-card-icon' });
-		h3.createEl('h3', { text: 'Reading View Visual Masking' });
+		h3.createSpan({ text: '⌨️', cls: 'confitext-wn-card-icon' });
+		h3.createEl('h3', { text: 'Powerful Virtual Keyboard Texting' });
 		card3.createEl('p', {
-			text: 'Visual masking is no longer limited to editing. Confitext now non-destructively masks text in Reading View (Preview Mode) as well! Click any masked word in Reading View to reveal it in-place, and click again to re-mask.'
+			text: 'Full compatibility with mobile virtual keyboards: non-breaking spaces (\u00A0), smart contractions (don’t, it’s), ellipses (…), em-dashes (—), and safe IME composition tracking without dropped frames.'
 		});
 
-		// Card 4: Panic Mode Command
+		// Card 5: Battery Saver & Low-End PC Support
 		const card4 = grid.createDiv({ cls: 'confitext-wn-card' });
 		const h4 = card4.createDiv({ cls: 'confitext-wn-card-header' });
-		h4.createSpan({ text: '🚨', cls: 'confitext-wn-card-icon' });
-		h4.createEl('h3', { text: 'Emergency Panic Mode' });
+		h4.createSpan({ text: '🔋', cls: 'confitext-wn-card-icon' });
+		h4.createEl('h3', { text: 'Low-End PC & Mobile Battery Saver' });
 		card4.createEl('p', {
-			text: 'Need to hide your screen instantly? Run "Confitext: Panic: Instant hide & mask all text" or bind it to a hotkey. It immediately collapses active selections, enforces masking mode, and secures your display.'
+			text: 'Added performanceMode setting ("Auto", "High Fidelity", "Battery Saver"). Throttles animation to 30 FPS on mobile/low-end CPUs and disables expensive GPU filter compositing to maximize battery life.'
 		});
 
 		// Card 5: Live Matrix Sandbox & Thematic Presets
