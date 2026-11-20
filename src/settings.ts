@@ -109,6 +109,25 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		}
 	}
 
+	/**
+	 * Creates an Apple HIG / Inset Grouped section header with a distinct
+	 * category capsule pill on top and the section title cleanly on the line below.
+	 */
+	private createSectionHeader(
+		containerEl: HTMLElement,
+		title: string,
+		badgeText: string,
+		badgeModifierCls: string
+	): Setting {
+		const heading = new Setting(containerEl).setHeading();
+		heading.setClass('confitext-section-header');
+		heading.nameEl.empty();
+		const badgeWrapper = heading.nameEl.createDiv({ cls: 'section-badge-wrapper' });
+		badgeWrapper.createSpan({ cls: `section-badge ${badgeModifierCls}`, text: badgeText });
+		heading.nameEl.createDiv({ cls: 'confitext-section-title', text: title });
+		return heading;
+	}
+
 	// =========================================================================
 	// 1. HERO HEADER & STATUS ISLAND
 	// =========================================================================
@@ -383,11 +402,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 3. REDACTION STRATEGY & TARGETED WORDS (Requirement 1)
 	// =========================================================================
 	private renderRedactionStrategyCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Redaction Strategy & Targeted Words')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-strategy', text: 'STRATEGY' }));
+		this.createSectionHeader(containerEl, 'Redaction Strategy & Targeted Words', 'STRATEGY', 'badge-strategy');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -602,11 +617,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 4. SENSITIVE DATA SHIELD (Pattern/PII Masking - Requirement 2)
 	// =========================================================================
 	private renderSensitiveShieldCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Sensitive Data Shield & Pattern Masking')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-shield', text: 'SHIELD' }));
+		this.createSectionHeader(containerEl, 'Sensitive Data Shield & Pattern Masking', 'SHIELD', 'badge-shield');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -791,11 +802,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 5. BEHAVIOR & GLANCE INTERACTIONS
 	// =========================================================================
 	private renderBehaviorCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Behavior & Glance Controls')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-behavior', text: 'BEHAVIOR' }));
+		this.createSectionHeader(containerEl, 'Behavior & Glance Controls', 'BEHAVIOR', 'badge-behavior');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -986,11 +993,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 6. VISUAL AESTHETICS & GLYPH PALETTES
 	// =========================================================================
 	private renderAppearanceCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Aesthetics & Glyph Palettes')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-appearance', text: 'APPEARANCE' }));
+		this.createSectionHeader(containerEl, 'Aesthetics & Glyph Palettes', 'APPEARANCE', 'badge-appearance');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1155,11 +1158,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 7. ANIMATION & MOTION
 	// =========================================================================
 	private renderAnimationCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Animation & Scramble Effects')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-motion', text: 'MOTION' }));
+		this.createSectionHeader(containerEl, 'Animation & Scramble Effects', 'MOTION', 'badge-motion');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1237,11 +1236,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 8. IDLE, BLUR & FOCUS AUTOMATIONS
 	// =========================================================================
 	private renderAutomationCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Idle, Blur & Focus Automations')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-automation', text: 'AUTOMATION' }));
+		this.createSectionHeader(containerEl, 'Idle, Blur & Focus Automations', 'AUTOMATION', 'badge-automation');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1296,11 +1291,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 9. EXCLUSIONS & SYNTAX PRESERVATION
 	// =========================================================================
 	private renderRulesAndSyntaxCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Workspace Rules & Syntax Preservation')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-rules', text: 'RULES' }));
+		this.createSectionHeader(containerEl, 'Workspace Rules & Syntax Preservation', 'RULES', 'badge-rules');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1450,11 +1441,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// 10. SECURITY & PRIVACY ARCHITECTURE CALLOUT
 	// =========================================================================
 	private renderSecurityCard(containerEl: HTMLElement): void {
-		const groupHeader = new Setting(containerEl)
-			.setName('Privacy & Architecture Guarantees')
-			.setHeading();
-		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-security', text: 'SECURITY' }));
+		this.createSectionHeader(containerEl, 'Privacy & Architecture Guarantees', 'SECURITY', 'badge-security');
 
 		const noticeBox = containerEl.createDiv({ cls: 'confitext-card confitext-security-card' });
 		const headerRow = noticeBox.createDiv({ cls: 'security-header-row' });

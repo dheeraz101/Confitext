@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.1.0] - 2026-11-20
+
+### Added
+- **Refined Apple HIG Settings & Pill-on-Top Architecture**:
+  - Restructured all section headers to position category pills (`STRATEGY`, `SHIELD`, `APPEARANCE`, etc.) cleanly on top, with section titles on the line below.
+  - Added thematic color accenting for each individual section capsule pill.
+  - Stacked Sandbox controls (`▶ Trigger Scramble Test` and `👁️ Reveal Preview`) vertically on mobile displays to eliminate button clipping and screen-edge overflow.
+  - Added safe word-wrapping for Matrix terminal preview characters on narrow displays.
+  - Enforced 10px–12px outer card margins and 16px internal padding on mobile devices, ensuring no text or buttons touch card borders.
+
+---
+
 ## [2.0.0] - 2026-11-20
 
 ### Added
