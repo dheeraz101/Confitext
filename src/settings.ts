@@ -387,7 +387,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Redaction Strategy & Targeted Words')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'STRATEGY' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-strategy', text: 'STRATEGY' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -606,7 +606,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Sensitive Data Shield & Pattern Masking')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'SHIELD' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-shield', text: 'SHIELD' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -795,7 +795,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Behavior & Glance Controls')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'BEHAVIOR' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-behavior', text: 'BEHAVIOR' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -990,7 +990,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Aesthetics & Glyph Palettes')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'APPEARANCE' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-appearance', text: 'APPEARANCE' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1159,7 +1159,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Animation & Scramble Effects')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'MOTION' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-motion', text: 'MOTION' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1241,7 +1241,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Idle, Blur & Focus Automations')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'AUTOMATION' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-automation', text: 'AUTOMATION' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
@@ -1300,7 +1300,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setName('Workspace Rules & Syntax Preservation')
 			.setHeading();
 		groupHeader.setClass('confitext-section-header');
-		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge', text: 'RULES' }));
+		groupHeader.nameEl.prepend(createSpan({ cls: 'section-badge badge-rules', text: 'RULES' }));
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
