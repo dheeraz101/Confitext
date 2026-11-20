@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.2.0] - 2026-11-20
+
+### Added
+- **YABP Initiative & Transparency Center**:
+  - Integrated dedicated footer card supporting **An YABP Initiative** ([yabp.netlify.app](https://yabp.netlify.app/)) — "Yet Another Boring Project".
+  - Added official author attribution to **Dheeraz** ([github.com/dheeraz101](https://github.com/dheeraz101)).
+  - Published comprehensive **Privacy Policy** (`PRIVACY.md`) confirming 100% local execution, zero network requests, and zero telemetry collection.
+  - Published open-source **Terms of Use** (`TERMS.md`) with explicit security scope guidelines and MIT licensing terms.
+  - Linked Privacy Policy, Terms of Use, MIT License, and GitHub repository across settings, release notes, and documentation.
+
+### Changed
+- **Squircle Card Curvature (Apple HIG Superellipse)**:
+  - Transitioned cards from oversized circular/bubble arcs (`16px`) to crisp `11px` squircles across all settings cards, hero headers, and terminal sandbox windows.
+- **Card Edge Clearances on Mobile**:
+  - Neutralized Obsidian's mobile theme negative margin pulls on `.setting-item`.
+  - Expanded card horizontal padding to `20px` with dedicated side insets on `.setting-item-info`, `.setting-item-control`, `.confitext-add-row`, and `.confitext-chips-grid` to prevent controls from touching card edges.
+
+---
+
 ## [2.1.0] - 2026-11-20
 
 ### Added

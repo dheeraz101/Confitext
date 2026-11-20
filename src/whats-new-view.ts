@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.1.0";
+		return "What's New in Confitext v2.2.0";
 	}
 
 	getIcon(): string {
@@ -36,13 +36,13 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.1.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.2.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.1.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.2.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 2.1.0 brings a refined mobile UI/UX experience with Apple HIG Inset Grouped cards, pill-on-top section headers, full-width vertical sandbox controls, and phone action button deduplication.'
+			text: 'Your thoughts. Your screen. Your code. Version 2.2.0 introduces Apple HIG squircle card styling, guaranteed inner margin insets on mobile screens, and full transparency under An YABP Initiative with official Privacy Policy and Terms of Use.'
 		});
 
 		// Feature Grid
@@ -131,6 +131,62 @@ export class WhatsNewView extends ItemView {
 		closeBtn.addEventListener('click', () => {
 			this.leaf.detach();
 		});
+
+		// YABP Footer & Legal Transparency
+		const footer = container.createDiv({ cls: 'confitext-card confitext-footer-card' });
+		const brandRow = footer.createDiv({ cls: 'confitext-footer-brand' });
+		const yabpBadge = brandRow.createEl('a', {
+			cls: 'confitext-footer-badge',
+			href: 'https://yabp.netlify.app/'
+		});
+		yabpBadge.setAttribute('target', '_blank');
+		yabpBadge.setAttribute('rel', 'noopener noreferrer');
+		yabpBadge.createSpan({ cls: 'yabp-dot' });
+		yabpBadge.createSpan({ text: 'AN YABP INITIATIVE' });
+
+		brandRow.createEl('p', {
+			cls: 'confitext-footer-tagline',
+			text: 'Yet Another Boring Project — Thoughtful, distraction-free software.'
+		});
+
+		const creditRow = footer.createDiv({ cls: 'confitext-footer-credits' });
+		creditRow.createSpan({ text: 'Crafted with care by ' });
+		const authorLink = creditRow.createEl('a', {
+			cls: 'confitext-footer-link author-link',
+			text: 'Dheeraz',
+			href: 'https://github.com/dheeraz101'
+		});
+		authorLink.setAttribute('target', '_blank');
+		authorLink.setAttribute('rel', 'noopener noreferrer');
+
+		const legalRow = footer.createDiv({ cls: 'confitext-footer-legal' });
+		const privacyLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'Privacy Policy',
+			href: 'https://github.com/dheeraz101/Confitext/blob/main/PRIVACY.md'
+		});
+		privacyLink.setAttribute('target', '_blank');
+		privacyLink.setAttribute('rel', 'noopener noreferrer');
+
+		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
+
+		const termsLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'Terms of Use',
+			href: 'https://github.com/dheeraz101/Confitext/blob/main/TERMS.md'
+		});
+		termsLink.setAttribute('target', '_blank');
+		termsLink.setAttribute('rel', 'noopener noreferrer');
+
+		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
+
+		const githubLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'GitHub',
+			href: 'https://github.com/dheeraz101/Confitext'
+		});
+		githubLink.setAttribute('target', '_blank');
+		githubLink.setAttribute('rel', 'noopener noreferrer');
 	}
 
 	async onClose(): Promise<void> {

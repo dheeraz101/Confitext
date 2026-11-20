@@ -100,6 +100,11 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		// 10. SECURITY & PRIVACY ARCHITECTURE CALLOUT
 		// ----------------------------------------------------
 		this.renderSecurityCard(containerEl);
+
+		// ----------------------------------------------------
+		// 11. YABP FOOTER & LEGAL TRANSPARENCY
+		// ----------------------------------------------------
+		this.renderFooter(containerEl);
 	}
 
 	hide(): void {
@@ -1463,5 +1468,78 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		calloutList.createEl('li', {
 			text: 'Shoulder-Surfing Deterrence: Confitext shields your screen from nearby observers in coffee shops, planes, or video calls. It is not cryptographic encryption for stored files.'
 		});
+	}
+
+	// =========================================================================
+	// 11. YABP INITIATIVE FOOTER & LEGAL TRANSPARENCY
+	// =========================================================================
+	private renderFooter(containerEl: HTMLElement): void {
+		const footerCard = containerEl.createDiv({ cls: 'confitext-card confitext-footer-card' });
+
+		const brandRow = footerCard.createDiv({ cls: 'confitext-footer-brand' });
+		const yabpBadge = brandRow.createEl('a', {
+			cls: 'confitext-footer-badge',
+			href: 'https://yabp.netlify.app/'
+		});
+		yabpBadge.setAttribute('target', '_blank');
+		yabpBadge.setAttribute('rel', 'noopener noreferrer');
+		yabpBadge.createSpan({ cls: 'yabp-dot' });
+		yabpBadge.createSpan({ text: 'AN YABP INITIATIVE' });
+
+		brandRow.createEl('p', {
+			cls: 'confitext-footer-tagline',
+			text: 'Yet Another Boring Project — Thoughtful, distraction-free software.'
+		});
+
+		const creditRow = footerCard.createDiv({ cls: 'confitext-footer-credits' });
+		creditRow.createSpan({ text: 'Crafted with care by ' });
+		const authorLink = creditRow.createEl('a', {
+			cls: 'confitext-footer-link author-link',
+			text: 'Dheeraz',
+			href: 'https://github.com/dheeraz101'
+		});
+		authorLink.setAttribute('target', '_blank');
+		authorLink.setAttribute('rel', 'noopener noreferrer');
+
+		// Legal & Transparency Links
+		const legalRow = footerCard.createDiv({ cls: 'confitext-footer-legal' });
+
+		const privacyLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'Privacy Policy',
+			href: 'https://github.com/dheeraz101/Confitext/blob/main/PRIVACY.md'
+		});
+		privacyLink.setAttribute('target', '_blank');
+		privacyLink.setAttribute('rel', 'noopener noreferrer');
+
+		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
+
+		const termsLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'Terms of Use',
+			href: 'https://github.com/dheeraz101/Confitext/blob/main/TERMS.md'
+		});
+		termsLink.setAttribute('target', '_blank');
+		termsLink.setAttribute('rel', 'noopener noreferrer');
+
+		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
+
+		const licenseLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'MIT License',
+			href: 'https://github.com/dheeraz101/Confitext/blob/main/LICENSE'
+		});
+		licenseLink.setAttribute('target', '_blank');
+		licenseLink.setAttribute('rel', 'noopener noreferrer');
+
+		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
+
+		const githubLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'GitHub',
+			href: 'https://github.com/dheeraz101/Confitext'
+		});
+		githubLink.setAttribute('target', '_blank');
+		githubLink.setAttribute('rel', 'noopener noreferrer');
 	}
 }

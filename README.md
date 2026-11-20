@@ -18,8 +18,9 @@
 <p align="center">
   <a href="https://github.com/dheeraz101/Confitext/releases"><img src="https://img.shields.io/github/v/release/dheeraz101/Confitext?include_prereleases&color=65F59A&label=Release" alt="GitHub Release"></a>
   <a href="https://obsidian.md"><img src="https://img.shields.io/badge/Obsidian-Community%20Plugin-7C3AED.svg" alt="Obsidian Plugin"></a>
-  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-170%20Passed-10b981.svg" alt="Tests"></a>
+  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-172%20Passed-10b981.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-65F59A.svg" alt="License: MIT"></a>
+  <a href="PRIVACY.md"><img src="https://img.shields.io/badge/Privacy-100%25%20Local-10b981.svg" alt="100% Local Privacy"></a>
   <a href="https://yabp.netlify.app/"><img src="https://img.shields.io/badge/Verified%20By-YABP-6366f1.svg" alt="Verified By YABP"></a>
 </p>
 
@@ -324,8 +325,11 @@ Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/TESTING.md](docs/TES
   </a>
 </p>
 
-Confitext is an official project of the **YABP (Yet Another Boring Project)** initiative.
+Confitext is an official project of the **YABP (Yet Another Boring Project)** initiative created and maintained by **[Dheeraz](https://github.com/dheeraz101)**.
 
+- **Initiative Website:** [yabp.netlify.app](https://yabp.netlify.app/)
 - **Initiative Repository:** [Yet-Another-Boring-Project on GitHub](https://github.com/dheeraz101/Yet-Another-Boring-Project)
-- **Official Website:** [yabp.netlify.app](https://yabp.netlify.app/)
-- **License:** [MIT License](LICENSE) (c) 2026 Dheeraz.
+- **Author:** [Dheeraz (@dheeraz101)](https://github.com/dheeraz101)
+- **Privacy Policy:** [PRIVACY.md](PRIVACY.md) (100% local execution, zero network requests, zero telemetry)
+- **Terms of Use:** [TERMS.md](TERMS.md) (Open-source terms, warranty disclaimers & security guidance)
+- **License:** [MIT License](LICENSE) &copy; 2026 Dheeraz.

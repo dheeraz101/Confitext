@@ -155,7 +155,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 .confitext-hero-card {
 	background: linear-gradient(135deg, rgba(101, 245, 154, 0.08) 0%, rgba(56, 189, 248, 0.04) 100%);
 	border: 1px solid var(--background-modifier-border);
-	border-radius: 16px;
+	border-radius: 11px;
 	padding: 1.5rem;
 	margin-bottom: 1.5rem;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
@@ -365,7 +365,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 .confitext-card {
 	background-color: var(--background-secondary);
 	border: 1px solid var(--background-modifier-border);
-	border-radius: 14px;
+	border-radius: 11px;
 	padding: 1.25rem 1.4rem;
 	margin-bottom: 1.5rem;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
@@ -498,7 +498,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 
 /* 4. macOS Terminal Sandbox Card */
 .confitext-sandbox-window {
-	border-radius: 12px;
+	border-radius: 11px;
 	overflow: hidden;
 	padding: 1.1rem;
 }
@@ -638,8 +638,9 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 /* 5. Token & Targeted Word Manager */
 .confitext-token-manager {
 	margin-top: 1rem;
-	padding-top: 1rem;
+	padding: 1rem 4px 0 4px;
 	border-top: 1px solid var(--background-modifier-border);
+	box-sizing: border-box;
 }
 
 .confitext-token-manager.note-level {
@@ -756,8 +757,9 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 
 .confitext-custom-regex-section {
 	margin-top: 1.25rem;
-	padding-top: 1rem;
+	padding: 1rem 4px 0 4px;
 	border-top: 1px dashed var(--background-modifier-border);
+	box-sizing: border-box;
 }
 
 .confitext-regex-add-row {
@@ -907,6 +909,102 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	padding-left: 1.25rem;
 	margin: 0;
 	line-height: 1.5;
+}
+
+/* 9. YABP Initiative Footer Card */
+.confitext-footer-card {
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 11px;
+	padding: 1.4rem;
+	margin-top: 1.5rem;
+	margin-bottom: 2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 12px;
+}
+
+.confitext-footer-brand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+}
+
+.confitext-footer-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: var(--font-monospace, monospace);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: #6366f1;
+	background: rgba(99, 102, 241, 0.1);
+	border: 1px solid rgba(99, 102, 241, 0.28);
+	padding: 4px 12px;
+	border-radius: 9999px;
+	text-decoration: none;
+	transition: all 0.15s ease;
+}
+
+.confitext-footer-badge:hover {
+	background: rgba(99, 102, 241, 0.18);
+	border-color: rgba(99, 102, 241, 0.45);
+	text-decoration: none;
+}
+
+.yabp-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: #6366f1;
+	box-shadow: 0 0 6px rgba(99, 102, 241, 0.5);
+}
+
+.confitext-footer-tagline {
+	font-size: 0.82rem;
+	color: var(--text-muted);
+	margin: 0;
+	line-height: 1.4;
+}
+
+.confitext-footer-credits {
+	font-size: 0.84rem;
+	color: var(--text-muted);
+}
+
+.confitext-footer-link {
+	color: var(--text-normal);
+	text-decoration: none;
+	transition: color 0.15s ease;
+}
+
+.confitext-footer-link:hover {
+	color: var(--interactive-accent);
+	text-decoration: underline;
+}
+
+.author-link {
+	font-weight: 600;
+	color: var(--confitext-color);
+}
+
+.confitext-footer-legal {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.78rem;
+	color: var(--text-faint);
+}
+
+.footer-sep {
+	color: var(--text-faint);
+	opacity: 0.5;
 }
 
 /* Reading View Preview Glyphs */
@@ -1161,13 +1259,13 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		line-height: 1.35;
 	}
 
-	/* Inset Grouped Cards */
+	/* Inset Grouped Cards (Squircle 11px Apple HIG) */
 	.confitext-card {
 		background-color: var(--background-secondary);
-		border-radius: 16px;
+		border-radius: 11px;
 		border: 1px solid var(--background-modifier-border);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-		padding: 18px 16px;
+		padding: 18px 20px;
 		margin-bottom: 16px;
 		overflow: hidden;
 		box-sizing: border-box;
@@ -1179,29 +1277,37 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		line-height: 1.45;
 		margin: 0 0 14px 0;
 		color: var(--text-muted);
+		padding: 0 4px;
 	}
 
-	/* Setting Items: Stacked Layout For Full Width Readability */
+	/* Setting Items: Stacked Layout For Full Width Readability with Inset Padding */
+	.confitext-card .setting-item,
 	.confitext-settings-pane .setting-item {
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
 		justify-content: flex-start;
 		gap: 10px;
-		padding: 14px 2px;
+		padding: 14px 6px;
+		margin-left: 0;
+		margin-right: 0;
 		border-bottom: 0.5px solid var(--background-modifier-border);
 		width: 100%;
+		box-sizing: border-box;
 	}
 
-	.confitext-settings-pane .setting-item:last-child {
+	.confitext-settings-pane .setting-item:last-child,
+	.confitext-card .setting-item:last-child {
 		border-bottom: none;
 	}
 
 	.confitext-settings-pane .setting-item-info {
 		width: 100%;
 		flex: 1 1 100%;
+		padding-left: 2px;
 		padding-right: 0;
 		margin-right: 0;
+		box-sizing: border-box;
 	}
 
 	.confitext-settings-pane .setting-item-name {
@@ -1225,6 +1331,8 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		align-items: center;
 		justify-content: stretch;
 		gap: 8px;
+		padding-right: 2px;
+		box-sizing: border-box;
 	}
 
 	/* Full-width Form Controls (44px Minimum Touch Targets) */
@@ -1237,6 +1345,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		border-radius: 10px;
 		background-color: var(--background-modifier-form-field);
 		border: 1px solid var(--background-modifier-border);
+		box-sizing: border-box;
 	}
 
 	.confitext-settings-pane .setting-item-control input[type="range"] {
@@ -1250,9 +1359,12 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		font-size: 15px;
 		border-radius: 10px;
 		padding: 10px 12px;
+		box-sizing: border-box;
 	}
 
-	/* Toggle Switch Rows Stay Horizontal (True iOS Settings Look) */
+	/* Toggle Switch Rows Stay Horizontal (True iOS Settings Look with Edge Insets) */
+	.confitext-card .confitext-setting-toggle,
+	.confitext-card .setting-item:has(.checkbox-container),
 	.confitext-settings-pane .confitext-setting-toggle,
 	.confitext-settings-pane .setting-item:has(.checkbox-container),
 	body.is-mobile .confitext-settings-pane .setting-item:has(.checkbox-container),
@@ -1260,21 +1372,31 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		gap: 12px;
-		padding: 12px 0;
+		gap: 14px;
+		padding: 12px 6px;
+		margin-left: 0;
+		margin-right: 0;
+		box-sizing: border-box;
 	}
 
+	.confitext-card .confitext-setting-toggle .setting-item-info,
+	.confitext-card .setting-item:has(.checkbox-container) .setting-item-info,
 	.confitext-settings-pane .confitext-setting-toggle .setting-item-info,
 	.confitext-settings-pane .setting-item:has(.checkbox-container) .setting-item-info {
 		flex: 1 1 auto;
 		min-width: 0;
-		padding-right: 10px;
+		padding-left: 2px;
+		padding-right: 12px;
+		box-sizing: border-box;
 	}
 
+	.confitext-card .confitext-setting-toggle .setting-item-control,
+	.confitext-card .setting-item:has(.checkbox-container) .setting-item-control,
 	.confitext-settings-pane .confitext-setting-toggle .setting-item-control,
 	.confitext-settings-pane .setting-item:has(.checkbox-container) .setting-item-control {
 		flex: 0 0 auto;
 		width: auto;
+		padding-right: 2px;
 	}
 
 	/* Apple HIG Segmented Controls (Full Width) */
@@ -1312,7 +1434,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	/* Dynamic Island & Hero Banner Mobile Refinements */
 	.confitext-hero-card {
 		padding: 1.25rem 1rem;
-		border-radius: 14px;
+		border-radius: 11px;
 		margin-bottom: 1rem;
 	}
 
@@ -1335,7 +1457,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		align-items: stretch;
 		padding: 1rem;
 		gap: 12px;
-		border-radius: 12px;
+		border-radius: 10px;
 	}
 
 	.confitext-island-left {
@@ -1373,7 +1495,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	/* Interactive Sandbox & Terminal Mobile Adapters */
 	.confitext-sandbox-window {
 		padding: 16px 14px;
-		border-radius: 14px;
+		border-radius: 11px;
 	}
 
 	.confitext-window-header {
@@ -1466,8 +1588,9 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		flex-direction: column;
 		align-items: stretch;
 		gap: 10px;
-		margin: 12px 0;
-		width: 100%;
+		margin: 12px 2px;
+		width: calc(100% - 4px);
+		box-sizing: border-box;
 	}
 
 	.confitext-add-row input,
@@ -1476,14 +1599,20 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 		min-height: 44px;
 		font-size: 15px;
 		border-radius: 10px;
+		box-sizing: border-box;
 	}
 
 	.confitext-chips-grid {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 8px;
-		width: 100%;
-		margin: 10px 0;
+		width: calc(100% - 4px);
+		padding: 12px 14px;
+		border-radius: 10px;
+		margin: 10px 2px 14px 2px;
+		background: var(--background-primary);
+		border: 1px dashed var(--background-modifier-border);
+		box-sizing: border-box;
 	}
 
 	.confitext-word-chip {
@@ -1620,11 +1749,19 @@ body.is-phone .confitext-settings-pane {
 }
 
 body.is-phone .confitext-card {
-	border-radius: 16px;
-	padding: 18px 16px;
+	border-radius: 11px;
+	padding: 18px 20px;
 	margin: 0 0 16px 0;
 	box-sizing: border-box;
 	width: 100%;
+}
+
+body.is-phone .confitext-card .setting-item {
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 6px;
+	padding-right: 6px;
+	box-sizing: border-box;
 }
 
 body.is-phone .confitext-btn {
@@ -1661,5 +1798,12 @@ body.is-phone .confitext-island-actions {
 body.is-phone .confitext-island-actions .confitext-btn {
 	width: 100%;
 	min-height: 44px;
+}
+
+body.is-phone .confitext-footer-card {
+	padding: 16px 14px;
+	margin-top: 1rem;
+	margin-bottom: 2.5rem;
+	border-radius: 11px;
 }
 
