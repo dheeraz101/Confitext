@@ -122,6 +122,36 @@
   - Token chip manager UI for adding and removing global and note-level target words.
 - **Zero Black Screen Invariant:** Uses pure imperative `display(): void` lifecycle calling internal `this.render()`, ensuring full compatibility across Obsidian 1.13, 1.14+, and future versions without relying on deprecated declarative interceptors.
 
+### 3.11 Platform-Specific Architecture Filtering (`src/settings.ts`)
+- **Dynamic Device Separation:**
+  - Employs Obsidian's `Platform.isMobile` and `Platform.isDesktop` runtime APIs to filter settings conditionally.
+  - Desktop-only settings (hover peek, hover reveal delay slider, tab header shield button, multi-monitor window blur, physical Esc peek, and Desktop Pro Suite card) are hidden on mobile phones and tablets.
+  - Mobile-only settings (Android circular corner comfort insets, tactile haptic feedback, 30 FPS battery saver throttling, and Mobile Touch Shield card) are hidden on desktop computers.
+  - Eliminates visual clutter and prevents dead-end configurations on unsupported hardware architectures.
+
+### 3.12 Mobile Predictive Virtual Keyboard Suggestion Animations (`src/editor-extension.ts`)
+- **Autocomplete Detection Without Trailing Delimiters:**
+  - Virtual keyboards (Gboard, Samsung Keyboard, iOS QuickType) insert words via autocomplete transactions without trailing whitespace delimiters.
+  - Confitext intercepts replacement transactions where `insertedStr.length >= 2` and matches valid word Unicode patterns, immediately registering the animation with `AnimationManager`.
+  - Scramble transitions execute smoothly even when words are tapped from the keyboard suggestion strip.
+
+### 3.13 Caret Click Line Reveal & Composition Tracking (`src/tokenizer.ts`)
+- **Replacement Widget Caret Positioning:**
+  - When clicking on an active replacement widget, CodeMirror 6 places the selection cursor at `word.from`.
+  - Confitext evaluates `(cursorPos > word.from || (cursorPos === word.from && word.from > 0)) && cursorPos <= word.to` to determine word composition.
+  - Clicking on any masked word immediately reveals it in cleartext for editing, while position `0` on cold file open preserves complete privacy masking on the first word.
+
+### 3.14 Press-and-Hold Esc Peek Cleartext (`src/main.ts`)
+- **Physical Keyboard Glancing:**
+  - Listening on desktop `keydown` events for the `Escape` key (`holdEscToPeek` setting).
+  - Holding down Esc temporarily reveals all text across active editors; releasing Esc on `keyup` immediately re-engages privacy masking.
+  - Safeguarded by an OS window `blur` listener: switching applications (Alt+Tab / Cmd+Tab) while holding Esc automatically restores privacy masking to prevent exposure.
+
+### 3.15 Android Circular Modal Geometry & Full-Surface Insets (`styles.css`)
+- **Squircle & Circle Curvature Insets:**
+  - Accommodates native Android circular card curvature through generous `24px–26px` horizontal padding (`padding: 24px 26px`) on `.confitext-card`.
+  - Adds dedicated top/bottom margin and padding clearances on first/last children, `.setting-item`, `.setting-item-control`, `.confitext-add-row`, and `.confitext-chips-grid`, ensuring text, inputs, switches, and buttons sit comfortably away from curved borders.
+
 ---
 
 ## 4. Performance & Resource Characteristics

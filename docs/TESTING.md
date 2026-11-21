@@ -127,11 +127,36 @@ Confitext maintains an automated test suite executed with Vitest and JSDOM, cove
   - Multi-cursor support across lines and paragraphs.
   - Selection reveal interaction across trigger modes.
 
+### 2.9 Native Features Suite (`tests/native-features.test.ts` - 11 tests)
+- **Tab Header Shield Action Buttons:**
+  - Setup and cleanup of action button DOM nodes across open workspace leaves.
+  - Verification that phone devices bypass tab actions cleanly.
+- **Panic Conceal Mode:**
+  - Instant collapse of active editor selections to prevent cleartext peeking.
+  - Forced transition to masking mode and screen masking verification.
+- **Reading View Post-Processor:**
+  - Markdown post-processor decoration of text nodes in Reading View.
+  - Interactive click-to-reveal word toggle event handlers.
+
+### 2.10 Mobile & Performance Suite (`tests/mobile-and-performance.test.ts` - 19 tests)
+- **Performance Mode & Battery Saver:**
+  - `performanceMode: 'battery-saver'` throttling animation loop to 30 FPS.
+  - Suppression of expensive blur and shadow filters on mobile CPUs.
+- **Mobile Predictive Keyboard Animations:**
+  - Autocomplete suggestion word insertion without space delimiters.
+  - Verification of instant Matrix scramble animation registration.
+- **Caret Line Click Reveal:**
+  - Placement of cursor at replacement widget offsets (`word.from` and interior).
+  - Verification that clicked words unmask immediately into editable cleartext.
+- **Pre-Render Privacy Veil & Cold Boot:**
+  - Synchronous application of `.confitext-active` and `.confitext-scope-all` body classes.
+  - Fast-path hydration from `localStorage` before CodeMirror extensions mount.
+
 ---
 
 ## 3. Running the Tests
 
-To run the complete automated test suite (159 tests across 9 test files):
+To run the complete automated test suite (185 tests across 10 test files):
 
 ```bash
 npm test

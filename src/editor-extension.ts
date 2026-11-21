@@ -87,8 +87,7 @@ export class ConfitextViewPlugin implements PluginValue {
 			if (
 				state.mode === 'masking' &&
 				state.settings.maskNewlyCompletedWords &&
-				state.settings.enableAnimation &&
-				!update.view.composing
+				state.settings.enableAnimation
 			) {
 				const fullDoc = update.state.doc.toString();
 
@@ -105,8 +104,12 @@ export class ConfitextViewPlugin implements PluginValue {
 							(toA > fromA || toB - fromB >= 2);
 
 						// Delimiters that complete a word (space, non-breaking space, newline, or clause/sentence punctuation)
-						// Excludes internal apostrophes and hyphens
-						if (/[\s\u00A0\u2000-\u200B\u202F.,!?;:"“”‘’„‟…—–\u3000-\u303F\uFF00-\uFF0F()[\]{}>/\\]/u.test(insertedStr) && fromB > 0) {
+						// Excludes internal apostrophes and hyphens. Checks !update.view.composing for active IME typing.
+						if (
+							!update.view.composing &&
+							/[\s\u00A0\u2000-\u200B\u202F.,!?;:"“”‘’„‟…—–\u3000-\u303F\uFF00-\uFF0F()[\]{}>/\\]/u.test(insertedStr) &&
+							fromB > 0
+						) {
 							// Look backwards from fromB to find the completed word
 							const textBefore = fullDoc.slice(0, fromB);
 							const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*$/u);
@@ -172,7 +175,7 @@ export class ConfitextViewPlugin implements PluginValue {
 						}
 					} else if (triggerMode === 'line') {
 						// Line mode: Trigger masking/animation when user completes a line via newline (Enter)
-						if (/[\r\n]/u.test(insertedStr) && fromB > 0) {
+						if (!update.view.composing && /[\r\n]/u.test(insertedStr) && fromB > 0) {
 							const prevLine = getLineRangeAt(fullDoc, fromB - 1);
 							if (prevLine.from < prevLine.to) {
 								const lineTokens = tokenizeWords(fullDoc, prevLine.from, prevLine.to, state.settings);
@@ -202,7 +205,7 @@ export class ConfitextViewPlugin implements PluginValue {
 						}
 					} else if (triggerMode === 'paragraph') {
 						// Paragraph mode: Trigger masking/animation when user creates a blank line gap
-						if (/[\r\n]/u.test(insertedStr) && fromB > 0) {
+						if (!update.view.composing && /[\r\n]/u.test(insertedStr) && fromB > 0) {
 							const textBefore = fullDoc.slice(0, fromB);
 							if (/\n[ \t]*$/u.test(textBefore)) {
 								// Preceding line was blank: a blank line gap is now formed!

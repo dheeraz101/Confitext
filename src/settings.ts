@@ -1471,7 +1471,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		const cornerItem = new Setting(card)
 			.setName('Android circular corner comfort')
-			.setDesc('Automatic 24px-26px inner padding and vertical clearances ensure text, switches, and buttons sit comfortably away from native Android circular card curvature.')
+			.setDesc('Automatic 24px–26px inner padding and vertical clearances ensure text, switches, and buttons sit comfortably away from native Android circular card curvature.')
 			.setClass('confitext-setting-item');
 
 		const pill = cornerItem.controlEl.createSpan({ cls: 'section-badge badge-mobile' });

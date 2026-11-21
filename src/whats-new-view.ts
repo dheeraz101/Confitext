@@ -137,7 +137,7 @@ export class WhatsNewView extends ItemView {
 
 		brandRow.createEl('p', {
 			cls: 'confitext-footer-tagline',
-			text: 'Yet Another Boring Project — Thoughtful, distraction-free software.'
+			text: 'Yet Another Boring Project • Thoughtful, distraction-free software.'
 		});
 
 		const creditRow = footer.createDiv({ cls: 'confitext-footer-credits' });
