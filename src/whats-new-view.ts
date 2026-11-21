@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.5.0";
+		return "What's New in Confitext v2.5.1";
 	}
 
 	getIcon(): string {
@@ -36,13 +36,13 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.5.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.5.1' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.5.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.5.1", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 2.5.0 introduces platform-specific settings filtering for PC and Mobile, fixes the editor caret line-click reveal bug, brings real-time scramble animations to mobile virtual keyboard suggestions, and refines typography with Apple HIG bullet dividers.'
+			text: 'Your thoughts. Your screen. Your code. Version 2.5.1 brings refinements across documentation, version consistency, and stability improvements throughout the plugin.'
 		});
 
 		// Feature Grid

@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.5.1] - 2026-11-22
+
+### Changed
+- Bumped version references across all documentation, website, and legal pages for consistency.
+- Refined What's New view subtitle copy for v2.5.1.
+- Updated website hero badge, privacy policy, and terms of use to reflect v2.5.1.
+
+---
+
 ## [2.5.0] - 2026-11-22
 
 ### Added
