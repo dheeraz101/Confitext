@@ -293,6 +293,25 @@ describe('Tokenizer - Performance & Cache Memoization', () => {
 		const refB2 = findExcludedRanges(docB, DEFAULT_SETTINGS);
 		expect(refB2).toBe(refB1); // Exact same cached array reference!
 	});
+
+	it('reveals word when cursor is clicked at the start or inside of a word (revealOnCursorInsideWord)', () => {
+		const doc = 'Hello world confidential';
+		const tokens = tokenizeWords(doc, 0, doc.length, DEFAULT_SETTINGS);
+		const worldToken = tokens[1]; // "world", from 6 to 11
+
+		// Clicking at the start of "world" (pos 6) reveals it
+		expect(isWordBeingComposed(worldToken, 6, doc, true)).toBe(true);
+
+		// Clicking inside "world" (pos 8) reveals it
+		expect(isWordBeingComposed(worldToken, 8, doc, true)).toBe(true);
+
+		// Clicking at the end of "world" (pos 11) reveals it
+		expect(isWordBeingComposed(worldToken, 11, doc, true)).toBe(true);
+
+		// Position 0 (cold open of document) does not unmask the first word
+		const firstToken = tokens[0]; // "Hello", from 0 to 5
+		expect(isWordBeingComposed(firstToken, 0, doc, true)).toBe(false);
+	});
 });
 
 

@@ -187,9 +187,9 @@ export function buildMaskDecorations(
 
 			// 2. Trigger Mode & Composition Check
 			if (settings.maskTriggerMode === 'line' || settings.maskTriggerMode === 'paragraph') {
-				// In line/paragraph mode, if token is within any active cursor line/paragraph, keep unmasked
+				// In line/paragraph mode, if token intersects any active cursor line/paragraph, keep unmasked
 				const isActive = activeTriggerRanges.some(
-					ar => token.from >= ar.from && token.to <= ar.to
+					ar => (token.from < ar.to && token.to > ar.from) || (token.from >= ar.from && token.to <= ar.to)
 				);
 				if (isActive) {
 					continue; // Do not mask; line or paragraph is active

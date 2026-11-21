@@ -59,3 +59,10 @@ Desktop.ini
 scratch/
 tmp/
 temp/
+
+# Obsidian local runtime & vault testing
+data.json
+.obsidian/
+test-vault/
+.parcel-cache/
+.vite/

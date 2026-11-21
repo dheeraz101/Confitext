@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.5.0] - 2026-11-22
+
+### Added
+- **Platform-Specific Settings Filtering (PC Desktop Pro vs. Mobile Touch Shield)**:
+  - Dynamically hides desktop-only controls on mobile devices: Hover peek on mouse rest, hover reveal delay slider, tab header shield button, multi-monitor window blur, physical Esc peek, and the entire "Desktop Pro Suite" card are now hidden on mobile phones and tablets.
+  - Dynamically hides mobile-only controls on desktop devices: Android circular corner comfort insets, tactile haptic vibration feedback, 30 FPS battery-saver animation cap, and the entire "Mobile Touch Shield" card are cleanly hidden on macOS and Windows PC.
+  - Ensures clean, clutter-free settings tailored strictly to the user's active device architecture.
+- **Mobile Predictive Keyboard Autocomplete Scramble Animations**:
+  - Added real-time detection for virtual keyboard autocomplete/suggestion word insertions (Gboard, Samsung Keyboard, iOS QuickType) that insert full words without trailing whitespace delimiters.
+  - Triggers the digital Matrix scramble animation on inserted suggested words automatically, ensuring full visual continuity without requiring a manual spacebar stroke.
+- **Apple HIG Bullet Divider Typography (`•`)**:
+  - Replaced hyphens (`-` or ` - `) across Dynamic Island status labels, hero headers, settings descriptions, and status bars with Apple HIG bullet symbols (`•`): `PROTECTED • FULL SCREEN VEIL`, `REVEALED • ALL TEXT READABLE`, `PAUSED • MASKING SUSPENDED`.
+  - Upgraded badge and pill formatting for a minimal, premium aesthetic.
+
+### Fixed
+- **Caret Line Click Masking Defect**:
+  - Resolved a defect where clicking or tapping directly onto a masked word or line left it hidden/masked until space was pressed.
+  - Updated `isWordBeingComposed()` in `src/tokenizer.ts` to evaluate `(cursorPos > word.from || (cursorPos === word.from && word.from > 0)) && cursorPos <= word.to`, ensuring instant cleartext reveal upon cursor placement while preserving masking at position 0 on cold document open.
+- **Website Architecture Consolidation (`docs/` vs `site/`)**:
+  - Consolidated the web documentation and landing site under the single canonical `/docs` directory required by GitHub Pages, removing the redundant `/site` duplicate to eliminate drift.
+
+---
+
 ## [2.3.0] - 2026-11-22
 
 ### Added

@@ -98,6 +98,12 @@ export class ConfitextViewPlugin implements PluginValue {
 					const insertedStr = inserted.toString();
 
 					if (triggerMode === 'word') {
+						const trimmedWord = insertedStr.trim();
+						const isWordSuggestion =
+							trimmedWord.length >= 2 &&
+							/^[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*$/u.test(trimmedWord) &&
+							(toA > fromA || toB - fromB >= 2);
+
 						// Delimiters that complete a word (space, non-breaking space, newline, or clause/sentence punctuation)
 						// Excludes internal apostrophes and hyphens
 						if (/[\s\u00A0\u2000-\u200B\u202F.,!?;:"“”‘’„‟…—–\u3000-\u303F\uFF00-\uFF0F()[\]{}>/\\]/u.test(insertedStr) && fromB > 0) {
@@ -134,6 +140,35 @@ export class ConfitextViewPlugin implements PluginValue {
 								);
 								this.animationManager.registerWordAnimation(wordFrom, wordTo, word, stable);
 							}
+						} else if (isWordSuggestion) {
+							// Mobile predictive text / autocomplete suggestion insertion without trailing delimiter
+							const word = trimmedWord;
+							const wordFrom = fromB;
+							const wordTo = fromB + word.length;
+
+							if (state.settings.maskingScope === 'targeted-only') {
+								const noteWords = getNoteMaskedWords(fullDoc);
+								const targetSet = new Set<string>();
+								for (const w of state.settings.globalMaskedWords || []) {
+									const t = w.trim();
+									if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+								}
+								for (const w of noteWords || []) {
+									const t = w.trim();
+									if (t) targetSet.add(state.settings.caseSensitiveTargeting ? t : t.toLowerCase());
+								}
+								const checkKey = state.settings.caseSensitiveTargeting ? word : word.toLowerCase();
+								if (!targetSet.has(checkKey)) {
+									return;
+								}
+							}
+
+							const stable = getStableGlyphs(
+								word,
+								state.settings.glyphStyle,
+								state.settings.customGlyphs
+							);
+							this.animationManager.registerWordAnimation(wordFrom, wordTo, word, stable);
 						}
 					} else if (triggerMode === 'line') {
 						// Line mode: Trigger masking/animation when user completes a line via newline (Enter)

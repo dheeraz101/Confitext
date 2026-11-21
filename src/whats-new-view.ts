@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.3.0";
+		return "What's New in Confitext v2.5.0";
 	}
 
 	getIcon(): string {
@@ -36,88 +36,70 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.3.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.5.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.3.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.5.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 2.3.0 brings official GitHub Pages live website hosting, complete mobile card insets, stacked category headers, and cross-platform desktop/mobile experience.'
+			text: 'Your thoughts. Your screen. Your code. Version 2.5.0 introduces platform-specific settings filtering for PC and Mobile, fixes the editor caret line-click reveal bug, brings real-time scramble animations to mobile virtual keyboard suggestions, and refines typography with Apple HIG bullet dividers.'
 		});
 
 		// Feature Grid
 		const grid = container.createDiv({ cls: 'confitext-wn-grid' });
 
-		// Card 0: Official GitHub Pages Website & Docs
+		// Card 1: Platform-Specific Settings Filtering
+		const cardPlatform = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hPlatform = cardPlatform.createDiv({ cls: 'confitext-wn-card-header' });
+		hPlatform.createSpan({ text: '📱', cls: 'confitext-wn-card-icon' });
+		hPlatform.createEl('h3', { text: 'Platform-Specific Settings Filtering' });
+		cardPlatform.createEl('p', {
+			text: 'Settings are now intelligently filtered by device. Desktop-only features (hover peek, tab header actions, multi-monitor blur, Esc peek) are hidden on mobile, while touch-only controls (haptic feedback, 26px corner insets) are hidden on PC.'
+		});
+
+		// Card 2: Mobile Predictive Keyboard Animations
+		const cardSuggest = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hSuggest = cardSuggest.createDiv({ cls: 'confitext-wn-card-header' });
+		hSuggest.createSpan({ text: '✨', cls: 'confitext-wn-card-icon' });
+		hSuggest.createEl('h3', { text: 'Predictive Keyboard Suggestion Animations' });
+		cardSuggest.createEl('p', {
+			text: 'Tapping autocomplete suggestions on mobile virtual keyboards (Gboard, iOS QuickType) now triggers smooth matrix scramble animations without requiring trailing space delimiters.'
+		});
+
+		// Card 3: Caret Click Line Reveal Fix
+		const cardClick = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hClick = cardClick.createDiv({ cls: 'confitext-wn-card-header' });
+		hClick.createSpan({ text: '🎯', cls: 'confitext-wn-card-icon' });
+		hClick.createEl('h3', { text: 'Caret Line Click Reveal Defect Resolved' });
+		cardClick.createEl('p', {
+			text: 'Resolved the issue where clicking directly on a line or masked word caused it to stay hidden until space was pressed. Clicking anywhere on a masked word now reveals it immediately in cleartext.'
+		});
+
+		// Card 4: Official Live GitHub Pages Website & Documentation
 		const cardWeb = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hWeb = cardWeb.createDiv({ cls: 'confitext-wn-card-header' });
 		hWeb.createSpan({ text: '🌐', cls: 'confitext-wn-card-icon' });
 		hWeb.createEl('h3', { text: 'Official Website Live on GitHub Pages' });
 		cardWeb.createEl('p', {
-			text: 'Confitext now has an official Apple HIG-inspired showcase and interactive documentation suite hosted live at dheeraz101.github.io/Confitext, complete with an interactive Matrix playground.'
+			text: 'Confitext now features an official Apple HIG-inspired website and interactive documentation suite live at dheeraz101.github.io/Confitext with dark/light themes, mobile nav drawer, and live privacy studio.'
 		});
 
-		// Card 1: Instant Startup Masking
-		const card0 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h0 = card0.createDiv({ cls: 'confitext-wn-card-header' });
-		h0.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
-		h0.createEl('h3', { text: 'Instant Startup Masking' });
-		card0.createEl('p', {
-			text: 'Resolved the 1-second plaintext exposure flash on mobile and desktop startup. Notes are now visually masked into matrix glyphs on the very first frame before layout measurement finishes.'
+		// Card 5: Hold Esc to Peek Cleartext
+		const cardEsc = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hEsc = cardEsc.createDiv({ cls: 'confitext-wn-card-header' });
+		hEsc.createSpan({ text: '⌨️', cls: 'confitext-wn-card-icon' });
+		hEsc.createEl('h3', { text: 'Hold Esc to Peek (macOS & Windows)' });
+		cardEsc.createEl('p', {
+			text: 'Press and hold the physical Escape key for an instant momentary glance at your notes. Releasing Escape immediately restores privacy masking, with focus-loss protection on Alt-Tab / Cmd-Tab.'
 		});
 
-		// Card 2: Selection Restore Scramble Animation
-		const card1 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h1 = card1.createDiv({ cls: 'confitext-wn-card-header' });
-		h1.createSpan({ text: '✨', cls: 'confitext-wn-card-icon' });
-		h1.createEl('h3', { text: 'Selection Restore Animation' });
-		card1.createEl('p', {
-			text: 'When tapping or clicking away from a selection to read text, previously revealed words now smoothly scramble and cascade back into glyphs instead of snapping instantly.'
-		});
-
-		// Card 3: iOS HIG & Touch Target Standardization
-		const card2 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h2 = card2.createDiv({ cls: 'confitext-wn-card-header' });
-		h2.createSpan({ text: '📱', cls: 'confitext-wn-card-icon' });
-		h2.createEl('h3', { text: 'iOS HIG Mobile Design & Touch Targets' });
-		card2.createEl('p', {
-			text: 'Enforced Apple Human Interface Guidelines across phone and tablet screens: 44px minimum touch targets, inset grouped cards, 16px inputs to prevent iOS auto-zoom, and zero horizontal clipping.'
-		});
-
-		// Card 4: Powerful Mobile Virtual Keyboard Texting
-		const card3 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h3 = card3.createDiv({ cls: 'confitext-wn-card-header' });
-		h3.createSpan({ text: '⌨️', cls: 'confitext-wn-card-icon' });
-		h3.createEl('h3', { text: 'Powerful Virtual Keyboard Texting' });
-		card3.createEl('p', {
-			text: 'Full compatibility with mobile virtual keyboards: non-breaking spaces (\u00A0), smart contractions (don’t, it’s), ellipses (…), em-dashes (—), and safe IME composition tracking without dropped frames.'
-		});
-
-		// Card 5: Battery Saver & Low-End PC Support
-		const card4 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h4 = card4.createDiv({ cls: 'confitext-wn-card-header' });
-		h4.createSpan({ text: '🔋', cls: 'confitext-wn-card-icon' });
-		h4.createEl('h3', { text: 'Low-End PC & Mobile Battery Saver' });
-		card4.createEl('p', {
-			text: 'Added performanceMode setting ("Auto", "High Fidelity", "Battery Saver"). Throttles animation to 30 FPS on mobile/low-end CPUs and disables expensive GPU filter compositing to maximize battery life.'
-		});
-
-		// Card 5: Live Matrix Sandbox & Thematic Presets
-		const card5 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h5 = card5.createDiv({ cls: 'confitext-wn-card-header' });
-		h5.createSpan({ text: '🎨', cls: 'confitext-wn-card-icon' });
-		h5.createEl('h3', { text: 'Live Matrix Sandbox & Presets' });
-		card5.createEl('p', {
-			text: 'Test scrambles and explore custom palettes live inside Settings. Choose from Matrix Code, Cyber Runes, Abstract Geometry, Digital Blocks, Braille, and Morse code, or supply your own custom Unicode symbols.'
-		});
-
-		// Card 6: Idle Auto-Masking & Window Blur
-		const card6 = grid.createDiv({ cls: 'confitext-wn-card' });
-		const h6 = card6.createDiv({ cls: 'confitext-wn-card-header' });
-		h6.createSpan({ text: '⏳', cls: 'confitext-wn-card-icon' });
-		h6.createEl('h3', { text: 'Idle Auto-Masking Timer' });
-		card6.createEl('p', {
-			text: 'Leaving your desk? Confitext automatically engages masking mode when Obsidian is left idle for N minutes or whenever Obsidian loses operating system window focus.'
+		// Card 6: Apple HIG Typography & Bullet Dividers
+		const cardTypo = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hTypo = cardTypo.createDiv({ cls: 'confitext-wn-card-header' });
+		hTypo.createSpan({ text: '💎', cls: 'confitext-wn-card-icon' });
+		hTypo.createEl('h3', { text: 'Apple HIG Bullet Divider Typography' });
+		cardTypo.createEl('p', {
+			text: 'Replaced hyphens with refined Apple bullet symbols (•) across all status indicators, headers, badges, and documentation for a premium typographic aesthetic.'
 		});
 
 		// Actions Bar

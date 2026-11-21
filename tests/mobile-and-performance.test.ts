@@ -211,6 +211,19 @@ describe('Mobile UX, Instant Startup Masking & Performance Optimization', () => 
 			expect(words).toContain('Third');
 			expect(words).toContain('Fourth');
 		});
+
+		it('registers scramble animation for mobile predictive keyboard word completions without delimiters', () => {
+			const animManager = new AnimationManager(() => DEFAULT_SETTINGS);
+
+			// Simulated mobile autocomplete insertion of "confidential" at pos 0..12
+			const word = 'confidential';
+			animManager.registerWordAnimation(0, word.length, word, '01ΞЖ░▒▓⌁⟁⌂');
+
+			const anim = animManager.getAnimation(0, word.length, word);
+			expect(anim).toBeDefined();
+			expect(anim?.stage).toBe('scramble');
+			expect(anim?.glyphs).toBeDefined();
+		});
 	});
 
 	describe('4. Low-End Device Support & Battery Saver Mode', () => {

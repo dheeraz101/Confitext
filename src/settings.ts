@@ -92,14 +92,12 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		this.renderAutomationCard(containerEl);
 
 		// ----------------------------------------------------
-		// 9 & 10. PC DESKTOP PRO & MOBILE TOUCH SUITES
+		// 9 & 10. PC DESKTOP PRO & MOBILE TOUCH SUITES (Platform Specific)
 		// ----------------------------------------------------
 		if (Platform.isMobile) {
-			this.renderMobileShieldCard(containerEl, true);
-			this.renderDesktopProCard(containerEl, false);
+			this.renderMobileShieldCard(containerEl);
 		} else {
-			this.renderDesktopProCard(containerEl, true);
-			this.renderMobileShieldCard(containerEl, false);
+			this.renderDesktopProCard(containerEl);
 		}
 
 		// ----------------------------------------------------
@@ -172,28 +170,28 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		const scope = this.plugin.settings.maskingScope;
 
 		let dotClass = 'pulse-off';
-		let statusLabel = 'INACTIVE — DISABLED';
+		let statusLabel = 'INACTIVE • DISABLED';
 		let statusDesc = 'Visual privacy veil is currently disabled.';
 
 		if (!isEnabled) {
 			dotClass = 'pulse-off';
-			statusLabel = 'INACTIVE — DISABLED';
+			statusLabel = 'INACTIVE • DISABLED';
 			statusDesc = 'Enable master switch to activate privacy masking.';
 		} else if (mode === 'revealed') {
 			dotClass = 'pulse-amber';
-			statusLabel = 'REVEALED — ALL TEXT READABLE';
+			statusLabel = 'REVEALED • ALL TEXT READABLE';
 			statusDesc = 'All words are temporarily revealed for reading or presentations.';
 		} else if (mode === 'paused') {
 			dotClass = 'pulse-amber';
-			statusLabel = 'PAUSED — MASKING SUSPENDED';
+			statusLabel = 'PAUSED • MASKING SUSPENDED';
 			statusDesc = 'Masking is paused and will resume on next toggle.';
 		} else if (scope === 'targeted-only') {
 			dotClass = 'pulse-cyan';
-			statusLabel = 'PROTECTED — TARGETED REDACTION';
+			statusLabel = 'PROTECTED • TARGETED REDACTION';
 			statusDesc = `Selectively concealing ${this.plugin.settings.globalMaskedWords.length} remembered terms & sensitive patterns.`;
 		} else {
 			dotClass = 'pulse-green';
-			statusLabel = 'PROTECTED — FULL SCREEN VEIL';
+			statusLabel = 'PROTECTED • FULL SCREEN VEIL';
 			statusDesc = 'Continuous visual mask applied across all completed words.';
 		}
 
@@ -980,38 +978,40 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setClass('confitext-setting-item')
 			.setClass('confitext-setting-toggle');
 
-		new Setting(card)
-			.setName('Quick peek on hover')
-			.setDesc('Temporarily reveal masked words by resting the mouse pointer over them.')
-			.addToggle(toggle =>
-				toggle
-					.setValue(this.plugin.settings.enableHoverReveal)
-					.onChange(async value => {
-						this.plugin.settings.enableHoverReveal = value;
-						await this.plugin.saveSettings();
-						this.plugin.dispatchSettingsToEditors();
-						this.refreshTab();
-					})
-			)
-			.setClass('confitext-setting-item')
-			.setClass('confitext-setting-toggle');
-
-		if (this.plugin.settings.enableHoverReveal) {
+		if (Platform.isDesktop) {
 			new Setting(card)
-				.setName('Hover reveal delay (ms)')
-				.setDesc('Milliseconds of hover before underlying text appears.')
-				.addSlider(slider =>
-					slider
-						.setLimits(200, 2000, 100)
-						.setValue(this.plugin.settings.hoverRevealDelayMs)
+				.setName('Quick peek on hover')
+				.setDesc('Temporarily reveal masked words by resting the mouse pointer over them.')
+				.addToggle(toggle =>
+					toggle
+						.setValue(this.plugin.settings.enableHoverReveal)
 						.onChange(async value => {
-							this.plugin.settings.hoverRevealDelayMs = value;
+							this.plugin.settings.enableHoverReveal = value;
 							await this.plugin.saveSettings();
 							this.plugin.dispatchSettingsToEditors();
+							this.refreshTab();
 						})
 				)
 				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-stacked');
+				.setClass('confitext-setting-toggle');
+
+			if (this.plugin.settings.enableHoverReveal) {
+				new Setting(card)
+					.setName('Hover reveal delay (ms)')
+					.setDesc('Milliseconds of hover before underlying text appears.')
+					.addSlider(slider =>
+						slider
+							.setLimits(200, 2000, 100)
+							.setValue(this.plugin.settings.hoverRevealDelayMs)
+							.onChange(async value => {
+								this.plugin.settings.hoverRevealDelayMs = value;
+								await this.plugin.saveSettings();
+								this.plugin.dispatchSettingsToEditors();
+							})
+					)
+					.setClass('confitext-setting-item')
+					.setClass('confitext-setting-stacked');
+			}
 		}
 	}
 
@@ -1316,17 +1316,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// =========================================================================
 	// 9. MACOS SEQUOIA & PC DESKTOP PRO EXPERIENCE
 	// =========================================================================
-	private renderDesktopProCard(containerEl: HTMLElement, isPrimary = true): void {
-		const badgeText = isPrimary ? 'ACTIVE ON THIS MAC/PC' : 'DESKTOP PRO (SYNCED)';
-		this.createSectionHeader(containerEl, 'macOS Sequoia & PC Desktop Pro Experience', badgeText, 'badge-desktop');
+	private renderDesktopProCard(containerEl: HTMLElement): void {
+		this.createSectionHeader(containerEl, 'macOS Sequoia & PC Desktop Pro Experience', 'DESKTOP PRO SUITE', 'badge-desktop');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
 		const desc = card.createEl('p', { cls: 'confitext-card-desc' });
 		desc.setText(
-			isPrimary
-				? 'Active workstation features for this device. Precision peek delays, multi-display boundaries, and macOS/Windows keyboard ergonomics.'
-				: 'Desktop workstation configurations synced across your Obsidian vault for macOS and PC devices.'
+			'Workstation features tailored for PC and macOS. Precision peek delays, multi-display boundaries, and physical Escape key glance ergonomics.'
 		);
 
 		new Setting(card)
@@ -1351,7 +1348,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				drop
 					.addOption('200', '200 ms (Instant)')
 					.addOption('350', '350 ms (Snappy)')
-					.addOption('500', '500 ms (Balanced - Default)')
+					.addOption('500', '500 ms (Balanced • Default)')
 					.addOption('800', '800 ms (Relaxed)')
 					.addOption('1200', '1200 ms (Deliberate)')
 					.setValue(String(this.plugin.settings.hoverRevealDelayMs || 500))
@@ -1415,17 +1412,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	// =========================================================================
 	// 10. IOS & ANDROID TOUCH EXPERIENCE & CORNER COMFORT
 	// =========================================================================
-	private renderMobileShieldCard(containerEl: HTMLElement, isPrimary = true): void {
-		const badgeText = isPrimary ? 'ACTIVE ON THIS DEVICE' : 'MOBILE SHIELD (SYNCED)';
-		this.createSectionHeader(containerEl, 'iOS & Android Touch Shield & Ergonomics', badgeText, 'badge-mobile');
+	private renderMobileShieldCard(containerEl: HTMLElement): void {
+		this.createSectionHeader(containerEl, 'iOS & Android Touch Shield & Ergonomics', 'MOBILE TOUCH SHIELD', 'badge-mobile');
 
 		const card = containerEl.createDiv({ cls: 'confitext-card' });
 
 		const desc = card.createEl('p', { cls: 'confitext-card-desc' });
 		desc.setText(
-			isPrimary
-				? 'Active mobile preferences for this device. Tactile haptic ticks, battery-saving 30 FPS animation throttling, and Android circular corner safe zones.'
-				: 'Mobile touch controls, haptic vibration, and battery-saver preferences synced across your Obsidian vault for iOS and Android devices.'
+			'Mobile touch controls, tactile haptic ticks, battery-saving 30 FPS animation throttling, and Android circular corner safe zones.'
 		);
 
 		new Setting(card)
@@ -1682,7 +1676,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		brandRow.createEl('p', {
 			cls: 'confitext-footer-tagline',
-			text: 'Yet Another Boring Project — Thoughtful, distraction-free software.'
+			text: 'Yet Another Boring Project • Thoughtful, distraction-free software.'
 		});
 
 		const creditRow = footerCard.createDiv({ cls: 'confitext-footer-credits' });

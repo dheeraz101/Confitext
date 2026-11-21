@@ -513,17 +513,15 @@ export function isWordBeingComposed(
 	fullDocText: string,
 	revealOnCursor: boolean
 ): boolean {
-	// If cursor is strictly inside the word
-	if (cursorPos > word.from && cursorPos < word.to) {
-		return revealOnCursor;
-	}
+	// If cursor is at or inside the word boundary [word.from, word.to]
+	// Note: cursor at 0 at start of document (e.g. cold open) does not unmask the first word.
+	const isAtOrInside =
+		(cursorPos > word.from || (cursorPos === word.from && word.from > 0)) &&
+		cursorPos <= word.to;
 
-	// If cursor is at the end of the word
-	if (cursorPos === word.to) {
-		// If reveal on cursor is active, caret resting at end of word reveals it
+	if (isAtOrInside) {
 		if (revealOnCursor) return true;
-		// If at end of document without trailing space, user is typing it
-		if (word.to >= fullDocText.length) return true;
+		if (cursorPos === word.to && word.to >= fullDocText.length) return true;
 		return false;
 	}
 
