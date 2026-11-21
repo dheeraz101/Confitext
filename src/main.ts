@@ -39,21 +39,63 @@ export default class ConfitextPlugin extends Plugin {
 	private viewsWithAction = new WeakSet<View>();
 
 	async onload(): Promise<void> {
-		await this.loadSettings();
-		this.currentMode = this.settings.defaultMode;
+		// 0. Synchronous instant startup: read fast local cache to eliminate startup plain-text exposure
+		let fastSettings: ConfitextSettings = DEFAULT_SETTINGS;
+		try {
+			if (typeof localStorage !== 'undefined') {
+				const cached = localStorage.getItem('confitext-cached-settings');
+				if (cached) {
+					fastSettings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(cached));
+				}
+			}
+		} catch {
+			fastSettings = DEFAULT_SETTINGS;
+		}
+		this.settings = fastSettings;
 
-		// Initialize StateField initial state provider with live settings and active file
+		let cachedMode = fastSettings.defaultMode || 'masking';
+		try {
+			if (typeof localStorage !== 'undefined') {
+				const m = localStorage.getItem('confitext-cached-mode') as ConfitextMode | null;
+				if (m && (m === 'masking' || m === 'revealed' || m === 'paused')) {
+					cachedMode = m;
+				}
+			}
+		} catch {}
+		this.currentMode = cachedMode;
+
+		// Initialize StateField initial state provider SYNCHRONOUSLY before registering extensions
 		setInitialStateProvider(() => ({
 			mode: this.currentMode,
 			settings: this.settings,
 			filePath: this.app.workspace.getActiveFile()?.path || ''
 		}));
 
-		// 1. Register CodeMirror 6 Editor Extension (Live Preview & Source Mode)
+		// 1. Register CodeMirror 6 Editor Extension SYNCHRONOUSLY (Live Preview & Source Mode)
 		this.registerEditorExtension(createConfitextExtension());
 
-		// 2. Register Reading View Markdown Post-Processor (Preview Mode)
+		// 2. Register Reading View Markdown Post-Processor SYNCHRONOUSLY (Preview Mode)
 		this.registerMarkdownPostProcessor(createPreviewMaskProcessor(this));
+
+		// Immediate pre-render visual privacy styling
+		this.applyBodyClasses();
+		this.applyCssVariables();
+
+		// Immediate dispatch to any views already mounted during cold boot
+		this.dispatchModeToEditors();
+		this.dispatchSettingsToEditors();
+		this.dispatchFilePathToEditors();
+		this.rerenderPreviewViews();
+
+		// Asynchronously load saved settings from Obsidian vault data.json
+		await this.loadSettings();
+		this.currentMode = this.settings.defaultMode;
+		this.cacheSettingsSynchronously();
+		this.applyBodyClasses();
+		this.dispatchModeToEditors();
+		this.dispatchSettingsToEditors();
+		this.dispatchFilePathToEditors();
+		this.rerenderPreviewViews();
 
 		// 3. Register What's New View Tab
 		this.registerView(VIEW_TYPE_WHATS_NEW, leaf => new WhatsNewView(leaf, this));
@@ -69,7 +111,7 @@ export default class ConfitextPlugin extends Plugin {
 		this.updateStatusBar();
 		this.applyCssVariables();
 
-		// 6. Setup Idle & Window Blur Auto-Masking Manager
+		// 7. Setup Idle & Window Blur Auto-Masking Manager
 		this.idleManager = new IdleManager(
 			() => this.settings,
 			() => {
@@ -83,9 +125,17 @@ export default class ConfitextPlugin extends Plugin {
 				}
 			}
 		);
-		if (this.settings.idleAutoMask) {
-			this.idleManager.start();
-		}
+		this.updateIdleManager();
+
+		// Listen to workspace layout changes to instantly decorate mounted leaves
+		this.registerEvent(
+			this.app.workspace.on('layout-change', () => {
+				this.dispatchModeToEditors();
+				this.dispatchSettingsToEditors();
+				this.dispatchFilePathToEditors();
+				this.rerenderPreviewViews();
+			})
+		);
 
 		// Update CSS variables when user toggles light/dark theme
 		this.registerEvent(
@@ -110,13 +160,23 @@ export default class ConfitextPlugin extends Plugin {
 					const filePath = leaf.view.file?.path || '';
 					if (cmView && typeof cmView.dispatch === 'function') {
 						const currentState = cmView.state.field(confitextStateField, false);
-						if (currentState?.filePath !== filePath) {
+						if (!currentState || currentState.mode !== this.currentMode || currentState.filePath !== filePath || currentState.settings !== this.settings) {
 							try {
-								cmView.dispatch({ effects: setFilePathEffect.of(filePath) });
+								cmView.dispatch({
+									effects: [
+										setModeEffect.of(this.currentMode),
+										setSettingsEffect.of(this.settings),
+										setFilePathEffect.of(filePath)
+									]
+								});
 							} catch {
 								// Guard against unmounted views
 							}
 						}
+					}
+					if (this.settings.maskReadingView) {
+						const pv = leaf.view as unknown as { previewMode?: MarkdownPreviewWithRerender };
+						pv.previewMode?.rerender?.(true);
 					}
 				}
 			})
@@ -334,8 +394,14 @@ export default class ConfitextPlugin extends Plugin {
 		clearRulesCache();
 		clearTokenizerCache();
 
-		document.body.classList.remove('confitext-active');
-		document.body.classList.remove('confitext-battery-saver');
+		if (typeof document !== 'undefined' && document.body) {
+			document.body.classList.remove('confitext-active');
+			document.body.classList.remove('confitext-scope-all');
+			document.body.classList.remove('confitext-revealed');
+			document.body.classList.remove('confitext-paused');
+			document.body.classList.remove('confitext-battery-saver');
+			document.body.classList.remove('confitext-ligatures');
+		}
 		const root = document.documentElement;
 		root.style.removeProperty('--confitext-color');
 		root.style.removeProperty('--confitext-bright');
@@ -359,7 +425,33 @@ export default class ConfitextPlugin extends Plugin {
 
 	async saveSettings(): Promise<void> {
 		await this.saveData(this.settings);
+		this.cacheSettingsSynchronously();
+		this.applyBodyClasses();
 		this.updateIdleManager();
+	}
+
+	/**
+	 * Synchronously caches current settings and mode to localStorage for zero-latency startup
+	 */
+	cacheSettingsSynchronously(): void {
+		try {
+			if (typeof localStorage !== 'undefined') {
+				localStorage.setItem('confitext-cached-settings', JSON.stringify(this.settings));
+				localStorage.setItem('confitext-cached-mode', this.currentMode);
+			}
+		} catch {}
+	}
+
+	/**
+	 * Fires subtle mobile haptic feedback if enabled on Android / iOS
+	 */
+	triggerHaptic(pattern: number | number[] = 15): void {
+		if (!this.settings.mobileHapticFeedback) return;
+		if (typeof navigator !== 'undefined' && 'vibrate' in navigator && typeof navigator.vibrate === 'function') {
+			try {
+				navigator.vibrate(pattern);
+			} catch {}
+		}
 	}
 
 	/**
@@ -367,7 +459,7 @@ export default class ConfitextPlugin extends Plugin {
 	 */
 	updateIdleManager(): void {
 		if (!this.idleManager) return;
-		if (this.settings.idleAutoMask) {
+		if (this.settings.idleAutoMask || this.settings.multiMonitorBlur) {
 			this.idleManager.start();
 		} else {
 			this.idleManager.stop();
@@ -396,11 +488,14 @@ export default class ConfitextPlugin extends Plugin {
 	 */
 	setMode(mode: ConfitextMode): void {
 		this.currentMode = mode;
+		this.triggerHaptic(mode === 'masking' ? [12, 20, 12] : 18);
 		if (mode === 'masking' && !this.settings.enabled) {
 			this.settings.enabled = true;
 			void this.saveSettings();
 			this.dispatchSettingsToEditors();
 		}
+		this.cacheSettingsSynchronously();
+		this.applyBodyClasses();
 		this.dispatchModeToEditors();
 		this.rerenderPreviewViews();
 		this.updateStatusBar();
@@ -411,6 +506,7 @@ export default class ConfitextPlugin extends Plugin {
 	 * Instant emergency panic hide: masks all text, deselects editors, and engages masking mode
 	 */
 	panicHide(): void {
+		this.triggerHaptic([30, 40, 30]);
 		this.setMode('masking');
 		this.iterateEditorViews(view => {
 			const head = view.state.selection.main.head;
@@ -800,17 +896,35 @@ export default class ConfitextPlugin extends Plugin {
 		root.style.setProperty('--confitext-color', color);
 		root.style.setProperty('--confitext-bright', bright);
 
-		const isMobile = typeof document !== 'undefined' && document.body?.classList.contains('is-mobile');
+		this.applyBodyClasses();
+
+		const isMobile = typeof document !== 'undefined' && (document.body?.classList.contains('is-mobile') || document.body?.classList.contains('is-phone') || document.body?.classList.contains('is-android'));
 		const isBatterySaver =
 			this.settings.performanceMode === 'battery-saver' ||
-			(this.settings.performanceMode === 'auto' && isMobile);
-
-		if (typeof document !== 'undefined' && document.body) {
-			document.body.classList.toggle('confitext-battery-saver', isBatterySaver);
-		}
+			(this.settings.performanceMode === 'auto' && isMobile) ||
+			(this.settings.batterySaverFps && isMobile);
 
 		const effectiveGlow = isBatterySaver ? 'none' : (this.settings.subtleGlow ? glow : 'none');
 		root.style.setProperty('--confitext-glow', effectiveGlow);
 		root.style.setProperty('--confitext-opacity', String(this.settings.maskOpacity));
+	}
+
+	/**
+	 * Manages global body classes for instantaneous cold-boot privacy veil and platform styling
+	 */
+	applyBodyClasses(): void {
+		if (typeof document === 'undefined' || !document.body) return;
+		const isMaskingActive = this.currentMode === 'masking' && this.settings.enabled;
+		document.body.classList.toggle('confitext-active', isMaskingActive);
+		document.body.classList.toggle('confitext-scope-all', isMaskingActive && this.settings.maskingScope === 'all-words');
+		document.body.classList.toggle('confitext-revealed', this.currentMode === 'revealed');
+		document.body.classList.toggle('confitext-paused', this.currentMode === 'paused');
+		const isMobile = document.body.classList.contains('is-mobile') || document.body.classList.contains('is-phone') || document.body.classList.contains('is-android');
+		const isBatterySaver =
+			this.settings.performanceMode === 'battery-saver' ||
+			(this.settings.performanceMode === 'auto' && isMobile) ||
+			(this.settings.batterySaverFps && isMobile);
+		document.body.classList.toggle('confitext-battery-saver', isBatterySaver);
+		document.body.classList.toggle('confitext-ligatures', !!this.settings.enableFontLigatures);
 	}
 }

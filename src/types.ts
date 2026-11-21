@@ -96,6 +96,16 @@ export interface ConfitextSettings {
 	preserveCodeBlocks: boolean;
 	preserveInlineCode: boolean;
 	preserveUrls: boolean;
+
+	// Group G - Desktop & PC Pro Suite
+	multiMonitorBlur: boolean;
+	enableFontLigatures: boolean;
+	desktopQuickRevealHotkeyHint: boolean;
+
+	// Group H - Mobile & Touch Ergonomics Suite
+	mobileHapticFeedback: boolean;
+	batterySaverFps: boolean;
+	mobileSwipeGestureReveal: boolean;
 }
 
 export const DEFAULT_SETTINGS: ConfitextSettings = {
@@ -152,6 +162,16 @@ export const DEFAULT_SETTINGS: ConfitextSettings = {
 	preserveCodeBlocks: true,
 	preserveInlineCode: true,
 	preserveUrls: true,
+
+	// Group G - Desktop & PC Pro Suite
+	multiMonitorBlur: false,
+	enableFontLigatures: true,
+	desktopQuickRevealHotkeyHint: true,
+
+	// Group H - Mobile & Touch Ergonomics Suite
+	mobileHapticFeedback: true,
+	batterySaverFps: true,
+	mobileSwipeGestureReveal: true,
 };
 
 export interface WordToken {

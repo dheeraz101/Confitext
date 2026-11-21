@@ -16,6 +16,26 @@
 	--confitext-glow: 0 0 3px rgba(11, 122, 62, 0.3);
 }
 
+/* Instant Cold-Boot Startup & Pre-Render Visual Privacy Veil
+   Protects unmasked text lines before CodeMirror widgets mount */
+body.confitext-active.confitext-scope-all .cm-editor:not(.confitext-note-excluded) .cm-line:not(:has(.confitext-glyph)),
+body.confitext-active.confitext-scope-all .markdown-preview-view:not(.confitext-note-excluded) .markdown-rendered > *:not(:has(.confitext-glyph)):not(pre):not(code):not(.frontmatter) {
+	filter: blur(8px);
+	opacity: 0.25;
+	user-select: none;
+	pointer-events: none;
+	transition: filter 0.14s ease, opacity 0.14s ease;
+}
+
+body.confitext-revealed .cm-editor .cm-line,
+body.confitext-paused .cm-editor .cm-line,
+body.confitext-revealed .markdown-preview-view *,
+body.confitext-paused .markdown-preview-view * {
+	filter: none;
+	opacity: 1;
+	pointer-events: auto;
+}
+
 /* Masked Glyph Widget */
 .confitext-glyph {
 	color: var(--confitext-color);
@@ -484,6 +504,62 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	background: rgba(14, 165, 233, 0.12);
 	color: #0ea5e9;
 	border: 1px solid rgba(14, 165, 233, 0.28);
+}
+
+.section-badge.badge-desktop {
+	background: rgba(59, 130, 246, 0.12);
+	color: #3b82f6;
+	border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+.section-badge.badge-mobile {
+	background: rgba(16, 185, 129, 0.12);
+	color: #10b981;
+	border: 1px solid rgba(16, 185, 129, 0.28);
+}
+
+/* Monospace Font Ligature Support (SF Mono / JetBrains Mono) */
+body.confitext-ligatures .confitext-glyph,
+.confitext-glyph.confitext-ligatures {
+	font-feature-settings: "liga" 1, "calt" 1, "zero" 1;
+	font-variant-ligatures: normal;
+}
+
+/* Apple Keyboard Shortcut Pill */
+.confitext-hotkey-pill {
+	font-family: var(--font-monospace, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif);
+	font-size: 0.72rem;
+	font-weight: 600;
+	padding: 2px 8px;
+	border-radius: 6px;
+	background: var(--background-modifier-form-field);
+	border: 1px solid var(--background-modifier-border);
+	color: var(--text-normal);
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* macOS Sequoia & Apple HIG Keyboard Shortcut Keycaps */
+.confitext-mac-kbd {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 5px;
+	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+	font-size: 0.72rem;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--text-normal);
+	background: var(--background-modifier-form-field);
+	border: 1px solid var(--background-modifier-border);
+	border-bottom: 2px solid var(--background-modifier-border-focus, rgba(0, 0, 0, 0.25));
+	border-radius: 5px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+	user-select: none;
 }
 
 .confitext-setting-item {
@@ -1742,39 +1818,228 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	}
 }
 
-/* Dedicated Phone Refinements (.is-phone Obsidian body class) */
-body.is-phone .confitext-settings-pane {
-	padding: 12px 14px 64px 14px;
+/* =========================================================================
+   Dedicated Mobile, Phone & Android Refinements (.is-phone, .is-android, .is-mobile)
+   Inset Grouped Circular Corner Comfort: Generous 24px-26px horizontal padding
+   ========================================================================= */
+
+body.is-phone .confitext-settings-pane,
+body.is-android .confitext-settings-pane,
+body.is-mobile .confitext-settings-pane {
+	padding: 12px 16px 84px 16px;
 	box-sizing: border-box;
 }
 
-body.is-phone .confitext-card {
-	border-radius: 11px;
-	padding: 18px 20px;
-	margin: 0 0 16px 0;
+/* Inset Grouped Circular Corner Cards: Generous 24px-26px horizontal padding */
+body.is-phone .confitext-card,
+body.is-android .confitext-card,
+body.is-mobile .confitext-card {
+	border-radius: 22px;
+	padding: 24px 26px;
+	margin: 0 0 18px 0;
 	box-sizing: border-box;
+	width: 100%;
+	overflow: hidden;
+	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure first and last children of ANY card never touch the circular corner curvature */
+body.is-phone .confitext-card > :first-child,
+body.is-android .confitext-card > :first-child,
+body.is-mobile .confitext-card > :first-child {
+	margin-top: 2px;
+	padding-top: 4px;
+}
+
+body.is-phone .confitext-card > :last-child,
+body.is-android .confitext-card > :last-child,
+body.is-mobile .confitext-card > :last-child {
+	margin-bottom: 2px;
+	padding-bottom: 4px;
+	border-bottom: none;
+}
+
+/* Card description padding clearance away from curved corners */
+body.is-phone .confitext-card .confitext-card-desc,
+body.is-android .confitext-card .confitext-card-desc,
+body.is-mobile .confitext-card .confitext-card-desc {
+	padding: 2px 14px 6px 14px;
+	margin: 0 0 14px 0;
+}
+
+/* Internal setting-item padding & clearances so controls never collide with curved corners */
+body.is-phone .confitext-settings-pane .setting-item,
+body.is-android .confitext-settings-pane .setting-item,
+body.is-mobile .confitext-settings-pane .setting-item,
+body.is-phone .confitext-card .setting-item,
+body.is-android .confitext-card .setting-item,
+body.is-mobile .confitext-card .setting-item {
+	margin-left: 0;
+	margin-right: 0;
+	padding: 16px 22px;
+	box-sizing: border-box;
+}
+
+body.is-phone .confitext-settings-pane .setting-item:first-child,
+body.is-android .confitext-settings-pane .setting-item:first-child,
+body.is-mobile .confitext-settings-pane .setting-item:first-child,
+body.is-phone .confitext-card .setting-item:first-child,
+body.is-android .confitext-card .setting-item:first-child,
+body.is-mobile .confitext-card .setting-item:first-child {
+	padding-top: 14px;
+}
+
+body.is-phone .confitext-settings-pane .setting-item:last-child,
+body.is-android .confitext-settings-pane .setting-item:last-child,
+body.is-mobile .confitext-settings-pane .setting-item:last-child,
+body.is-phone .confitext-card .setting-item:last-child,
+body.is-android .confitext-card .setting-item:last-child,
+body.is-mobile .confitext-card .setting-item:last-child {
+	padding-bottom: 14px;
+	border-bottom: none;
+}
+
+/* Setting item controls (switches, inputs, dropdowns) safe clearance from right edge */
+body.is-phone .confitext-settings-pane .setting-item-control,
+body.is-android .confitext-settings-pane .setting-item-control,
+body.is-mobile .confitext-settings-pane .setting-item-control,
+body.is-phone .confitext-card .setting-item-control,
+body.is-android .confitext-card .setting-item-control,
+body.is-mobile .confitext-card .setting-item-control {
+	padding-right: 6px;
+	gap: 12px;
+}
+
+/* Ensure text inside setting info wraps comfortably with generous side breathing room */
+body.is-phone .confitext-settings-pane .setting-item-info,
+body.is-android .confitext-settings-pane .setting-item-info,
+body.is-mobile .confitext-settings-pane .setting-item-info,
+body.is-phone .confitext-card .setting-item-info,
+body.is-android .confitext-card .setting-item-info,
+body.is-mobile .confitext-card .setting-item-info {
+	padding-left: 4px;
+	padding-right: 16px;
+	overflow-wrap: break-word;
+	word-break: normal;
+}
+
+/* Hero card on phone & Android */
+body.is-phone .confitext-hero-card,
+body.is-android .confitext-hero-card,
+body.is-mobile .confitext-hero-card {
+	border-radius: 24px;
+	padding: 26px 26px;
+	margin-bottom: 20px;
+}
+
+/* Dynamic island card clearance */
+body.is-phone .confitext-island-card,
+body.is-android .confitext-island-card,
+body.is-mobile .confitext-island-card {
+	border-radius: 18px;
+	padding: 18px 20px;
+}
+
+/* Sandbox screen inner padding and corner clearance */
+body.is-phone .confitext-sandbox-screen,
+body.is-android .confitext-sandbox-screen,
+body.is-mobile .confitext-sandbox-screen {
+	border-radius: 16px;
+	padding: 18px 20px;
+	margin-bottom: 16px;
+}
+
+/* Quick Add Rows (Targeted Words & Patterns) */
+body.is-phone .confitext-add-row,
+body.is-android .confitext-add-row,
+body.is-mobile .confitext-add-row {
+	margin: 12px 4px;
+	width: calc(100% - 8px);
+}
+
+body.is-phone .confitext-chips-grid,
+body.is-android .confitext-chips-grid,
+body.is-mobile .confitext-chips-grid {
+	border-radius: 14px;
+	padding: 14px 16px;
+	margin: 12px 4px 16px 4px;
+	width: calc(100% - 8px);
+}
+
+body.is-phone .confitext-btn,
+body.is-android .confitext-btn,
+body.is-mobile .confitext-btn {
+	min-height: 44px;
+	padding: 10px 16px;
+	border-radius: 12px;
+}
+
+body.is-phone .confitext-section-header,
+body.is-android .confitext-section-header,
+body.is-mobile .confitext-section-header,
+.confitext-settings-pane .confitext-section-header {
+	display: block;
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	margin: 2.2rem 0 0.85rem 4px;
+	padding: 0;
+}
+
+body.is-phone .confitext-section-header .setting-item-info,
+body.is-android .confitext-section-header .setting-item-info,
+body.is-mobile .confitext-section-header .setting-item-info,
+.confitext-settings-pane .confitext-section-header .setting-item-info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 0;
+	margin: 0;
 	width: 100%;
 }
 
-body.is-phone .confitext-card .setting-item {
-	margin-left: 0;
-	margin-right: 0;
-	padding-left: 6px;
-	padding-right: 6px;
+body.is-phone .confitext-section-header .setting-item-name,
+body.is-android .confitext-section-header .setting-item-name,
+body.is-mobile .confitext-section-header .setting-item-name,
+.confitext-settings-pane .confitext-section-header .setting-item-name {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	width: 100%;
+}
+
+body.is-phone .confitext-window-pills,
+body.is-android .confitext-window-pills,
+body.is-mobile .confitext-window-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	width: 100%;
+	padding: 4px 0 10px 0;
 	box-sizing: border-box;
 }
 
-body.is-phone .confitext-btn {
-	min-height: 44px;
-	padding: 10px 14px;
-	border-radius: 10px;
+body.is-phone .confitext-tag-pill,
+body.is-android .confitext-tag-pill,
+body.is-mobile .confitext-tag-pill {
+	font-size: 0.68rem;
+	padding: 3px 8px;
+	white-space: nowrap;
 }
 
-body.is-phone .confitext-section-header {
-	margin: 2rem 0 0.75rem 2px;
+body.is-phone .confitext-folders-textarea,
+body.is-android .confitext-folders-textarea,
+body.is-mobile .confitext-folders-textarea {
+	width: 100%;
+	border-radius: 12px;
+	padding: 12px 14px;
+	box-sizing: border-box;
 }
 
-body.is-phone .confitext-sandbox-controls {
+body.is-phone .confitext-sandbox-controls,
+body.is-android .confitext-sandbox-controls,
+body.is-mobile .confitext-sandbox-controls {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -1782,12 +2047,16 @@ body.is-phone .confitext-sandbox-controls {
 	margin-bottom: 14px;
 }
 
-body.is-phone .confitext-sandbox-controls .confitext-btn {
+body.is-phone .confitext-sandbox-controls .confitext-btn,
+body.is-android .confitext-sandbox-controls .confitext-btn,
+body.is-mobile .confitext-sandbox-controls .confitext-btn {
 	width: 100%;
 	min-height: 44px;
 }
 
-body.is-phone .confitext-island-actions {
+body.is-phone .confitext-island-actions,
+body.is-android .confitext-island-actions,
+body.is-mobile .confitext-island-actions {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -1795,15 +2064,19 @@ body.is-phone .confitext-island-actions {
 	margin-top: 10px;
 }
 
-body.is-phone .confitext-island-actions .confitext-btn {
+body.is-phone .confitext-island-actions .confitext-btn,
+body.is-android .confitext-island-actions .confitext-btn,
+body.is-mobile .confitext-island-actions .confitext-btn {
 	width: 100%;
 	min-height: 44px;
 }
 
-body.is-phone .confitext-footer-card {
-	padding: 16px 14px;
-	margin-top: 1rem;
-	margin-bottom: 2.5rem;
-	border-radius: 11px;
+body.is-phone .confitext-footer-card,
+body.is-android .confitext-footer-card,
+body.is-mobile .confitext-footer-card {
+	padding: 24px 26px;
+	margin-top: 1.25rem;
+	margin-bottom: 3rem;
+	border-radius: 20px;
 }
 

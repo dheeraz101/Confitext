@@ -35,6 +35,11 @@ export class AnimationManager {
 		if (settings.performanceMode === 'battery-saver') return true;
 		if (settings.performanceMode === 'high') return false;
 
+		// Mobile battery-saver 30fps mode
+		if (settings.batterySaverFps && typeof document !== 'undefined' && document.body?.classList.contains('is-mobile')) {
+			return true;
+		}
+
 		// 'auto' mode: check for mobile or low hardware concurrency
 		if (typeof window !== 'undefined') {
 			if (typeof document !== 'undefined' && document.body?.classList.contains('is-mobile')) {

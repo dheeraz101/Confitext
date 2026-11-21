@@ -6,22 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
-## [2.2.0] - 2026-11-20
+## [2.2.0] - 2026-11-21
 
 ### Added
+- **Instant Cold-Boot Startup Privacy Veil**:
+  - Implemented immediate synchronous pre-render CSS visual privacy veil (`body.confitext-active.confitext-scope-all .cm-editor:not(.confitext-note-excluded) .cm-line:not(:has(.confitext-glyph))`), eliminating the 2–5 second plain-text startup vulnerability on Android mobile cold boots.
+  - Added synchronous `localStorage` cache hydration on plugin `onload()`, applying active masking mode and settings before notes or CodeMirror extensions mount.
+  - Added `update.geometryChanged` and `update.heightChanged` observers plus zero-decoration fallback recovery in `src/editor-extension.ts`.
+- **Platform Feature Divergence (PC Desktop Pro vs. Mobile Touch Shield)**:
+  - **macOS & PC Desktop Pro**: Added multi-monitor window blur & edge masking, customizable hover glance reveal delays (200ms–1200ms), OpenType monospace font ligatures (SF Mono, JetBrains Mono, Cascadia Code), and Apple HIG 3D keyboard shortcut tips (`⌥ / Alt + M`, `Esc`).
+  - **iOS & Android Touch Shield**: Added tactile haptic feedback (`navigator.vibrate`), battery-saver 30 FPS animation throttling, touch gesture word reveal, and active platform device pills.
+- **Apple HIG Web Landing & Documentation Suite**:
+  - Published interactive dark/light web landing page (`docs/index.html`) featuring live Matrix typing playground, feature showcase, and platform comparison.
+  - Published comprehensive interactive documentation guide (`docs/docs.html`).
+  - Published formal web versions of the Privacy Policy (`docs/privacy.html`) and Terms of Use (`docs/terms.html`) with GDPR/CCPA alignment and HIPAA display discretion framing.
 - **YABP Initiative & Transparency Center**:
   - Integrated dedicated footer card supporting **An YABP Initiative** ([yabp.netlify.app](https://yabp.netlify.app/)) — "Yet Another Boring Project".
   - Added official author attribution to **Dheeraz** ([github.com/dheeraz101](https://github.com/dheeraz101)).
   - Published comprehensive **Privacy Policy** (`PRIVACY.md`) confirming 100% local execution, zero network requests, and zero telemetry collection.
   - Published open-source **Terms of Use** (`TERMS.md`) with explicit security scope guidelines and MIT licensing terms.
-  - Linked Privacy Policy, Terms of Use, MIT License, and GitHub repository across settings, release notes, and documentation.
 
 ### Changed
-- **Squircle Card Curvature (Apple HIG Superellipse)**:
-  - Transitioned cards from oversized circular/bubble arcs (`16px`) to crisp `11px` squircles across all settings cards, hero headers, and terminal sandbox windows.
-- **Card Edge Clearances on Mobile**:
-  - Neutralized Obsidian's mobile theme negative margin pulls on `.setting-item`.
-  - Expanded card horizontal padding to `20px` with dedicated side insets on `.setting-item-info`, `.setting-item-control`, `.confitext-add-row`, and `.confitext-chips-grid` to prevent controls from touching card edges.
+- **Android Native Circular Card Corner Accommodation**:
+  - Accommodated native Android app circular card curvature by implementing generous `24px–26px` horizontal padding (`padding: 24px 26px`) on `.confitext-card`.
+  - Added top and bottom margin and padding clearances on first/last children (`.confitext-card > :first-child`, `.confitext-card > :last-child`), `.setting-item`, `.setting-item-control`, `.confitext-add-row`, and `.confitext-chips-grid`, ensuring text, inputs, switches, and buttons sit comfortably away from curved borders.
 
 ---
 

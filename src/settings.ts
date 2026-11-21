@@ -3,7 +3,7 @@
  * High-end Apple HIG / macOS Sequoia aesthetic with imperative display() lifecycle.
  */
 
-import { App, PluginSettingTab, Setting, Notice, TFile } from 'obsidian';
+import { App, PluginSettingTab, Setting, Notice, TFile, Platform } from 'obsidian';
 import type ConfitextPlugin from './main';
 import {
 	ConfitextMode,
@@ -92,17 +92,28 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		this.renderAutomationCard(containerEl);
 
 		// ----------------------------------------------------
-		// 9. EXCLUSIONS & SYNTAX PRESERVATION
+		// 9 & 10. PC DESKTOP PRO & MOBILE TOUCH SUITES
+		// ----------------------------------------------------
+		if (Platform.isMobile) {
+			this.renderMobileShieldCard(containerEl, true);
+			this.renderDesktopProCard(containerEl, false);
+		} else {
+			this.renderDesktopProCard(containerEl, true);
+			this.renderMobileShieldCard(containerEl, false);
+		}
+
+		// ----------------------------------------------------
+		// 11. EXCLUSIONS & SYNTAX PRESERVATION
 		// ----------------------------------------------------
 		this.renderRulesAndSyntaxCard(containerEl);
 
 		// ----------------------------------------------------
-		// 10. SECURITY & PRIVACY ARCHITECTURE CALLOUT
+		// 12. SECURITY & PRIVACY ARCHITECTURE CALLOUT
 		// ----------------------------------------------------
 		this.renderSecurityCard(containerEl);
 
 		// ----------------------------------------------------
-		// 11. YABP FOOTER & LEGAL TRANSPARENCY
+		// 13. YABP FOOTER & LEGAL TRANSPARENCY
 		// ----------------------------------------------------
 		this.renderFooter(containerEl);
 	}
@@ -308,9 +319,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			text: `GLYPHS: ${palette.length}`
 		});
 
+		const scopeShort = this.plugin.settings.maskingScope === 'all-words' ? 'ALL' : 'TARGETED';
 		this.sandboxPillEl.createSpan({
 			cls: 'confitext-tag-pill',
-			text: `SCOPE: ${this.plugin.settings.maskingScope.toUpperCase()}`
+			text: `SCOPE: ${scopeShort}`
 		});
 
 		this.sandboxPillEl.createSpan({
@@ -1293,7 +1305,164 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	}
 
 	// =========================================================================
-	// 9. EXCLUSIONS & SYNTAX PRESERVATION
+	// 9. MACOS SEQUOIA & PC DESKTOP PRO EXPERIENCE
+	// =========================================================================
+	private renderDesktopProCard(containerEl: HTMLElement, isPrimary = true): void {
+		const badgeText = isPrimary ? 'ACTIVE ON THIS MAC/PC' : 'DESKTOP PRO (SYNCED)';
+		this.createSectionHeader(containerEl, 'macOS Sequoia & PC Desktop Pro Experience', badgeText, 'badge-desktop');
+
+		const card = containerEl.createDiv({ cls: 'confitext-card' });
+
+		const desc = card.createEl('p', { cls: 'confitext-card-desc' });
+		desc.setText(
+			isPrimary
+				? 'Active workstation features for this device. Precision peek delays, multi-display boundaries, and macOS/Windows keyboard ergonomics.'
+				: 'Desktop workstation configurations synced across your Obsidian vault for macOS and PC devices.'
+		);
+
+		new Setting(card)
+			.setName('Multi-monitor window blur & edge masking')
+			.setDesc('Immediately engages Matrix masking when cursor leaves the Obsidian window boundaries or focus moves to a secondary monitor.')
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.multiMonitorBlur)
+					.onChange(async value => {
+						this.plugin.settings.multiMonitorBlur = value;
+						await this.plugin.saveSettings();
+						this.plugin.updateIdleManager();
+					})
+			)
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
+
+		new Setting(card)
+			.setName('Quick glance hover reveal delay')
+			.setDesc('Duration the mouse pointer must rest over a masked word before cleartext is revealed.')
+			.addDropdown(drop => {
+				drop
+					.addOption('200', '200 ms (Instant)')
+					.addOption('350', '350 ms (Snappy)')
+					.addOption('500', '500 ms (Balanced - Default)')
+					.addOption('800', '800 ms (Relaxed)')
+					.addOption('1200', '1200 ms (Deliberate)')
+					.setValue(String(this.plugin.settings.hoverRevealDelayMs || 500))
+					.onChange(async val => {
+						this.plugin.settings.hoverRevealDelayMs = Number(val);
+						await this.plugin.saveSettings();
+						this.plugin.dispatchSettingsToEditors();
+					});
+			})
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-dropdown');
+
+		new Setting(card)
+			.setName('Typography ligature & monospace kerning')
+			.setDesc('Enables OpenType monospace font ligatures and zero-width kerning on SF Mono, JetBrains Mono, and Cascadia Code glyphs.')
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.enableFontLigatures)
+					.onChange(async value => {
+						this.plugin.settings.enableFontLigatures = value;
+						await this.plugin.saveSettings();
+						this.plugin.applyCssVariables();
+					})
+			)
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
+
+		const hotkeyItem = new Setting(card)
+			.setName('Quick reveal hotkey tips')
+			.setDesc('Toggle masking, panic conceal, or reveal active selections instantly via keyboard shortcuts.')
+			.setClass('confitext-setting-item');
+
+		const hotkeyGroup = hotkeyItem.controlEl.createDiv({ cls: 'confitext-hotkey-group' });
+		const pill1 = hotkeyGroup.createSpan({ cls: 'confitext-hotkey-pill' });
+		pill1.createSpan({ cls: 'confitext-mac-kbd', text: '⌥' });
+		pill1.createSpan({ text: ' / ' });
+		pill1.createSpan({ cls: 'confitext-mac-kbd', text: 'Alt' });
+		pill1.createSpan({ text: ' + ' });
+		pill1.createSpan({ cls: 'confitext-mac-kbd', text: 'M' });
+		pill1.createSpan({ text: ' Mask Toggle' });
+
+		const pill2 = hotkeyGroup.createSpan({ cls: 'confitext-hotkey-pill' });
+		pill2.createSpan({ cls: 'confitext-mac-kbd', text: 'Esc' });
+		pill2.createSpan({ text: ' Panic Conceal' });
+	}
+
+	// =========================================================================
+	// 10. IOS & ANDROID TOUCH EXPERIENCE & CORNER COMFORT
+	// =========================================================================
+	private renderMobileShieldCard(containerEl: HTMLElement, isPrimary = true): void {
+		const badgeText = isPrimary ? 'ACTIVE ON THIS DEVICE' : 'MOBILE SHIELD (SYNCED)';
+		this.createSectionHeader(containerEl, 'iOS & Android Touch Shield & Ergonomics', badgeText, 'badge-mobile');
+
+		const card = containerEl.createDiv({ cls: 'confitext-card' });
+
+		const desc = card.createEl('p', { cls: 'confitext-card-desc' });
+		desc.setText(
+			isPrimary
+				? 'Active mobile preferences for this device. Tactile haptic ticks, battery-saving 30 FPS animation throttling, and Android circular corner safe zones.'
+				: 'Mobile touch controls, haptic vibration, and battery-saver preferences synced across your Obsidian vault for iOS and Android devices.'
+		);
+
+		new Setting(card)
+			.setName('Haptic touch feedback')
+			.setDesc('Vibrates with subtle haptic ticks on Android and iOS when switching modes, revealing selections, or engaging panic conceal.')
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.mobileHapticFeedback)
+					.onChange(async value => {
+						this.plugin.settings.mobileHapticFeedback = value;
+						await this.plugin.saveSettings();
+						if (value) {
+							this.plugin.triggerHaptic(20);
+						}
+					})
+			)
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
+
+		new Setting(card)
+			.setName('Battery-saver 30 FPS animation cap')
+			.setDesc('Throttles scrambling animations from 60/120 FPS to 30 FPS on mobile, reducing battery drain and device heat.')
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.batterySaverFps)
+					.onChange(async value => {
+						this.plugin.settings.batterySaverFps = value;
+						await this.plugin.saveSettings();
+						this.plugin.applyCssVariables();
+					})
+			)
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
+
+		new Setting(card)
+			.setName('Touch gesture word reveal')
+			.setDesc('Permits two-finger taps and long-presses to reveal masked words on touchscreens without moving the text cursor.')
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.mobileSwipeGestureReveal)
+					.onChange(async value => {
+						this.plugin.settings.mobileSwipeGestureReveal = value;
+						await this.plugin.saveSettings();
+						this.plugin.dispatchSettingsToEditors();
+					})
+			)
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
+
+		const cornerItem = new Setting(card)
+			.setName('Android circular corner comfort')
+			.setDesc('Automatic 24px-26px inner padding and vertical clearances ensure text, switches, and buttons sit comfortably away from native Android circular card curvature.')
+			.setClass('confitext-setting-item');
+
+		const pill = cornerItem.controlEl.createSpan({ cls: 'section-badge badge-mobile' });
+		pill.setText(Platform.isMobile ? 'Active on Android' : '26px Inset Active');
+	}
+
+	// =========================================================================
+	// 11. EXCLUSIONS & SYNTAX PRESERVATION
 	// =========================================================================
 	private renderRulesAndSyntaxCard(containerEl: HTMLElement): void {
 		this.createSectionHeader(containerEl, 'Workspace Rules & Syntax Preservation', 'RULES', 'badge-rules');
@@ -1364,24 +1533,26 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setClass('confitext-setting-item')
 			.setClass('confitext-setting-toggle');
 
-		new Setting(card)
-			.setName('Show tab header shield button')
-			.setDesc('Add a quick-toggle shield button to the title bar of note tabs (desktop only).')
-			.addToggle(toggle =>
-				toggle
-					.setValue(this.plugin.settings.showTabHeaderAction)
-					.onChange(async value => {
-						this.plugin.settings.showTabHeaderAction = value;
-						await this.plugin.saveSettings();
-						if (value) {
-							this.plugin.setupAllTabHeaderActions();
-						} else {
-							this.plugin.removeTabHeaderActions();
-						}
-					})
-			)
-			.setClass('confitext-setting-item')
-			.setClass('confitext-setting-toggle');
+		if (!Platform.isMobile) {
+			new Setting(card)
+				.setName('Show tab header shield button')
+				.setDesc('Add a quick-toggle shield button to the title bar of note tabs (desktop only).')
+				.addToggle(toggle =>
+					toggle
+						.setValue(this.plugin.settings.showTabHeaderAction)
+						.onChange(async value => {
+							this.plugin.settings.showTabHeaderAction = value;
+							await this.plugin.saveSettings();
+							if (value) {
+								this.plugin.setupAllTabHeaderActions();
+							} else {
+								this.plugin.removeTabHeaderActions();
+							}
+						})
+				)
+				.setClass('confitext-setting-item')
+				.setClass('confitext-setting-toggle');
+		}
 
 		new Setting(card)
 			.setName('Mask in Reading View')
@@ -1504,10 +1675,20 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		// Legal & Transparency Links
 		const legalRow = footerCard.createDiv({ cls: 'confitext-footer-legal' });
 
+		const docsLink = legalRow.createEl('a', {
+			cls: 'confitext-footer-link',
+			text: 'Docs & Guides',
+			href: 'https://dheeraz101.github.io/Confitext/docs.html'
+		});
+		docsLink.setAttribute('target', '_blank');
+		docsLink.setAttribute('rel', 'noopener noreferrer');
+
+		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
+
 		const privacyLink = legalRow.createEl('a', {
 			cls: 'confitext-footer-link',
 			text: 'Privacy Policy',
-			href: 'https://github.com/dheeraz101/Confitext/blob/main/PRIVACY.md'
+			href: 'https://dheeraz101.github.io/Confitext/privacy.html'
 		});
 		privacyLink.setAttribute('target', '_blank');
 		privacyLink.setAttribute('rel', 'noopener noreferrer');
@@ -1517,20 +1698,20 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		const termsLink = legalRow.createEl('a', {
 			cls: 'confitext-footer-link',
 			text: 'Terms of Use',
-			href: 'https://github.com/dheeraz101/Confitext/blob/main/TERMS.md'
+			href: 'https://dheeraz101.github.io/Confitext/terms.html'
 		});
 		termsLink.setAttribute('target', '_blank');
 		termsLink.setAttribute('rel', 'noopener noreferrer');
 
 		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
 
-		const licenseLink = legalRow.createEl('a', {
+		const siteLink = legalRow.createEl('a', {
 			cls: 'confitext-footer-link',
-			text: 'MIT License',
-			href: 'https://github.com/dheeraz101/Confitext/blob/main/LICENSE'
+			text: 'Website',
+			href: 'https://dheeraz101.github.io/Confitext/'
 		});
-		licenseLink.setAttribute('target', '_blank');
-		licenseLink.setAttribute('rel', 'noopener noreferrer');
+		siteLink.setAttribute('target', '_blank');
+		siteLink.setAttribute('rel', 'noopener noreferrer');
 
 		legalRow.createSpan({ cls: 'footer-sep', text: '•' });
 

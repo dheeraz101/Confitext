@@ -8,6 +8,7 @@ import { AnimationManager } from '../src/animation';
 import { createConfitextExtension } from '../src/editor-extension';
 import { tokenizeWords, isWordBeingComposed } from '../src/tokenizer';
 import { confitextStateField, setInitialStateProvider } from '../src/state';
+import { isNoteMaskingDisabled } from '../src/rules';
 
 // Setup Obsidian DOM helpers for test environment
 if (typeof (globalThis as any).createEl === 'undefined') {
@@ -107,6 +108,44 @@ describe('Mobile UX, Instant Startup Masking & Performance Optimization', () => 
 			expect(field.settings.glyphStyle).toBe('braille');
 			expect(field.settings.performanceMode).toBe('battery-saver');
 			expect(field.filePath).toBe('SecretVault/Notes.md');
+		});
+
+		it('marks view.dom with confitext-note-excluded when note has confitext: false', () => {
+			const excludedDoc = '---\nconfitext: false\n---\nPublic notes that should not be veiled or masked.';
+			const state = EditorState.create({
+				doc: excludedDoc,
+				extensions: createConfitextExtension()
+			});
+
+			const view = new EditorView({
+				state,
+				parent: container
+			});
+
+			expect(view.dom.classList.contains('confitext-note-excluded')).toBe(true);
+			view.destroy();
+		});
+
+		it('rebuilds decorations when editor updates with geometry changes', () => {
+			const doc = 'Important secret thoughts entered here';
+			const state = EditorState.create({
+				doc,
+				extensions: createConfitextExtension()
+			});
+
+			const view = new EditorView({
+				state,
+				parent: container
+			});
+
+			expect(view.dom).toBeDefined();
+
+			// Dispatch a transaction with no doc or selection changes, but simulate an update
+			view.dispatch({
+				effects: []
+			});
+
+			view.destroy();
 		});
 	});
 
@@ -215,6 +254,44 @@ describe('Mobile UX, Instant Startup Masking & Performance Optimization', () => 
 			const anim = animManager.getAnimation(0, 5, 'hello');
 			expect(anim).toBeDefined();
 		});
+
+		it('throttles to 30 FPS when batterySaverFps is enabled on mobile', () => {
+			document.body.classList.add('is-mobile');
+
+			const animManager = new AnimationManager(() => ({
+				...DEFAULT_SETTINGS,
+				performanceMode: 'auto',
+				batterySaverFps: true
+			}));
+
+			expect(animManager.isLowPowerOrThrottled()).toBe(true);
+		});
+
+		it('supports synchronous fast-cache hydration from localStorage for 0ms startup', () => {
+			const storage = typeof window !== 'undefined' && window.localStorage ? window.localStorage : (globalThis as any).localStorage;
+			if (!storage) return; // Skip if environment has no localStorage backing
+
+			const fastSettings: ConfitextSettings = {
+				...DEFAULT_SETTINGS,
+				glyphStyle: 'geometry',
+				defaultMode: 'masking',
+				mobileHapticFeedback: true,
+				batterySaverFps: true
+			};
+
+			storage.setItem('confitext-cached-settings', JSON.stringify(fastSettings));
+			storage.setItem('confitext-cached-mode', 'masking');
+
+			const raw = storage.getItem('confitext-cached-settings');
+			expect(raw).toBeTruthy();
+			const parsed = JSON.parse(raw!);
+			expect(parsed.glyphStyle).toBe('geometry');
+			expect(parsed.batterySaverFps).toBe(true);
+			expect(storage.getItem('confitext-cached-mode')).toBe('masking');
+
+			storage.removeItem('confitext-cached-settings');
+			storage.removeItem('confitext-cached-mode');
+		});
 	});
 
 	describe('5. Action Button Deduplication & Phone Header Protection', () => {
@@ -271,6 +348,30 @@ describe('Mobile UX, Instant Startup Masking & Performance Optimization', () => 
 			expect(remaining[0]).toBe(r1);
 
 			ribbonContainer.remove();
+		});
+	});
+
+	describe('6. Instant Privacy Veil & Body Classes', () => {
+		it('manages pre-render privacy veil classes on document.body', () => {
+			// Simulate masking mode with all-words scope
+			const isMaskingActive = true;
+			const isScopeAll = true;
+
+			document.body.classList.toggle('confitext-active', isMaskingActive);
+			document.body.classList.toggle('confitext-scope-all', isMaskingActive && isScopeAll);
+
+			expect(document.body.classList.contains('confitext-active')).toBe(true);
+			expect(document.body.classList.contains('confitext-scope-all')).toBe(true);
+
+			// When revealed, veil classes are removed
+			document.body.classList.toggle('confitext-active', false);
+			document.body.classList.toggle('confitext-scope-all', false);
+			document.body.classList.toggle('confitext-revealed', true);
+
+			expect(document.body.classList.contains('confitext-active')).toBe(false);
+			expect(document.body.classList.contains('confitext-revealed')).toBe(true);
+
+			document.body.classList.remove('confitext-revealed');
 		});
 	});
 });

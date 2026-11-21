@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Confitext — Matrix Visual Privacy for Obsidian</title>
+	<meta name="description" content="An animated, Matrix-inspired visual privacy layer for private writing in Obsidian. Stop shoulder surfing in cafes, flights, and open offices without touching a single Markdown file.">
+	<link rel="stylesheet" href="styles.css">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+	<div class="bg-glow-top"></div>
+
+	<!-- Navigation Bar -->
+	<header class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="nav-brand">
+				<div class="nav-logo-badge">⚡</div>
+				<span>Confitext</span>
+			</a>
+			<ul class="nav-links">
+				<li><a href="#playground">Interactive Demo</a></li>
+				<li><a href="#features">Features</a></li>
+				<li><a href="#platform-showcase">PC & Mobile</a></li>
+				<li><a href="docs.html">Docs</a></li>
+				<li><a href="privacy.html">Privacy</a></li>
+				<li><a href="terms.html">Terms</a></li>
+			</ul>
+			<div class="nav-actions">
+				<button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">🌙</button>
+				<a href="https://github.com/dheeraz101/Confitext" class="btn-nav-cta" target="_blank" rel="noopener noreferrer">GitHub</a>
+			</div>
+		</div>
+	</header>
+
+	<!-- Hero Section -->
+	<main>
+		<section class="hero-section">
+			<div class="hero-pill-badge">
+				<span>⚡</span> Real-Time In-Editor Visual Privacy Shield
+			</div>
+			<h1 class="hero-title">Your thoughts. Your screen.<br>Your code.</h1>
+			<p class="hero-subtitle">
+				An animated, Matrix-inspired privacy layer for private-feeling writing in Obsidian. Stop shoulder surfing in cafes, flights, and open offices without touching a single Markdown file.
+			</p>
+			<div class="hero-cta-group">
+				<a href="obsidian://show-plugin?id=confitext" class="btn-primary">
+					<span>⬇️</span> Install in Obsidian
+				</a>
+				<a href="#playground" class="btn-secondary">
+					<span>▶️</span> Try Interactive Demo
+				</a>
+				<a href="docs.html" class="btn-secondary">
+					<span>📖</span> Documentation
+				</a>
+			</div>
+		</section>
+
+		<!-- Interactive Playground Section -->
+		<section class="playground-section" id="playground">
+			<div class="mac-window">
+				<div class="window-header">
+					<div class="window-controls">
+						<span class="dot dot-red"></span>
+						<span class="dot dot-yellow"></span>
+						<span class="dot dot-green"></span>
+					</div>
+					<div class="window-title">LIVE PRIVACY TERMINAL & PLAYGROUND</div>
+					<div style="font-size:0.75rem; color:var(--accent-matrix); font-weight:700;">● SHIELD ACTIVE</div>
+				</div>
+				<div class="window-body">
+					<div class="live-screen-label">Simulated Editor Presentation (What observers see):</div>
+					<div class="live-screen" id="playground-screen" title="Hover over masked words or click to inspect cleartext"></div>
+
+					<div class="playground-input-group">
+						<div class="live-screen-label">Type your note below (What you type):</div>
+						<input type="text" id="playground-input" class="playground-input" value="I am drafting confidential roadmap notes in a busy coffee shop today." placeholder="Type any sentence here..." spellcheck="false" autocomplete="off">
+					</div>
+
+					<div class="playground-controls-row">
+						<div style="display:flex; gap:10px; align-items:center;">
+							<button class="btn-ctrl" id="btn-toggle-glance">👁️ Quick Glance (Reveal All)</button>
+							<button class="btn-ctrl btn-ctrl-panic" id="btn-panic-hide">⚡ Panic Conceal</button>
+						</div>
+						<div style="display:flex; gap:8px; align-items:center;">
+							<label for="glyph-palette-select" style="font-size:0.82rem; color:var(--text-muted); font-weight:600;">Glyph Palette:</label>
+							<select id="glyph-palette-select" class="btn-ctrl" style="padding:6px 12px; outline:none;">
+								<option value="matrix">Matrix (0 1 ░ ⌁ ⵙ)</option>
+								<option value="braille">Braille (⠁ ⠃ ⠉ ⠙)</option>
+								<option value="runes">Runes (᚛ ᚜ ᚠ ᚡ)</option>
+								<option value="geometry">Geometry (▲ ▼ ◆ ●)</option>
+								<option value="morse">Morse (• − ⬝ —)</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Features Grid -->
+		<section class="features-section" id="features">
+			<div class="section-badge-center">
+				<span>HIGH-INTEGRITY ARCHITECTURE</span>
+			</div>
+			<h2 class="section-title">Designed for Uncompromising Privacy</h2>
+			<p class="section-desc">Confitext operates strictly inside CodeMirror 6's screen presentation layer. Clean, robust, and zero-compromise.</p>
+
+			<div class="feature-grid">
+				<div class="feature-card">
+					<div class="feature-icon-wrapper" style="color:var(--accent-matrix);">🛡️</div>
+					<h3>100% Local & Zero Telemetry</h3>
+					<p>Zero outbound network connections, zero analytics trackers, and zero telemetry. All masking runs strictly in-memory inside your local Obsidian vault.</p>
+				</div>
+
+				<div class="feature-card">
+					<div class="feature-icon-wrapper" style="color:var(--accent-cyan);">📝</div>
+					<h3>Non-Destructive In-Memory Layer</h3>
+					<p>Your notes are never rewritten or encrypted on disk. Copying or selecting text always yields standard, readable Markdown.</p>
+				</div>
+
+				<div class="feature-card">
+					<div class="feature-icon-wrapper" style="color:#c084fc;">🎯</div>
+					<h3>Targeted Words & Sensitive Shield</h3>
+					<p>Mask all words or selectively conceal sensitive terms, API keys, passwords, credit cards, emails, and custom regular expressions.</p>
+				</div>
+
+				<div class="feature-card">
+					<div class="feature-icon-wrapper" style="color:var(--accent-amber);">⚡</div>
+					<h3>Granular Hide Triggers</h3>
+					<p>Choose your privacy rhythm: Word mode (scrambles on space/punctuation), Line mode (keeps active line visible), or Paragraph mode.</p>
+				</div>
+
+				<div class="feature-card">
+					<div class="feature-icon-wrapper" style="color:#38bdf8;">👁️</div>
+					<h3>Fluid In-Place Reveals</h3>
+					<p>Highlight text with your cursor or keyboard arrow keys, or hover over any word for a quick glance to inspect in-place instantly.</p>
+				</div>
+
+				<div class="feature-card">
+					<div class="feature-icon-wrapper" style="color:#f43f5e;">⚡</div>
+					<h3>Instant Panic Conceal</h3>
+					<p>Hit the emergency panic shortcut to deselect your cursor and instantly mask your entire viewport in a fraction of a millisecond.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- PC vs Mobile Showcase -->
+		<section class="platform-section" id="platform-showcase">
+			<div class="section-badge-center">
+				<span>DESKTOP & MOBILE TAILORED</span>
+			</div>
+			<h2 class="section-title">Engineered Specifically for Every Device</h2>
+			<p class="section-desc">From multi-monitor desktop workstations to curved-screen mobile smartphones, Confitext adapts seamlessly.</p>
+
+			<div class="platform-switch">
+				<div class="segmented-control">
+					<button class="segment-btn active" data-target="both">All Platforms</button>
+					<button class="segment-btn" data-target="desktop">macOS & PC</button>
+					<button class="segment-btn" data-target="mobile">iOS & Android</button>
+				</div>
+			</div>
+
+			<div class="platform-showcase-grid">
+				<div class="platform-card" id="showcase-desktop">
+					<div class="platform-card-header">
+						<div class="platform-icon">🖥️</div>
+						<div>
+							<div class="platform-card-title">macOS Sequoia & PC Desktop Pro</div>
+							<div style="font-size:0.82rem; color:var(--accent-cyan); font-weight:600;">Workstation Performance</div>
+						</div>
+					</div>
+					<ul class="platform-list">
+						<li><strong>Multi-Monitor Edge Blur:</strong> Automatically engages Matrix veil when the cursor exits the Obsidian window onto another display.</li>
+						<li><strong>Configurable Hover Glance:</strong> 200ms to 1200ms precision peek delay calibrated for high-DPI mouse sensors.</li>
+						<li><strong>SF Mono & OpenType Ligatures:</strong> Native support for zero-width monospace kerning across JetBrains Mono, Cascadia Code, and SF Mono.</li>
+						<li><strong>Native Keyboard Shortcuts:</strong> One-touch hotkey toggles for masking mode and emergency panic hide.</li>
+					</ul>
+				</div>
+
+				<div class="platform-card" id="showcase-mobile">
+					<div class="platform-card-header">
+						<div class="platform-icon">📱</div>
+						<div>
+							<div class="platform-card-title">iOS & Android Mobile Shield</div>
+							<div style="font-size:0.82rem; color:var(--accent-matrix); font-weight:600;">Touch & Curved Screen Comfort</div>
+						</div>
+					</div>
+					<ul class="platform-list">
+						<li><strong>Circular Corner Radius Comfort:</strong> Generous 24px-26px horizontal inset padding ensures text, buttons, and switches never touch curved phone display corners.</li>
+						<li><strong>Zero-Latency Cold Startup:</strong> Synchronous fast-cache eliminates cleartext exposure gaps when opening Obsidian on Android phones in public.</li>
+						<li><strong>Subtle Haptic Ticks:</strong> Tactile feedback confirmation on mode transitions, word reveals, and emergency panic conceal.</li>
+						<li><strong>Battery-Preserving 30 FPS Mode:</strong> Smart frame throttling protects mobile battery life and prevents device thermal throttling.</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<!-- Trust Banner -->
+		<section class="trust-section">
+			<div class="trust-banner">
+				<h2>Privacy You Can Audit. Speed You Can Feel.</h2>
+				<p>Confitext is free, open-source software built for users who value discretion without complexity. No tracking accounts, no cloud sync lock-in, and zero server communication.</p>
+				<div class="trust-badges-row">
+					<span class="trust-badge-item">🛡️ 100% Local Execution</span>
+					<span class="trust-badge-item">⚡ Zero Network Requests</span>
+					<span class="trust-badge-item">📜 MIT License</span>
+					<span class="trust-badge-item">🚀 An YABP Initiative</span>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="footer-container">
+			<div class="footer-top">
+				<div class="footer-brand-col">
+					<a href="index.html" class="nav-brand">
+						<div class="nav-logo-badge">⚡</div>
+						<span>Confitext</span>
+					</a>
+					<p style="font-size:0.85rem; color:var(--text-secondary); max-width:320px;">
+						Yet Another Boring Project — Thoughtful, high-integrity privacy software.
+					</p>
+				</div>
+				<nav class="footer-nav">
+					<a href="docs.html">Documentation</a>
+					<a href="privacy.html">Privacy Policy</a>
+					<a href="terms.html">Terms of Use</a>
+					<a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a>
+					<a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer">YABP Initiative</a>
+				</nav>
+			</div>
+			<div class="footer-bottom">
+				<div>© 2026 Dheeraz. Licensed under the MIT License.</div>
+				<div>Created with Apple HIG principles for macOS, iOS, Windows, and Android.</div>
+			</div>
+		</div>
+	</footer>
+
+	<script src="app.js"></script>
+</body>
+</html>

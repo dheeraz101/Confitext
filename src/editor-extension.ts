@@ -23,7 +23,7 @@ import {
 import { buildMaskDecorations } from './decorations';
 import { AnimationManager } from './animation';
 import { getStableGlyphs } from './glyphs';
-import { getNoteMaskedWords } from './rules';
+import { getNoteMaskedWords, isNoteMaskingDisabled } from './rules';
 import { tokenizeWords, findTargetedTokens, getLineRangeAt, getParagraphRangeAt } from './tokenizer';
 
 export class ConfitextViewPlugin implements PluginValue {
@@ -258,12 +258,17 @@ export class ConfitextViewPlugin implements PluginValue {
 			this.prevSelection = update.state.selection;
 		}
 
-		// 3. Viewport scrolling (virtualized rendering for huge documents)
-		if (update.viewportChanged) {
+		// 3. Viewport scrolling, geometry measurement & layout height changes
+		if (update.viewportChanged || update.geometryChanged || update.heightChanged) {
 			shouldRebuild = true;
 		}
 
-		// 4. Confitext State Effects
+		// 4. Zero-decoration recovery fallback (ensures cold boot layout measure builds decorations immediately)
+		if (this.decorations.size === 0 && update.state.doc.length > 0) {
+			shouldRebuild = true;
+		}
+
+		// 5. Confitext State Effects
 		for (const trEffect of update.transactions.flatMap(t => t.effects)) {
 			if (
 				trEffect.is(setModeEffect) ||
@@ -300,6 +305,12 @@ export class ConfitextViewPlugin implements PluginValue {
 export function createConfitextExtension(): Extension {
 	return [
 		confitextStateField,
+		EditorView.editorAttributes.compute([confitextStateField], state => {
+			const cState = state.field(confitextStateField, false) || initialEditorState;
+			const isExcluded = isNoteMaskingDisabled(state.doc.toString(), cState.filePath, cState.settings);
+			const attrs: Record<string, string> = isExcluded ? { class: 'confitext-note-excluded' } : {};
+			return attrs;
+		}),
 		ViewPlugin.fromClass(ConfitextViewPlugin, {
 			decorations: v => v.decorations
 		})

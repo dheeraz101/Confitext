@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Confitext Privacy Policy — Absolute Transparency & 100% Local Guarantee</title>
+	<meta name="description" content="Official Privacy Policy and transparency manifesto for Confitext Obsidian Plugin. 100% Local Execution, Zero Telemetry, and Zero Network Activity.">
+	<link rel="stylesheet" href="styles.css">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+	<!-- Navigation Bar -->
+	<header class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="nav-brand">
+				<div class="nav-logo-badge">⚡</div>
+				<span>Confitext</span>
+			</a>
+			<ul class="nav-links">
+				<li><a href="index.html">Home</a></li>
+				<li><a href="docs.html">Documentation</a></li>
+				<li><a href="privacy.html" class="active">Privacy Policy</a></li>
+				<li><a href="terms.html">Terms of Use</a></li>
+				<li><a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+			</ul>
+			<div class="nav-actions">
+				<button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">🌙</button>
+			</div>
+		</div>
+	</header>
+
+	<main style="max-width: 860px; margin: 0 auto; padding: 60px 24px 100px 24px;">
+		<div class="section-badge-center">
+			<span style="background:rgba(16, 185, 129, 0.12); color:#10b981; border:1px solid rgba(16, 185, 129, 0.28);">LEGAL TRANSPARENCY MANIFESTO</span>
+		</div>
+		<h1 style="font-size: clamp(2.2rem, 5vw, 3.25rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">
+			Privacy Policy
+		</h1>
+		<p style="text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 48px;">
+			<strong>Effective Date:</strong> November 21, 2026 &bull; <strong>Version:</strong> 2.2.0 &bull; <strong>Initiative:</strong> <a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">An YABP Initiative</a>
+		</p>
+
+		<div class="mac-window" style="padding: 36px 32px; margin-bottom: 40px;">
+			<div class="doc-callout" style="margin-top:0;">
+				<p><strong>Core Privacy Guarantee:</strong> Confitext does not collect, transmit, store, sell, or analyze your personal information, notes, device identifiers, or usage telemetry. All software execution is 100% client-side and completely offline.</p>
+			</div>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				1. Zero Telemetry & Zero Analytics
+			</h2>
+			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
+				At Confitext, privacy is the foundational reason the software exists. Unlike software that bundles diagnostic pings, analytics SDKs, or background telemetry, Confitext is completely tracker-free:
+			</p>
+			<ul style="color:var(--text-secondary); padding-left: 24px; margin-bottom: 24px; line-height: 1.65;">
+				<li><strong>No Usage Telemetry:</strong> We do not track when you open Obsidian, what commands you execute, or how long you type.</li>
+				<li><strong>No User Identification:</strong> Confitext has no user registration, no login system, and no account identifiers.</li>
+				<li><strong>No Error Reporting to External Servers:</strong> Exceptions or debugging statements remain strictly in your local browser developer console.</li>
+			</ul>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				2. Complete Absence of Network Activity
+			</h2>
+			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
+				Confitext contains <strong>zero network communication code</strong>. Specifically:
+			</p>
+			<ul style="color:var(--text-secondary); padding-left: 24px; margin-bottom: 24px; line-height: 1.65;">
+				<li>There are no calls to <code>fetch()</code>, <code>XMLHttpRequest</code>, <code>WebSocket</code>, or third-party cloud APIs.</li>
+				<li>No external stylesheets, fonts, web components, or tracking pixels are fetched from remote Content Delivery Networks (CDNs). All glyphs and styles are self-contained within the plugin package.</li>
+				<li>The plugin works identically in air-gapped, offline, and airplane-mode environments.</li>
+			</ul>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				3. Local Vault Storage Exclusivity
+			</h2>
+			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
+				All data created or configured through Confitext remains strictly confined to your local Obsidian vault:
+			</p>
+			<ul style="color:var(--text-secondary); padding-left: 24px; margin-bottom: 24px; line-height: 1.65;">
+				<li><strong>Plugin Settings:</strong> Stored locally in <code>&lt;YourVault&gt;/.obsidian/plugins/confitext/data.json</code>.</li>
+				<li><strong>Fast Startup Cache:</strong> Stored in your local client's <code>localStorage</code> to ensure 0ms cold boot masking without plaintext flashes.</li>
+				<li><strong>Targeted Note Words:</strong> Stored directly inside your local note's YAML frontmatter (<code>confitext-masked-words: [...]</code>).</li>
+			</ul>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				4. Non-Destructive In-Memory Visual Layer
+			</h2>
+			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
+				Confitext does not modify, encrypt, rewrite, or hash your underlying Markdown files (<code>.md</code>). Masking is applied in-memory through CodeMirror 6's <code>Decoration.replace</code> presentation layer:
+			</p>
+			<ul style="color:var(--text-secondary); padding-left: 24px; margin-bottom: 24px; line-height: 1.65;">
+				<li>Selecting or copying text extracts clean, readable Markdown without visual glyph corruption.</li>
+				<li>Disabling or uninstalling Confitext leaves your Markdown notes 100% intact and immediately readable in any standard text editor.</li>
+			</ul>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				5. Regulatory Standards (GDPR, CCPA & Data Protection)
+			</h2>
+			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
+				Because Confitext processes zero personal data and maintains zero servers, it exceeds the requirements of major international data protection frameworks:
+			</p>
+			<ul style="color:var(--text-secondary); padding-left: 24px; margin-bottom: 24px; line-height: 1.65;">
+				<li><strong>GDPR (General Data Protection Regulation):</strong> Confitext embodies <em>Data Protection by Design and by Default</em> (Article 25). No personal data is stored or processed on external servers.</li>
+				<li><strong>CCPA / CPRA (California Consumer Privacy Act):</strong> Confitext does not sell, share, or retain consumer personal information.</li>
+				<li><strong>HIPAA & Workplace Privacy:</strong> Confitext aids compliance by preventing unauthorized visual observation (shoulder surfing) of confidential records on public screens.</li>
+			</ul>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				6. Open Source Verifiability
+			</h2>
+			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
+				Confitext is licensed under the permissive <a href="https://github.com/dheeraz101/Confitext/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">MIT License</a>. Every line of TypeScript source code, build scripts, and dependencies is public, open, and auditable on GitHub:
+			</p>
+			<p style="color:var(--text-secondary); line-height: 1.65;">
+				Official Repository: <a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">https://github.com/dheeraz101/Confitext</a>
+			</p>
+
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+				7. Security Contact & Responsible Disclosure
+			</h2>
+			<p style="color:var(--text-secondary); line-height: 1.65;">
+				If you discover any security anomaly, edge case, or potential vulnerability, please report it directly via GitHub Issues or contact the author:
+			</p>
+			<ul style="color:var(--text-secondary); padding-left: 24px; line-height: 1.65;">
+				<li><strong>GitHub Issues:</strong> <a href="https://github.com/dheeraz101/Confitext/issues" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">https://github.com/dheeraz101/Confitext/issues</a></li>
+				<li><strong>Author:</strong> Dheeraz (<a href="https://github.com/dheeraz101" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">@dheeraz101</a>)</li>
+				<li><strong>Initiative:</strong> Yet Another Boring Project (<a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">https://yabp.netlify.app/</a>)</li>
+			</ul>
+		</div>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="footer-container">
+			<div class="footer-top">
+				<div class="footer-brand-col">
+					<a href="index.html" class="nav-brand">
+						<div class="nav-logo-badge">⚡</div>
+						<span>Confitext</span>
+					</a>
+					<p style="font-size:0.85rem; color:var(--text-secondary); max-width:320px;">
+						Yet Another Boring Project — Thoughtful, high-integrity privacy software.
+					</p>
+				</div>
+				<nav class="footer-nav">
+					<a href="index.html">Home</a>
+					<a href="docs.html">Documentation</a>
+					<a href="privacy.html">Privacy Policy</a>
+					<a href="terms.html">Terms of Use</a>
+					<a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a>
+				</nav>
+			</div>
+			<div class="footer-bottom">
+				<div>© 2026 Dheeraz. Licensed under the MIT License.</div>
+				<div>Created with Apple HIG principles for macOS, iOS, Windows, and Android.</div>
+			</div>
+		</div>
+	</footer>
+
+	<script src="app.js"></script>
+</body>
+</html>

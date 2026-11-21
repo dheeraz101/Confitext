@@ -24,6 +24,15 @@ for (const file of filesToCopy) {
 	console.log(`Copied ${file} -> dist/confitext/${file}`);
 }
 
+// Local test vault synchronization
+const localVaultPluginDir = 'I:\\obsidian_vault\\.obsidian\\plugins\\confitext';
+if (fs.existsSync(localVaultPluginDir)) {
+	for (const file of filesToCopy) {
+		fs.copyFileSync(path.join(rootDir, file), path.join(localVaultPluginDir, file));
+	}
+	console.log(`Synced distribution files -> ${localVaultPluginDir}`);
+}
+
 // Remove old zip if present
 if (fs.existsSync(confitextZip)) {
 	fs.unlinkSync(confitextZip);

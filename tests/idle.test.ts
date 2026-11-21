@@ -154,7 +154,8 @@ describe('Idle Auto-Masking Timer', () => {
 		const settings = {
 			...DEFAULT_SETTINGS,
 			idleAutoMask: true,
-			autoMaskOnBlur: false
+			autoMaskOnBlur: false,
+			multiMonitorBlur: false
 		};
 
 		const manager = new IdleManager(
@@ -169,6 +170,36 @@ describe('Idle Auto-Masking Timer', () => {
 
 		window.dispatchEvent(new Event('blur'));
 		expect(blurTriggered).toBe(false);
+
+		manager.destroy();
+	});
+
+	it('triggers onBlurAutoMask when multiMonitorBlur is enabled on window blur or mouseleave', () => {
+		let blurCount = 0;
+		const settings = {
+			...DEFAULT_SETTINGS,
+			idleAutoMask: false,
+			autoMaskOnBlur: false,
+			multiMonitorBlur: true
+		};
+
+		const manager = new IdleManager(
+			() => settings,
+			() => {},
+			() => {
+				blurCount++;
+			}
+		);
+
+		manager.start();
+
+		// 1. Trigger blur
+		window.dispatchEvent(new Event('blur'));
+		expect(blurCount).toBe(1);
+
+		// 2. Trigger mouseleave on document element
+		document.documentElement.dispatchEvent(new Event('mouseleave'));
+		expect(blurCount).toBe(2);
 
 		manager.destroy();
 	});

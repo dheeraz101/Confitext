@@ -12,6 +12,7 @@ export class IdleManager {
 	private activityListener: () => void;
 	private blurListener: () => void;
 	private focusListener: () => void;
+	private mouseLeaveListener: () => void;
 
 	constructor(
 		private getSettings: () => ConfitextSettings,
@@ -29,7 +30,17 @@ export class IdleManager {
 
 		this.blurListener = () => {
 			const settings = this.getSettings();
-			if (settings.idleAutoMask && settings.autoMaskOnBlur) {
+			if (
+				(settings.idleAutoMask && settings.autoMaskOnBlur) ||
+				(settings.multiMonitorBlur && settings.enabled)
+			) {
+				this.onBlurAutoMask();
+			}
+		};
+
+		this.mouseLeaveListener = () => {
+			const settings = this.getSettings();
+			if (settings.multiMonitorBlur && settings.enabled) {
 				this.onBlurAutoMask();
 			}
 		};
@@ -63,6 +74,9 @@ export class IdleManager {
 			window.addEventListener('scroll', this.activityListener, { passive: true, capture: true });
 			window.addEventListener('blur', this.blurListener);
 			window.addEventListener('focus', this.focusListener);
+			if (typeof document !== 'undefined' && document.documentElement) {
+				document.documentElement.addEventListener('mouseleave', this.mouseLeaveListener);
+			}
 		}
 
 		this.resetTimer();
@@ -91,6 +105,9 @@ export class IdleManager {
 			window.removeEventListener('scroll', this.activityListener, { capture: true });
 			window.removeEventListener('blur', this.blurListener);
 			window.removeEventListener('focus', this.focusListener);
+			if (typeof document !== 'undefined' && document.documentElement) {
+				document.documentElement.removeEventListener('mouseleave', this.mouseLeaveListener);
+			}
 		}
 	}
 
