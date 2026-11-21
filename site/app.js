@@ -205,4 +205,52 @@ document.addEventListener('DOMContentLoaded', () => {
 			themeBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
 		});
 	}
+
+	// Mobile Menu Drawer Toggle
+	const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+	const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+	if (mobileMenuBtn && mobileNavDrawer) {
+		mobileMenuBtn.addEventListener('click', () => {
+			const isOpen = mobileNavDrawer.classList.toggle('is-open');
+			mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+			mobileMenuBtn.textContent = isOpen ? '✕' : '☰';
+			if (navigator.vibrate) {
+				try { navigator.vibrate(10); } catch (_) {}
+			}
+		});
+
+		mobileNavDrawer.querySelectorAll('a').forEach(link => {
+			link.addEventListener('click', () => {
+				mobileNavDrawer.classList.remove('is-open');
+				mobileMenuBtn.setAttribute('aria-expanded', 'false');
+				mobileMenuBtn.textContent = '☰';
+			});
+		});
+	}
+
+	// Documentation Sidebar Scrollspy & Smooth Active Tracking
+	const docSections = document.querySelectorAll('.doc-section');
+	const sidebarLinks = document.querySelectorAll('.doc-nav-links a');
+	if (docSections.length > 0 && sidebarLinks.length > 0) {
+		const sectionObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const id = entry.target.getAttribute('id');
+					sidebarLinks.forEach(link => {
+						const href = link.getAttribute('href');
+						if (href === `#${id}`) {
+							link.classList.add('active');
+						} else {
+							link.classList.remove('active');
+						}
+					});
+				}
+			});
+		}, {
+			rootMargin: '-72px 0px -70% 0px',
+			threshold: 0
+		});
+
+		docSections.forEach(sec => sectionObserver.observe(sec));
+	}
 });

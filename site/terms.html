@@ -13,49 +13,61 @@
 	<header class="navbar">
 		<div class="nav-container">
 			<a href="index.html" class="nav-brand">
-				<div class="nav-logo-badge">⚡</div>
+				<div class="nav-brand-logo">⚡</div>
 				<span>Confitext</span>
 			</a>
 			<ul class="nav-links">
-				<li><a href="index.html">Home</a></li>
+				<li><a href="index.html">Overview</a></li>
+				<li><a href="index.html#studio">Playground</a></li>
 				<li><a href="docs.html">Documentation</a></li>
-				<li><a href="privacy.html">Privacy Policy</a></li>
-				<li><a href="terms.html" class="active">Terms of Use</a></li>
-				<li><a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+				<li><a href="privacy.html">Privacy</a></li>
+				<li><a href="terms.html" class="active">Terms</a></li>
 			</ul>
 			<div class="nav-actions">
 				<button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">🌙</button>
+				<a href="https://github.com/dheeraz101/Confitext" class="btn-nav-cta" target="_blank" rel="noopener noreferrer">GitHub</a>
+				<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">☰</button>
 			</div>
 		</div>
 	</header>
 
-	<main style="max-width: 860px; margin: 0 auto; padding: 60px 24px 100px 24px;">
+	<!-- Mobile Navigation Drawer -->
+	<nav class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+		<a href="index.html" class="mobile-nav-link">Overview</a>
+		<a href="index.html#studio" class="mobile-nav-link">Studio Playground</a>
+		<a href="docs.html" class="mobile-nav-link">Documentation</a>
+		<a href="privacy.html" class="mobile-nav-link">Privacy Policy</a>
+		<a href="terms.html" class="mobile-nav-link active">Terms of Use</a>
+		<a href="https://github.com/dheeraz101/Confitext" class="mobile-nav-link" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+	</nav>
+
+	<main class="legal-page-container">
 		<div class="section-badge-center">
-			<span style="background:rgba(59, 130, 246, 0.12); color:#3b82f6; border:1px solid rgba(59, 130, 246, 0.28);">TERMS & LEGAL CONDITIONS</span>
+			<span style="background:rgba(41, 151, 255, 0.12); color:#2997ff; border:1px solid rgba(41, 151, 255, 0.28);">TERMS & LEGAL CONDITIONS</span>
 		</div>
 		<h1 style="font-size: clamp(2.2rem, 5vw, 3.25rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;">
 			Terms of Use
 		</h1>
 		<p style="text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 48px;">
-			<strong>Effective Date:</strong> November 22, 2026 &bull; <strong>Version:</strong> 2.3.0 &bull; <strong>License:</strong> <a href="https://github.com/dheeraz101/Confitext/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">MIT License</a>
+			<strong>Effective Date:</strong> November 22, 2026 &bull; <strong>Version:</strong> 2.3.0 &bull; <strong>License:</strong> <a href="https://github.com/dheeraz101/Confitext/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
 		</p>
 
-		<div class="mac-window" style="padding: 36px 32px; margin-bottom: 40px;">
-			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+		<div class="mac-window">
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 14px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
 				1. Acceptance of Terms
 			</h2>
 			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
 				By downloading, installing, enabling, copying, modifying, or using the Confitext plugin ("Software"), you agree to be bound by these Terms of Use and the associated MIT License. If you do not agree with these terms, do not install or use the Software.
 			</p>
 
-			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
 				2. Open Source License (MIT)
 			</h2>
 			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
 				Confitext is released as open-source software under the terms of the MIT License. You are granted permission, free of charge, to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the conditions outlined in the license file.
 			</p>
 
-			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
 				3. Critical Security Disclaimer: Shoulder-Surfing Deterrence vs. Cryptographic Encryption
 			</h2>
 			<div class="doc-callout">
@@ -91,58 +103,52 @@
 				<li>Maintaining independent backups of your Obsidian vault through standard backup utilities.</li>
 			</ul>
 
-			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
 				6. "As-Is" Warranty Disclaimer
 			</h2>
 			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65; font-size: 0.88rem; text-transform: uppercase; font-family: var(--font-mono);">
 				THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			</p>
 
-			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
 				7. Limitation of Liability
 			</h2>
 			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
 				To the maximum extent permitted by applicable law, neither the author (Dheeraz), the YABP initiative, nor any contributors shall be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising out of the installation, use, or inability to use the Software.
 			</p>
 
-			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+			<h2 style="font-size: 1.5rem; font-weight: 700; margin: 32px 0 14px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
 				8. YABP Initiative & Attribution
 			</h2>
 			<p style="color:var(--text-secondary); margin-bottom: 16px; line-height: 1.65;">
 				Confitext is created and maintained by <strong>Dheeraz</strong> as an open-source initiative under <strong>YABP (Yet Another Boring Project)</strong>:
 			</p>
 			<ul style="color:var(--text-secondary); padding-left: 24px; line-height: 1.65;">
-				<li>Initiative Website: <a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">https://yabp.netlify.app/</a></li>
-				<li>GitHub Repository: <a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">https://github.com/dheeraz101/Confitext</a></li>
-				<li>Author Profile: <a href="https://github.com/dheeraz101" target="_blank" rel="noopener noreferrer" style="color:var(--accent-matrix);">https://github.com/dheeraz101</a></li>
+				<li>Initiative Website: <a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer">https://yabp.netlify.app/</a></li>
+				<li>GitHub Repository: <a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">https://github.com/dheeraz101/Confitext</a></li>
+				<li>Author Profile: <a href="https://github.com/dheeraz101" target="_blank" rel="noopener noreferrer">https://github.com/dheeraz101</a></li>
 			</ul>
 		</div>
 	</main>
 
-	<!-- Footer -->
+	<!-- Apple Global Minimal Footer -->
 	<footer class="footer">
 		<div class="footer-container">
-			<div class="footer-top">
-				<div class="footer-brand-col">
-					<a href="index.html" class="nav-brand">
-						<div class="nav-logo-badge">⚡</div>
-						<span>Confitext</span>
-					</a>
-					<p style="font-size:0.85rem; color:var(--text-secondary); max-width:320px;">
-						Yet Another Boring Project — Thoughtful, high-integrity privacy software.
-					</p>
-				</div>
-				<nav class="footer-nav">
-					<a href="index.html">Home</a>
-					<a href="docs.html">Documentation</a>
-					<a href="privacy.html">Privacy Policy</a>
-					<a href="terms.html">Terms of Use</a>
-					<a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a>
-				</nav>
+			<div class="footer-disclaimer">
+				1. Confitext is an open-source visual shoulder-surfing deterrence layer for Obsidian and does not replace filesystem-level disk encryption or access control policies. Always secure your local storage environment.
 			</div>
-			<div class="footer-bottom">
-				<div>© 2026 Dheeraz. Licensed under the MIT License.</div>
-				<div>Created with Apple HIG principles for macOS, iOS, Windows, and Android.</div>
+			<div class="footer-nav-row">
+				<div class="footer-copyright">
+					&copy; 2026 Dheeraz. Licensed under the MIT License. <a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer" style="color:inherit; text-decoration:underline;">An YABP Initiative</a>.
+				</div>
+				<ul class="footer-links">
+					<li><a href="index.html">Overview</a></li>
+					<li><a href="docs.html">Documentation</a></li>
+					<li><a href="privacy.html">Privacy Policy</a></li>
+					<li><a href="terms.html">Terms of Use</a></li>
+					<li><a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+					<li><a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer">YABP Initiative</a></li>
+				</ul>
 			</div>
 		</div>
 	</footer>

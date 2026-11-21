@@ -13,12 +13,12 @@
 	<header class="navbar">
 		<div class="nav-container">
 			<a href="index.html" class="nav-brand">
-				<div class="nav-logo-badge">⚡</div>
+				<div class="nav-brand-logo">⚡</div>
 				<span>Confitext</span>
 			</a>
 			<ul class="nav-links">
 				<li><a href="index.html">Overview</a></li>
-				<li><a href="index.html#playground">Playground</a></li>
+				<li><a href="index.html#studio">Playground</a></li>
 				<li><a href="docs.html" class="active">Documentation</a></li>
 				<li><a href="privacy.html">Privacy</a></li>
 				<li><a href="terms.html">Terms</a></li>
@@ -26,9 +26,20 @@
 			<div class="nav-actions">
 				<button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">🌙</button>
 				<a href="https://github.com/dheeraz101/Confitext" class="btn-nav-cta" target="_blank" rel="noopener noreferrer">GitHub</a>
+				<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">☰</button>
 			</div>
 		</div>
 	</header>
+
+	<!-- Mobile Navigation Drawer -->
+	<nav class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+		<a href="index.html" class="mobile-nav-link">Overview</a>
+		<a href="index.html#studio" class="mobile-nav-link">Studio Playground</a>
+		<a href="docs.html" class="mobile-nav-link active">Documentation</a>
+		<a href="privacy.html" class="mobile-nav-link">Privacy Policy</a>
+		<a href="terms.html" class="mobile-nav-link">Terms of Use</a>
+		<a href="https://github.com/dheeraz101/Confitext" class="mobile-nav-link" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+	</nav>
 
 	<!-- Main Documentation Layout -->
 	<div class="doc-layout">
@@ -224,9 +235,23 @@ confitext-masked-words:
 				</p>
 			</section>
 
-			<!-- 12. FAQ -->
+			<!-- 12. Custom Glyphs, Palettes & Theming -->
+			<section class="doc-section" id="custom-glyphs">
+				<h2>12. Custom Glyphs, Palettes & Theming</h2>
+				<p>
+					Confitext allows deep visual personalization so the privacy veil aligns with your aesthetic preferences:
+				</p>
+				<ul>
+					<li><strong>5 Built-in Glyph Palettes:</strong> Choose from <em>Matrix Code</em> (<code>0 1 Ξ Ж ░ ▒ ▓ ⌁ ⟁ ⌂ ⵙ Ϟ</code>), <em>Braille Script</em> (<code>⠁ ⠃ ⠉ ⠙ ⠑ ⠋ ⠛</code>), <em>Cyber Runes</em> (<code>᚛ ᚜ ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ</code>), <em>Morse Code</em> (<code>• − ⬝ — ·</code>), and <em>Geometric Shapes</em> (<code>▲ ▼ ◆ ◇ ○ ● ◈ ■ □</code>).</li>
+					<li><strong>Custom User Glyphs:</strong> Define your own custom string of Unicode characters in Settings. Confitext will randomly distribute your characters across masked words using a deterministic per-word hashing algorithm.</li>
+					<li><strong>Dynamic Color Themes:</strong> Select from <em>Matrix Luminous Green</em>, <em>Cyberpunk Cyan</em>, <em>Amethyst Purple</em>, <em>Amber Terminal</em>, <em>Crimson Alert</em>, or <em>Monochrome Stealth</em>.</li>
+					<li><strong>Phosphor Glow & Mask Opacity:</strong> Toggle a subtle CRT phosphor glow around characters and adjust mask opacity from 0.1 to 1.0 (default 0.85).</li>
+				</ul>
+			</section>
+
+			<!-- 13. FAQ -->
 			<section class="doc-section" id="faq">
-				<h2>12. Frequently Asked Questions</h2>
+				<h2>13. Frequently Asked Questions</h2>
 				<h3>Does Confitext encrypt my files on disk?</h3>
 				<p>
 					No. Confitext is an in-editor visual privacy deterrent designed to shield your display from human observers (shoulder surfing). It does not encrypt files on disk. For cryptographic data protection at rest, use full-disk encryption (FileVault, BitLocker, LUKS) or encrypted storage vaults.
@@ -245,30 +270,24 @@ confitext-masked-words:
 		</main>
 	</div>
 
-	<!-- Footer -->
+	<!-- Apple Global Minimal Footer -->
 	<footer class="footer">
 		<div class="footer-container">
-			<div class="footer-top">
-				<div class="footer-brand-col">
-					<a href="index.html" class="nav-brand">
-						<div class="nav-logo-badge">⚡</div>
-						<span>Confitext</span>
-					</a>
-					<p style="font-size:0.85rem; color:var(--text-secondary); max-width:320px;">
-						Yet Another Boring Project — Thoughtful, high-integrity privacy software.
-					</p>
-				</div>
-				<nav class="footer-nav">
-					<a href="index.html">Home</a>
-					<a href="docs.html">Documentation</a>
-					<a href="privacy.html">Privacy Policy</a>
-					<a href="terms.html">Terms of Use</a>
-					<a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a>
-				</nav>
+			<div class="footer-disclaimer">
+				1. Confitext is an open-source visual shoulder-surfing deterrence layer for Obsidian and does not replace filesystem-level disk encryption or access control policies. Always secure your local storage environment.
 			</div>
-			<div class="footer-bottom">
-				<div>© 2026 Dheeraz. Licensed under the MIT License.</div>
-				<div>Created with Apple HIG principles for macOS, iOS, Windows, and Android.</div>
+			<div class="footer-nav-row">
+				<div class="footer-copyright">
+					&copy; 2026 Dheeraz. Licensed under the MIT License. <a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer" style="color:inherit; text-decoration:underline;">An YABP Initiative</a>.
+				</div>
+				<ul class="footer-links">
+					<li><a href="index.html">Overview</a></li>
+					<li><a href="docs.html">Documentation</a></li>
+					<li><a href="privacy.html">Privacy Policy</a></li>
+					<li><a href="terms.html">Terms of Use</a></li>
+					<li><a href="https://github.com/dheeraz101/Confitext" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+					<li><a href="https://yabp.netlify.app/" target="_blank" rel="noopener noreferrer">YABP Initiative</a></li>
+				</ul>
 			</div>
 		</div>
 	</footer>
