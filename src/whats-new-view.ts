@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.2.0";
+		return "What's New in Confitext v2.3.0";
 	}
 
 	getIcon(): string {
@@ -36,17 +36,26 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.2.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.3.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.2.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.3.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 2.2.0 introduces Apple HIG squircle card styling, guaranteed inner margin insets on mobile screens, and full transparency under An YABP Initiative with official Privacy Policy and Terms of Use.'
+			text: 'Your thoughts. Your screen. Your code. Version 2.3.0 brings official GitHub Pages live website hosting, complete mobile card insets, stacked category headers, and cross-platform desktop/mobile experience.'
 		});
 
 		// Feature Grid
 		const grid = container.createDiv({ cls: 'confitext-wn-grid' });
+
+		// Card 0: Official GitHub Pages Website & Docs
+		const cardWeb = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hWeb = cardWeb.createDiv({ cls: 'confitext-wn-card-header' });
+		hWeb.createSpan({ text: '🌐', cls: 'confitext-wn-card-icon' });
+		hWeb.createEl('h3', { text: 'Official Website Live on GitHub Pages' });
+		cardWeb.createEl('p', {
+			text: 'Confitext now has an official Apple HIG-inspired showcase and interactive documentation suite hosted live at dheeraz101.github.io/Confitext, complete with an interactive Matrix playground.'
+		});
 
 		// Card 1: Instant Startup Masking
 		const card0 = grid.createDiv({ cls: 'confitext-wn-card' });

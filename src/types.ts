@@ -101,6 +101,7 @@ export interface ConfitextSettings {
 	multiMonitorBlur: boolean;
 	enableFontLigatures: boolean;
 	desktopQuickRevealHotkeyHint: boolean;
+	holdEscToPeek: boolean;
 
 	// Group H - Mobile & Touch Ergonomics Suite
 	mobileHapticFeedback: boolean;
@@ -167,6 +168,7 @@ export const DEFAULT_SETTINGS: ConfitextSettings = {
 	multiMonitorBlur: false,
 	enableFontLigatures: true,
 	desktopQuickRevealHotkeyHint: true,
+	holdEscToPeek: true,
 
 	// Group H - Mobile & Touch Ergonomics Suite
 	mobileHapticFeedback: true,

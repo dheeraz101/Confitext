@@ -165,3 +165,114 @@ describe('Native Infusion Features - Reading View Post-Processor', () => {
 		expect(glyphs.length).toBe(0);
 	});
 });
+
+describe('PC Desktop Pro - Hold Esc to Peek Cleartext', () => {
+	it('has holdEscToPeek enabled by default in DEFAULT_SETTINGS', () => {
+		expect(DEFAULT_SETTINGS.holdEscToPeek).toBe(true);
+	});
+
+	it('engages momentary reveal on Escape keydown and restores on keyup', () => {
+		let currentMode = 'masking';
+		let isEscPeeking = false;
+		const settings = { ...DEFAULT_SETTINGS, enabled: true, holdEscToPeek: true };
+
+		const onKeyDown = (evt: KeyboardEvent) => {
+			if (evt.key !== 'Escape') return;
+			if (!settings.enabled || !settings.holdEscToPeek) return;
+			if (evt.repeat) return;
+			if (document.querySelector('.modal-container, .prompt, .suggestion-container')) return;
+			if (currentMode === 'masking') {
+				isEscPeeking = true;
+				currentMode = 'revealed';
+			}
+		};
+
+		const onKeyUp = (evt: KeyboardEvent) => {
+			if (evt.key !== 'Escape') return;
+			if (isEscPeeking) {
+				isEscPeeking = false;
+				currentMode = 'masking';
+			}
+		};
+
+		// Initial state
+		expect(currentMode).toBe('masking');
+
+		// Press Esc down
+		onKeyDown(new KeyboardEvent('keydown', { key: 'Escape', repeat: false }));
+		expect(isEscPeeking).toBe(true);
+		expect(currentMode).toBe('revealed');
+
+		// While holding Esc down (repeated events)
+		onKeyDown(new KeyboardEvent('keydown', { key: 'Escape', repeat: true }));
+		expect(isEscPeeking).toBe(true);
+		expect(currentMode).toBe('revealed');
+
+		// Release Esc
+		onKeyUp(new KeyboardEvent('keyup', { key: 'Escape' }));
+		expect(isEscPeeking).toBe(false);
+		expect(currentMode).toBe('masking');
+	});
+
+	it('restores masking if window blurs while user is holding Escape', () => {
+		let currentMode = 'revealed';
+		let isEscPeeking = true;
+
+		const onBlur = () => {
+			if (isEscPeeking) {
+				isEscPeeking = false;
+				currentMode = 'masking';
+			}
+		};
+
+		onBlur();
+		expect(isEscPeeking).toBe(false);
+		expect(currentMode).toBe('masking');
+	});
+
+	it('does not reveal when holdEscToPeek is disabled in settings', () => {
+		let currentMode = 'masking';
+		let isEscPeeking = false;
+		const settings = { ...DEFAULT_SETTINGS, enabled: true, holdEscToPeek: false };
+
+		const onKeyDown = (evt: KeyboardEvent) => {
+			if (evt.key !== 'Escape') return;
+			if (!settings.enabled || !settings.holdEscToPeek) return;
+			if (currentMode === 'masking') {
+				isEscPeeking = true;
+				currentMode = 'revealed';
+			}
+		};
+
+		onKeyDown(new KeyboardEvent('keydown', { key: 'Escape', repeat: false }));
+		expect(isEscPeeking).toBe(false);
+		expect(currentMode).toBe('masking');
+	});
+
+	it('does not intercept Escape when a modal dialog is open', () => {
+		let currentMode = 'masking';
+		let isEscPeeking = false;
+		const settings = { ...DEFAULT_SETTINGS, enabled: true, holdEscToPeek: true };
+
+		const modal = document.createElement('div');
+		modal.className = 'modal-container';
+		document.body.appendChild(modal);
+
+		const onKeyDown = (evt: KeyboardEvent) => {
+			if (evt.key !== 'Escape') return;
+			if (!settings.enabled || !settings.holdEscToPeek) return;
+			if (evt.repeat) return;
+			if (document.querySelector('.modal-container, .prompt, .suggestion-container')) return;
+			if (currentMode === 'masking') {
+				isEscPeeking = true;
+				currentMode = 'revealed';
+			}
+		};
+
+		onKeyDown(new KeyboardEvent('keydown', { key: 'Escape', repeat: false }));
+		expect(isEscPeeking).toBe(false);
+		expect(currentMode).toBe('masking');
+
+		document.body.removeChild(modal);
+	});
+});

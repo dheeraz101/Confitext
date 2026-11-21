@@ -235,6 +235,15 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		whatsNewBtn.addEventListener('click', () => {
 			void this.plugin.openWhatsNewTab();
 		});
+
+		const websiteBtn = actionGroup.createEl('button', {
+			cls: 'confitext-btn confitext-btn-ghost',
+			text: '🌐 Website'
+		});
+		websiteBtn.title = 'Open official Confitext website and interactive documentation';
+		websiteBtn.addEventListener('click', () => {
+			window.open('https://dheeraz101.github.io/Confitext/', '_blank');
+		});
 	}
 
 	// =========================================================================
@@ -1370,6 +1379,20 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setClass('confitext-setting-item')
 			.setClass('confitext-setting-toggle');
 
+		new Setting(card)
+			.setName('Hold Esc to peek cleartext')
+			.setDesc('Press and hold the Escape key to temporarily reveal all masked text for a quick glance. Releasing Escape instantly re-engages privacy masking.')
+			.addToggle(toggle =>
+				toggle
+					.setValue(this.plugin.settings.holdEscToPeek)
+					.onChange(async value => {
+						this.plugin.settings.holdEscToPeek = value;
+						await this.plugin.saveSettings();
+					})
+			)
+			.setClass('confitext-setting-item')
+			.setClass('confitext-setting-toggle');
+
 		const hotkeyItem = new Setting(card)
 			.setName('Quick reveal hotkey tips')
 			.setDesc('Toggle masking, panic conceal, or reveal active selections instantly via keyboard shortcuts.')
@@ -1385,8 +1408,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		pill1.createSpan({ text: ' Mask Toggle' });
 
 		const pill2 = hotkeyGroup.createSpan({ cls: 'confitext-hotkey-pill' });
-		pill2.createSpan({ cls: 'confitext-mac-kbd', text: 'Esc' });
-		pill2.createSpan({ text: ' Panic Conceal' });
+		pill2.createSpan({ cls: 'confitext-mac-kbd', text: 'Hold Esc' });
+		pill2.createSpan({ text: ' Glance Peek' });
 	}
 
 	// =========================================================================

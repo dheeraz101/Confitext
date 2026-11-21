@@ -1,6 +1,6 @@
 {
   "name": "confitext",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "An animated, Matrix-inspired visual masking layer for private-feeling writing.",
   "main": "main.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "confitext"
   ],
   "author": "Dheeraz",
-  "homepage": "https://yabp.netlify.app/",
+  "homepage": "https://dheeraz101.github.io/Confitext/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dheeraz101/Confitext.git"

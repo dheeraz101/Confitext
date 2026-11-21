@@ -37,6 +37,7 @@ export default class ConfitextPlugin extends Plugin {
 	ribbonIconEl: HTMLElement | null = null;
 	idleManager: IdleManager | null = null;
 	private viewsWithAction = new WeakSet<View>();
+	private isEscPeeking = false;
 
 	async onload(): Promise<void> {
 		// 0. Synchronous instant startup: read fast local cache to eliminate startup plain-text exposure
@@ -126,6 +127,9 @@ export default class ConfitextPlugin extends Plugin {
 			}
 		);
 		this.updateIdleManager();
+
+		// 8. Register PC Desktop "Hold Esc to Peek" Key Handler
+		this.registerEscPeekHandler();
 
 		// Listen to workspace layout changes to instantly decorate mounted leaves
 		this.registerEvent(
@@ -926,5 +930,52 @@ export default class ConfitextPlugin extends Plugin {
 			(this.settings.batterySaverFps && isMobile);
 		document.body.classList.toggle('confitext-battery-saver', isBatterySaver);
 		document.body.classList.toggle('confitext-ligatures', !!this.settings.enableFontLigatures);
+	}
+
+	/**
+	 * Registers global keyboard listeners for PC (macOS & Windows) "Hold Esc to Peek" cleartext glance.
+	 * When user holds down Escape, text temporarily reveals; when released, masking instantly restores.
+	 */
+	registerEscPeekHandler(): void {
+		this.registerDomEvent(window, 'keydown', (evt: KeyboardEvent) => {
+			if (evt.key !== 'Escape') return;
+			if (!this.settings.enabled || !this.settings.holdEscToPeek) return;
+			// Ignore repeating keydown events while held down
+			if (evt.repeat) return;
+			// Do not intercept if a modal, prompt, suggestion, or command palette is open
+			if (document.querySelector('.modal-container, .prompt, .suggestion-container')) return;
+			// Do not intercept if active element is an input or standalone textarea outside editor
+			const activeEl = document.activeElement;
+			if (activeEl && (activeEl.tagName === 'INPUT' || (activeEl.tagName === 'TEXTAREA' && !activeEl.classList.contains('cm-content')))) {
+				return;
+			}
+			// Only engage peek if currently in masking mode
+			if (this.currentMode === 'masking') {
+				this.isEscPeeking = true;
+				this.setMode('revealed');
+				if (this.settings.mobileHapticFeedback) {
+					this.triggerHaptic(15);
+				}
+			}
+		});
+
+		this.registerDomEvent(window, 'keyup', (evt: KeyboardEvent) => {
+			if (evt.key !== 'Escape') return;
+			if (this.isEscPeeking) {
+				this.isEscPeeking = false;
+				this.setMode('masking');
+				if (this.settings.mobileHapticFeedback) {
+					this.triggerHaptic(15);
+				}
+			}
+		});
+
+		// If window loses focus while holding Escape (e.g. Alt+Tab / Cmd+Tab), immediately re-engage masking
+		this.registerDomEvent(window, 'blur', () => {
+			if (this.isEscPeeking) {
+				this.isEscPeeking = false;
+				this.setMode('masking');
+			}
+		});
 	}
 }

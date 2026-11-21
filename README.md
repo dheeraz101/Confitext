@@ -20,7 +20,7 @@
   <a href="https://obsidian.md"><img src="https://img.shields.io/badge/Obsidian-Community%20Plugin-7C3AED.svg" alt="Obsidian Plugin"></a>
   <a href="https://dheeraz101.github.io/Confitext/"><img src="https://img.shields.io/badge/Website-Live%20Apple%20HIG-38bdf8.svg" alt="Website"></a>
   <a href="https://dheeraz101.github.io/Confitext/docs.html"><img src="https://img.shields.io/badge/Docs-Interactive%20Guides-10b981.svg" alt="Docs"></a>
-  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-175%20Passed-10b981.svg" alt="Tests"></a>
+  <a href="https://github.com/dheeraz101/Confitext/actions"><img src="https://img.shields.io/badge/Tests-183%20Passed-10b981.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-65F59A.svg" alt="License: MIT"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/Privacy-100%25%20Local-10b981.svg" alt="100% Local Privacy"></a>
   <a href="https://yabp.netlify.app/"><img src="https://img.shields.io/badge/Verified%20By-YABP-6366f1.svg" alt="Verified By YABP"></a>
@@ -84,7 +84,7 @@ When you highlight "extraordinary":
 
 ## Design Highlights
 
-- **macOS Sequoia Desktop Pro Suite:** Multi-monitor edge blur detection, configurable hover glance delay (200ms-1200ms), SF Mono typography ligatures, and native keyboard shortcuts.
+- **macOS Sequoia & Windows PC Desktop Pro Suite:** Hold-to-reveal Esc glance peek, multi-monitor edge blur detection, configurable hover glance delay (200ms-1200ms), SF Mono typography ligatures, and native keyboard shortcuts.
 - **iOS & Android Touch Shield Suite:** Zero-latency cold startup cache, 24px-26px circular corner radius inset clearance, subtle haptic vibration ticks, and battery-preserving 30 FPS animation caps.
 - **Targeted Word & Phrase Masking:** Mask specific sensitive words or phrases globally across all notes or locally via YAML frontmatter (`confitext-masked-words: [...]`), with right-click context menu integration.
 - **Granular Hide Triggers:** Choose your typing privacy rhythm: **Word** (masks on space/punctuation), **Line** (keeps line visible until moving to another line), or **Paragraph** (keeps paragraph block visible until a full blank line gap is formed).

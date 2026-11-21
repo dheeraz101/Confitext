@@ -1,6 +1,6 @@
 /**
- * Confitext - Interactive Apple HIG Web Experience
- * Matrix Scrambler Engine, Playground, Theme Switcher & Showcase
+ * Confitext — Apple HIG Interactive Studio & Matrix Scrambler Engine
+ * Live In-Browser Simulation with "Hold Esc to Peek", Scramble Animations & Theme Switcher
  */
 
 // Glyph Palettes matching the Obsidian plugin
@@ -15,6 +15,7 @@ const GLYPH_SETS = {
 let currentGlyphStyle = 'matrix';
 let isHoverGlanceActive = false;
 let isPanicActive = false;
+let isEscHeld = false;
 
 // Deterministic hashing for stable word glyph mapping
 function hashWord(word) {
@@ -43,22 +44,25 @@ function renderSimulatedScreen(text) {
 	if (!screenEl) return;
 
 	if (isPanicActive) {
-		screenEl.innerHTML = '<span style="color:#ef4444; font-weight:700;">⚡ PANIC HIDE ENGAGED — SCREEN FULLY CONCEALED</span>';
+		screenEl.innerHTML = '<span style="color:#ff453a; font-weight:700;">⚡ PANIC CONCEAL ENGAGED — SCREEN FULLY CONCEALED</span>';
 		return;
 	}
 
 	if (!text || !text.trim()) {
-		screenEl.innerHTML = '<span style="color:var(--text-muted); font-size: 0.95rem;">Type something in the box above to see real-time privacy masking...</span>';
+		screenEl.innerHTML = '<span style="color:var(--text-muted); font-size: 0.95rem;">Type something in the input below to see real-time privacy masking...</span>';
 		return;
 	}
 
+	const isRevealedMode = isHoverGlanceActive || isEscHeld;
 	const words = text.split(/(\s+|[.,!?;:"“”()[\]{}]+)/u);
 	let html = '';
 
 	for (const token of words) {
 		if (/^[\p{L}\p{N}]+$/u.test(token)) {
 			const masked = getStableGlyphs(token, currentGlyphStyle);
-			html += `<span class="confitext-interactive-word" data-word="${token}" data-mask="${masked}">${isHoverGlanceActive ? token : masked}</span>`;
+			const activeText = isRevealedMode ? token : masked;
+			const extraCls = isRevealedMode ? ' is-revealed' : '';
+			html += `<span class="confitext-interactive-word${extraCls}" data-word="${token}" data-mask="${masked}">${activeText}</span>`;
 		} else {
 			// Preserve spaces, punctuation and line breaks
 			html += token.replace(/\n/g, '<br>');
@@ -76,31 +80,30 @@ function attachWordHoverListeners() {
 		el.addEventListener('mouseenter', () => {
 			timer = setTimeout(() => {
 				el.textContent = el.getAttribute('data-word');
-				el.style.color = 'var(--text-primary)';
-				el.style.background = 'rgba(101, 245, 154, 0.2)';
-				el.style.borderRadius = '3px';
-				el.style.padding = '0 2px';
-			}, 350);
+				el.classList.add('is-revealed');
+			}, 250);
 		});
 		el.addEventListener('mouseleave', () => {
 			if (timer) clearTimeout(timer);
-			if (!isHoverGlanceActive) {
+			if (!isHoverGlanceActive && !isEscHeld) {
 				el.textContent = el.getAttribute('data-mask');
-				el.style.color = '';
-				el.style.background = '';
-				el.style.padding = '';
+				el.classList.remove('is-revealed');
 			}
 		});
 		el.addEventListener('click', () => {
-			const isRevealed = el.textContent === el.getAttribute('data-word');
-			el.textContent = isRevealed ? el.getAttribute('data-mask') : el.getAttribute('data-word');
-			el.style.color = isRevealed ? '' : 'var(--text-primary)';
-			el.style.background = isRevealed ? '' : 'rgba(56, 189, 248, 0.25)';
+			const isRevealed = el.classList.contains('is-revealed');
+			if (isRevealed) {
+				el.textContent = el.getAttribute('data-mask');
+				el.classList.remove('is-revealed');
+			} else {
+				el.textContent = el.getAttribute('data-word');
+				el.classList.add('is-revealed');
+			}
 		});
 	});
 }
 
-// Initialize Playground on page load
+// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
 	const inputEl = document.getElementById('playground-input');
 	if (inputEl) {
@@ -111,27 +114,72 @@ document.addEventListener('DOMContentLoaded', () => {
 		renderSimulatedScreen(inputEl.value);
 	}
 
-	// Action buttons
+	// Hold Esc to Peek Button Handler (Hold down mouse/touch to peek, release to re-mask)
+	const holdEscBtn = document.getElementById('btn-hold-esc');
+	if (holdEscBtn) {
+		const startPeek = () => {
+			isEscHeld = true;
+			holdEscBtn.classList.add('is-active');
+			if (inputEl) renderSimulatedScreen(inputEl.value);
+		};
+		const endPeek = () => {
+			if (isEscHeld) {
+				isEscHeld = false;
+				holdEscBtn.classList.remove('is-active');
+				if (inputEl) renderSimulatedScreen(inputEl.value);
+			}
+		};
+
+		holdEscBtn.addEventListener('mousedown', startPeek);
+		window.addEventListener('mouseup', endPeek);
+		holdEscBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startPeek(); });
+		window.addEventListener('touchend', endPeek);
+	}
+
+	// Physical Keyboard "Hold Esc to Peek" Support directly in browser window!
+	window.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && !e.repeat) {
+			const activeTag = document.activeElement ? document.activeElement.tagName : '';
+			if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') {
+				document.activeElement.blur();
+			}
+			isEscHeld = true;
+			if (holdEscBtn) holdEscBtn.classList.add('is-active');
+			if (inputEl) renderSimulatedScreen(inputEl.value);
+		}
+	});
+
+	window.addEventListener('keyup', (e) => {
+		if (e.key === 'Escape') {
+			isEscHeld = false;
+			if (holdEscBtn) holdEscBtn.classList.remove('is-active');
+			if (inputEl) renderSimulatedScreen(inputEl.value);
+		}
+	});
+
+	// Quick Glance / Reveal All Toggle Button
 	const toggleGlanceBtn = document.getElementById('btn-toggle-glance');
 	if (toggleGlanceBtn) {
 		toggleGlanceBtn.addEventListener('click', () => {
 			isPanicActive = false;
 			isHoverGlanceActive = !isHoverGlanceActive;
-			toggleGlanceBtn.textContent = isHoverGlanceActive ? '🔒 Re-Mask Screen' : '👁️ Quick Glance (Reveal All)';
+			toggleGlanceBtn.innerHTML = isHoverGlanceActive ? '<span>🔒</span> Re-Mask Screen' : '<span>👁️</span> Reveal All';
 			if (inputEl) renderSimulatedScreen(inputEl.value);
 		});
 	}
 
+	// Panic Conceal Button
 	const panicBtn = document.getElementById('btn-panic-hide');
 	if (panicBtn) {
 		panicBtn.addEventListener('click', () => {
 			isPanicActive = true;
 			isHoverGlanceActive = false;
-			if (toggleGlanceBtn) toggleGlanceBtn.textContent = '👁️ Quick Glance (Reveal All)';
+			if (toggleGlanceBtn) toggleGlanceBtn.innerHTML = '<span>👁️</span> Reveal All';
 			renderSimulatedScreen('');
 		});
 	}
 
+	// Glyph Palette Selector
 	const glyphSelect = document.getElementById('glyph-palette-select');
 	if (glyphSelect) {
 		glyphSelect.addEventListener('change', (e) => {
@@ -140,37 +188,21 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	// Theme Toggle
+	// Theme Toggle with LocalStorage persistence
 	const themeBtn = document.getElementById('theme-toggle-btn');
+	const savedTheme = localStorage.getItem('confitext-web-theme');
+	if (savedTheme) {
+		document.documentElement.setAttribute('data-theme', savedTheme);
+		if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+	}
+
 	if (themeBtn) {
 		themeBtn.addEventListener('click', () => {
 			const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
 			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('confitext-web-theme', newTheme);
 			themeBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
 		});
 	}
-
-	// PC vs Mobile Segmented Control Switcher
-	const segBtns = document.querySelectorAll('.segment-btn');
-	const desktopCard = document.getElementById('showcase-desktop');
-	const mobileCard = document.getElementById('showcase-mobile');
-
-	segBtns.forEach(btn => {
-		btn.addEventListener('click', () => {
-			segBtns.forEach(b => b.classList.remove('active'));
-			btn.classList.add('active');
-			const target = btn.getAttribute('data-target');
-			if (target === 'desktop') {
-				if (desktopCard) desktopCard.style.display = 'flex';
-				if (mobileCard) mobileCard.style.display = 'none';
-			} else if (target === 'mobile') {
-				if (desktopCard) desktopCard.style.display = 'none';
-				if (mobileCard) mobileCard.style.display = 'flex';
-			} else {
-				if (desktopCard) desktopCard.style.display = 'flex';
-				if (mobileCard) mobileCard.style.display = 'flex';
-			}
-		});
-	});
 });

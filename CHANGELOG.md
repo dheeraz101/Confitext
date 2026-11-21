@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.3.0] - 2026-11-22
+
+### Added
+- **Hold Esc to Peek Cleartext (macOS & Windows PC Pro)**:
+  - Added physical keyboard press-and-hold `Escape` key handling on desktop: holding down Esc momentarily reveals full underlying text for a quick glance, and releasing Esc immediately restores Matrix privacy masking.
+  - Added a toggle in settings under "macOS Sequoia & PC Desktop Pro Experience" (`holdEscToPeek`) to enable or disable this shortcut.
+  - Safeguarded with window `blur` listener: switching windows (Alt+Tab/Cmd+Tab) while holding Esc automatically re-engages masking to prevent cleartext exposure.
+- **GitHub Pages Official Website Hosting**:
+  - Live deployment of the Apple HIG-styled Confitext web suite and interactive Matrix playground at [https://dheeraz101.github.io/Confitext/](https://dheeraz101.github.io/Confitext/).
+  - Added direct "🌐 Website" action button in the plugin settings hero header and linked in the footer and README.
+- **Mobile Setting-Item Full-Surface Inset Comfort**:
+  - Expanded 22px–26px horizontal insets to `.setting-item` on Android and phone layouts, eliminating boundary collisions on native circular card corners.
+  - Stacked category pill badges cleanly above section titles on mobile to avoid horizontal text wrapping.
+
+---
+
 ## [2.2.0] - 2026-11-21
 
 ### Added
