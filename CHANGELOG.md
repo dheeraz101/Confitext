@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.6.1] - 2026-11-22
+
+### Added
+- **Apple HIG & SF Symbols Complete Vector Iconography Upgrade**:
+  - Expanded `src/icons.ts` with crisp, high-DPI Apple SF Symbols-inspired vector SVGs: `plus`, `trash`, `return` (line mode arrow), `pilcrow` (paragraph mode symbol), `text-cursor` (word mode icon), `warning`, `info`, `sun`, `moon`, and `menu`.
+  - Replaced all remaining raw platform emojis and character fallbacks (`⚡`, `☰`, `✕`, `✓`, `⚠`, `◉`, `⏎`, `¶`) across the Obsidian status bar, settings buttons, chips, lists, and What's New view.
+  - Obsidian status bar now dynamically renders an Apple HIG vector SVG (`shield`, `shield-check`, `eye`, `lock-open`) alongside native label text.
+  - Replaced website dynamic toggle emojis (`🔒`, `👁️`, `🌙`, `☀️`, `☰`, `✕`) in `docs/app.js` with pure vector SVGs that scale cleanly without font rendering glitches.
+  - Updated website favicons across all pages to high-resolution vector SVG shields with Apple dark glass styling.
+  - Enriched Bento Grid cards and Documentation section headers (`<h2>`) with contextual Apple SF Symbols vector SVGs.
+
+---
+
 ## [2.6.0] - 2026-11-22
 
 ### Added

@@ -5,6 +5,7 @@
 
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 import type ConfitextPlugin from './main';
+import { createAppleIconEl } from './icons';
 
 export const VIEW_TYPE_WHATS_NEW = 'confitext-whats-new';
 
@@ -21,7 +22,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.6.0";
+		return "What's New in Confitext v2.6.1";
 	}
 
 	getIcon(): string {
@@ -36,10 +37,10 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.0' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.1' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.6.0", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.6.1", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
 			text: 'Your thoughts. Your screen. Your code. Version 2.6.0 introduces un-nested full-width settings cards, vertically stacked mobile trigger buttons, full Gboard suggestion animations for words of any length, Cupertino web loading, and high-quality Apple HIG vector icons.'
@@ -51,7 +52,7 @@ export class WhatsNewView extends ItemView {
 		// Card 1: Full-Width Settings Card Architecture
 		const cardLayout = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hLayout = cardLayout.createDiv({ cls: 'confitext-wn-card-header' });
-		hLayout.createSpan({ text: '▢', cls: 'confitext-wn-card-icon' });
+		createAppleIconEl(hLayout, 'display', 16, 'confitext-wn-card-icon');
 		hLayout.createEl('h3', { text: 'Full-Width Settings Card Architecture' });
 		cardLayout.createEl('p', {
 			text: 'Eliminated outer card nesting so settings cards utilize full viewport width. Sub-sections (Global Words, Active Note Words, Custom Patterns) now live in their own standalone cards with comfortable edge clearances.'
@@ -60,7 +61,7 @@ export class WhatsNewView extends ItemView {
 		// Card 2: Mobile Trigger Rhythm Vertical Stack
 		const cardTrigger = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hTrigger = cardTrigger.createDiv({ cls: 'confitext-wn-card-header' });
-		hTrigger.createSpan({ text: '☰', cls: 'confitext-wn-card-icon' });
+		createAppleIconEl(hTrigger, 'sliders', 16, 'confitext-wn-card-icon');
 		hTrigger.createEl('h3', { text: 'Mobile Trigger Rhythm Vertical Stack' });
 		cardTrigger.createEl('p', {
 			text: 'Mask trigger options (Per Word, Per Line, Per Paragraph) now stack vertically on phone screens with 44px touch targets and an Apple HIG redesigned hints explanation card.'
@@ -69,7 +70,7 @@ export class WhatsNewView extends ItemView {
 		// Card 3: Universal Keyboard Suggestion Animations
 		const cardSuggest = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hSuggest = cardSuggest.createDiv({ cls: 'confitext-wn-card-header' });
-		hSuggest.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
+		createAppleIconEl(hSuggest, 'keyboard', 16, 'confitext-wn-card-icon');
 		hSuggest.createEl('h3', { text: 'Universal Word Suggestion Animations' });
 		cardSuggest.createEl('p', {
 			text: 'Tapping autocomplete suggestions on virtual keyboards (Gboard, iOS QuickType) now triggers smooth matrix scramble animations for both short and long words, including replacements with auto-trailing spaces.'
@@ -78,7 +79,7 @@ export class WhatsNewView extends ItemView {
 		// Card 4: Apple HIG Vector Icons
 		const cardIcons = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hIcons = cardIcons.createDiv({ cls: 'confitext-wn-card-header' });
-		hIcons.createSpan({ text: '◈', cls: 'confitext-wn-card-icon' });
+		createAppleIconEl(hIcons, 'sparkles', 16, 'confitext-wn-card-icon');
 		hIcons.createEl('h3', { text: 'Apple HIG Vector Iconography' });
 		cardIcons.createEl('p', {
 			text: 'Replaced standard platform emojis across the plugin and website with crisp, high-DPI Apple SF Symbols-inspired vector SVGs.'
@@ -87,7 +88,7 @@ export class WhatsNewView extends ItemView {
 		// Card 5: Fast-Scroll Compositor Containment
 		const cardScroll = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hScroll = cardScroll.createDiv({ cls: 'confitext-wn-card-header' });
-		hScroll.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
+		createAppleIconEl(hScroll, 'bolt', 16, 'confitext-wn-card-icon');
 		hScroll.createEl('h3', { text: 'Fast-Scroll Compositor Containment' });
 		cardScroll.createEl('p', {
 			text: 'Added CSS compositor layout/style containment and min-height constraints to eliminate momentary black screen flashes during rapid scrolling on mobile.'
@@ -96,7 +97,7 @@ export class WhatsNewView extends ItemView {
 		// Card 6: Cupertino Web Loading & Mobile Scroll Fix
 		const cardWeb = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hWeb = cardWeb.createDiv({ cls: 'confitext-wn-card-header' });
-		hWeb.createSpan({ text: '↗', cls: 'confitext-wn-card-icon' });
+		createAppleIconEl(hWeb, 'globe', 16, 'confitext-wn-card-icon');
 		hWeb.createEl('h3', { text: 'Cupertino Web Loader & Mobile Scroll Fix' });
 		cardWeb.createEl('p', {
 			text: 'Official documentation and website now feature an Apple Cupertino loading spinner, zero horizontal mobile overflow, and sleek custom selection styling.'
@@ -106,9 +107,10 @@ export class WhatsNewView extends ItemView {
 		const actionsBar = container.createDiv({ cls: 'confitext-wn-actions' });
 
 		const settingsBtn = actionsBar.createEl('button', {
-			cls: 'confitext-sandbox-btn confitext-btn-primary',
-			text: 'Open Confitext Settings'
+			cls: 'confitext-sandbox-btn confitext-btn-primary'
 		});
+		createAppleIconEl(settingsBtn, 'sliders', 14);
+		settingsBtn.createSpan({ text: ' Open Confitext Settings' });
 		settingsBtn.addEventListener('click', () => {
 			const extendedApp = this.app as unknown as { setting?: { open(): void; openTabById(id: string): void } };
 			extendedApp.setting?.open();
@@ -116,9 +118,10 @@ export class WhatsNewView extends ItemView {
 		});
 
 		const closeBtn = actionsBar.createEl('button', {
-			cls: 'confitext-sandbox-btn',
-			text: '✕ Close Tab'
+			cls: 'confitext-sandbox-btn'
 		});
+		createAppleIconEl(closeBtn, 'xmark', 14);
+		closeBtn.createSpan({ text: ' Close Tab' });
 		closeBtn.addEventListener('click', () => {
 			this.leaf.detach();
 		});

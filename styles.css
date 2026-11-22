@@ -102,10 +102,18 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	letter-spacing: 0.05em;
 	cursor: pointer;
 	padding: 2px 6px;
-	border-radius: 3px;
+	border-radius: 4px;
 	display: inline-flex;
 	align-items: center;
+	gap: 5px;
 	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.confitext-status-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
 }
 
 .confitext-status-bar:hover {
@@ -805,9 +813,12 @@ body.confitext-ligatures .confitext-glyph,
 	color: var(--text-muted);
 	font-weight: bold;
 	font-size: 0.9rem;
-	padding: 0 2px;
-	border-radius: 50%;
+	padding: 2px 4px;
+	border-radius: 4px;
 	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	transition: color 0.15s ease, background 0.15s ease;
 }
 
@@ -1280,6 +1291,19 @@ body.confitext-ligatures .confitext-glyph,
 .trigger-icon {
 	font-size: 0.85rem;
 	color: var(--confitext-color);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.segment-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	vertical-align: middle;
+	flex-shrink: 0;
+	margin-right: 4px;
 }
 
 .trigger-badge {

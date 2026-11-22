@@ -24,7 +24,7 @@ import {
 	resolveGlyphPalette
 } from './glyphs';
 import { DURATION_MAP } from './animation';
-import { createAppleIconEl } from './icons';
+import { createAppleIconEl, AppleIconName } from './icons';
 
 export class ConfitextSettingTab extends PluginSettingTab {
 	plugin: ConfitextPlugin;
@@ -501,9 +501,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			placeholder: 'Add confidential word or phrase (e.g. client name, secret project)...'
 		});
 		const addBtn = addRow.createEl('button', {
-			cls: 'confitext-btn confitext-btn-primary',
-			text: 'Add Word'
+			cls: 'confitext-btn confitext-btn-primary'
 		});
+		createAppleIconEl(addBtn, 'plus', 13);
+		addBtn.createSpan({ text: ' Add Word' });
 
 		const commitAddWord = async () => {
 			const val = addInput.value.trim();
@@ -535,7 +536,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				const chip = chipsContainer.createDiv({ cls: 'confitext-word-chip' });
 				createAppleIconEl(chip, 'lock', 12, 'chip-icon');
 				chip.createSpan({ cls: 'chip-text', text: word });
-				const removeBtn = chip.createSpan({ cls: 'chip-remove', text: '×' });
+				const removeBtn = chip.createSpan({ cls: 'chip-remove' });
+				createAppleIconEl(removeBtn, 'xmark', 10);
 				removeBtn.title = `Remove "${word}"`;
 				removeBtn.addEventListener('click', (e: MouseEvent) => {
 					e.stopPropagation();
@@ -550,9 +552,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		if (this.plugin.settings.globalMaskedWords.length > 0) {
 			const clearRow = globalSection.createDiv({ cls: 'confitext-clear-row' });
 			const clearBtn = clearRow.createEl('button', {
-				cls: 'confitext-btn confitext-btn-ghost-danger',
-				text: 'Clear All Global Words'
+				cls: 'confitext-btn confitext-btn-ghost-danger'
 			});
+			createAppleIconEl(clearBtn, 'trash', 13);
+			clearBtn.createSpan({ text: ' Clear All Global Words' });
 			clearBtn.addEventListener('click', () => {
 				void (async () => {
 					await this.plugin.clearGlobalMaskedWords();
@@ -596,9 +599,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				placeholder: `Add word specifically to "${activeFile.basename}"...`
 			});
 			const noteAddBtn = noteAddRow.createEl('button', {
-				cls: 'confitext-btn confitext-btn-secondary',
-				text: 'Add to Note'
+				cls: 'confitext-btn confitext-btn-secondary'
 			});
+			createAppleIconEl(noteAddBtn, 'plus', 13);
+			noteAddBtn.createSpan({ text: ' Add to Note' });
 
 			const commitNoteWord = async () => {
 				const val = noteAddInput.value.trim();
@@ -629,7 +633,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					const chip = noteChipsContainer.createDiv({ cls: 'confitext-word-chip chip-note' });
 					createAppleIconEl(chip, 'document', 12, 'chip-icon');
 					chip.createSpan({ cls: 'chip-text', text: word });
-					const removeBtn = chip.createSpan({ cls: 'chip-remove', text: '×' });
+					const removeBtn = chip.createSpan({ cls: 'chip-remove' });
+					createAppleIconEl(removeBtn, 'xmark', 10);
 					removeBtn.title = `Remove "${word}" from note`;
 					removeBtn.addEventListener('click', (e: MouseEvent) => {
 						e.stopPropagation();
@@ -768,9 +773,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				placeholder: 'Regular Expression (e.g. EMP-\\d{6})'
 			});
 			const addPatternBtn = regexAddRow.createEl('button', {
-				cls: 'confitext-btn confitext-btn-secondary',
-				text: 'Add Pattern'
+				cls: 'confitext-btn confitext-btn-secondary'
 			});
+			createAppleIconEl(addPatternBtn, 'plus', 13);
+			addPatternBtn.createSpan({ text: ' Add Pattern' });
 
 			addPatternBtn.addEventListener('click', () => {
 				void (async () => {
@@ -812,9 +818,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 					const itemControls = item.createDiv({ cls: 'regex-controls' });
 					const toggleBtn = itemControls.createEl('button', {
-						cls: `confitext-btn ${cp.enabled ? 'confitext-btn-secondary' : 'confitext-btn-ghost'}`,
-						text: cp.enabled ? 'Enabled' : 'Disabled'
+						cls: `confitext-btn ${cp.enabled ? 'confitext-btn-secondary' : 'confitext-btn-ghost'}`
 					});
+					createAppleIconEl(toggleBtn, cp.enabled ? 'checkmark' : 'xmark', 12);
+					toggleBtn.createSpan({ text: cp.enabled ? ' Enabled' : ' Disabled' });
 					toggleBtn.addEventListener('click', () => {
 						void (async () => {
 							cp.enabled = !cp.enabled;
@@ -825,9 +832,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 					});
 
 					const delBtn = itemControls.createEl('button', {
-						cls: 'confitext-btn confitext-btn-ghost-danger',
-						text: 'Delete'
+						cls: 'confitext-btn confitext-btn-ghost-danger'
 					});
+					createAppleIconEl(delBtn, 'trash', 12);
+					delBtn.createSpan({ text: ' Delete' });
 					delBtn.addEventListener('click', () => {
 						void (async () => {
 							this.plugin.settings.customPatterns = this.plugin.settings.customPatterns.filter(
@@ -894,23 +902,23 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		// Apple HIG Segmented Control
 		const segControl = triggerSetting.controlEl.createDiv({ cls: 'confitext-segmented-control' });
-		const triggerModes: { id: MaskTriggerMode; label: string; icon: string; desc: string }[] = [
+		const triggerModes: { id: MaskTriggerMode; label: string; iconName: AppleIconName; desc: string }[] = [
 			{
 				id: 'word',
 				label: 'Per Word',
-				icon: '◉',
+				iconName: 'text-cursor',
 				desc: 'Masks immediately as words are completed with Space, punctuation, or predictive suggestions.'
 			},
 			{
 				id: 'line',
 				label: 'Per Line',
-				icon: '⏎',
+				iconName: 'return',
 				desc: 'Keeps current line readable while typing; masks when moving caret to another line.'
 			},
 			{
 				id: 'paragraph',
 				label: 'Per Paragraph',
-				icon: '¶',
+				iconName: 'pilcrow',
 				desc: 'Keeps paragraph readable; masks once you press Enter twice for a blank line gap.'
 			}
 		];
@@ -919,8 +927,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			const btn = segControl.createEl('button', {
 				cls: `confitext-segment-btn${currentTriggerMode === m.id ? ' active' : ''}`
 			});
-			btn.createSpan({ cls: 'segment-icon', text: `${m.icon} ` });
-			btn.createSpan({ text: m.label });
+			createAppleIconEl(btn, m.iconName, 13, 'segment-icon');
+			btn.createSpan({ text: ' ' + m.label });
 			btn.title = m.desc;
 			btn.addEventListener('click', () => {
 				if (this.plugin.settings.maskTriggerMode === m.id) return;
@@ -940,8 +948,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 				cls: `confitext-trigger-desc-item${currentTriggerMode === m.id ? ' is-active' : ''}`
 			});
 			const itemHeader = item.createDiv({ cls: 'trigger-item-header' });
-			itemHeader.createSpan({ cls: 'trigger-icon', text: m.icon });
-			itemHeader.createSpan({ cls: 'trigger-badge', text: m.label });
+			createAppleIconEl(itemHeader, m.iconName, 14, 'trigger-icon');
+			itemHeader.createSpan({ cls: 'trigger-badge', text: ' ' + m.label });
 			item.createDiv({ cls: 'trigger-text', text: m.desc });
 		}
 
@@ -1095,11 +1103,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						this.plugin.settings.customGlyphs = value;
 						const res = validateCustomGlyphs(value);
 						if (validationMsgEl) {
+							validationMsgEl.empty();
 							if (res.valid) {
-								validationMsgEl.setText(`✓ Valid custom set: ${res.count} unique glyphs.`);
+								createAppleIconEl(validationMsgEl, 'checkmark', 13);
+								validationMsgEl.createSpan({ text: ` Valid custom set: ${res.count} unique glyphs.` });
 								validationMsgEl.className = 'confitext-validation-msg confitext-validation-success';
 							} else {
-								validationMsgEl.setText(`⚠ ${res.error || 'Invalid glyph set.'}`);
+								createAppleIconEl(validationMsgEl, 'warning', 13);
+								validationMsgEl.createSpan({ text: ` ${res.error || 'Invalid glyph set.'}` });
 								validationMsgEl.className = 'confitext-validation-msg confitext-validation-error';
 							}
 						}
@@ -1114,10 +1125,13 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			validationMsgEl = customSection.createDiv({
 				cls:
 					'confitext-validation-msg ' +
-					(validation.valid ? 'confitext-validation-success' : 'confitext-validation-error'),
+					(validation.valid ? 'confitext-validation-success' : 'confitext-validation-error')
+			});
+			createAppleIconEl(validationMsgEl, validation.valid ? 'checkmark' : 'warning', 13);
+			validationMsgEl.createSpan({
 				text: validation.valid
-					? `✓ Valid custom set: ${validation.count} unique glyphs.`
-					: `⚠ ${validation.error || 'Invalid glyph set.'}`
+					? ` Valid custom set: ${validation.count} unique glyphs.`
+					: ` ${validation.error || 'Invalid glyph set.'}`
 			});
 
 			const presetContainer = customSection.createDiv({ cls: 'confitext-preset-section' });
@@ -1562,7 +1576,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setClass('confitext-setting-item')
 			.setClass('confitext-setting-toggle');
 
-		new Setting(card)
+		const statusSetting = new Setting(card)
 			.setName('Show status bar indicator')
 			.setDesc('Display current mode status in bottom status bar.')
 			.addToggle(toggle =>
@@ -1573,12 +1587,13 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.updateStatusBar();
 					})
-			)
-			.setClass('confitext-setting-item')
-			.setClass('confitext-setting-toggle');
+			);
+		createAppleIconEl(statusSetting.nameEl, 'shield', 14);
+		statusSetting.setClass('confitext-setting-item');
+		statusSetting.setClass('confitext-setting-toggle');
 
 		if (!Platform.isMobile) {
-			new Setting(card)
+			const tabHeaderSetting = new Setting(card)
 				.setName('Show tab header shield button')
 				.setDesc('Add a quick-toggle shield button to the title bar of note tabs (desktop only).')
 				.addToggle(toggle =>
@@ -1593,9 +1608,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 								this.plugin.removeTabHeaderActions();
 							}
 						})
-				)
-				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-toggle');
+				);
+			createAppleIconEl(tabHeaderSetting.nameEl, 'shield-check', 14);
+			tabHeaderSetting.setClass('confitext-setting-item');
+			tabHeaderSetting.setClass('confitext-setting-toggle');
 		}
 
 		new Setting(card)

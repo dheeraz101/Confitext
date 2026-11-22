@@ -21,6 +21,7 @@ import { clearTokenizerCache } from './tokenizer';
 import { IdleManager } from './idle';
 import { createPreviewMaskProcessor } from './preview';
 import { WhatsNewView, VIEW_TYPE_WHATS_NEW } from './whats-new-view';
+import { createAppleIconEl, AppleIconName } from './icons';
 
 interface EditorWithCm {
 	cm?: EditorView;
@@ -519,7 +520,7 @@ export default class ConfitextPlugin extends Plugin {
 				scrollIntoView: false
 			});
 		});
-		new Notice('⚡ Confitext: Panic hide engaged. All text masked.');
+		new Notice('Confitext: Panic hide engaged. All text masked.');
 	}
 
 	/**
@@ -829,27 +830,35 @@ export default class ConfitextPlugin extends Plugin {
 
 		let label = '';
 		let statusClass = '';
+		let iconName: AppleIconName = 'shield';
 
 		if (!this.settings.enabled) {
-			label = '⚡ CONFITEXT: OFF';
+			label = 'CONFITEXT: OFF';
 			statusClass = 'confitext-status-off';
+			iconName = 'shield';
 		} else if (this.currentMode === 'masking') {
 			if (this.settings.maskingScope === 'targeted-only') {
-				label = '⚡ CONFITEXT: TARGETED';
+				label = 'CONFITEXT: TARGETED';
 				statusClass = 'confitext-status-targeted';
+				iconName = 'shield-check';
 			} else {
-				label = '⚡ CONFITEXT: ON';
+				label = 'CONFITEXT: ON';
 				statusClass = 'confitext-status-masking';
+				iconName = 'shield';
 			}
 		} else if (this.currentMode === 'revealed') {
-			label = '⚡ CONFITEXT: REVEALED';
+			label = 'CONFITEXT: REVEALED';
 			statusClass = 'confitext-status-revealed';
+			iconName = 'eye';
 		} else {
-			label = '⚡ CONFITEXT: PAUSED';
+			label = 'CONFITEXT: PAUSED';
 			statusClass = 'confitext-status-paused';
+			iconName = 'lock-open';
 		}
 
-		this.statusBarItemEl.setText(label);
+		this.statusBarItemEl.empty();
+		createAppleIconEl(this.statusBarItemEl, iconName, 12, 'confitext-status-icon');
+		this.statusBarItemEl.createSpan({ text: ' ' + label });
 		this.statusBarItemEl.className = 'confitext-status-bar ' + statusClass;
 		this.statusBarItemEl.setAttribute(
 			'aria-label',

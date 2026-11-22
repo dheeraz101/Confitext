@@ -3,6 +3,17 @@
  * Live In-Browser Simulation with "Hold Esc to Peek", Scramble Animations & Theme Switcher
  */
 
+// Apple HIG / SF Symbols SVG Icon Library
+const ICONS = {
+	lock: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+	eye: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+	bolt: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+	moon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`,
+	sun: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`,
+	menu: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>`,
+	close: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; display:inline-block;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>`
+};
+
 // Glyph Palettes matching the Obsidian plugin
 const GLYPH_SETS = {
 	matrix: ['0', '1', 'Ξ', 'Ж', '░', '▒', '▓', '⌁', '⟁', '⌂', 'ⵙ', 'Ϟ', 'ᚷ', 'ⵣ'],
@@ -44,7 +55,7 @@ function renderSimulatedScreen(text) {
 	if (!screenEl) return;
 
 	if (isPanicActive) {
-		screenEl.innerHTML = '<span style="color:#ff453a; font-weight:700;">⚡ PANIC CONCEAL ENGAGED — SCREEN FULLY CONCEALED</span>';
+		screenEl.innerHTML = `<span style="color:#ff453a; font-weight:700; display:inline-flex; align-items:center; gap:6px;">${ICONS.bolt} PANIC CONCEAL ENGAGED — SCREEN FULLY CONCEALED</span>`;
 		return;
 	}
 
@@ -179,7 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		toggleGlanceBtn.addEventListener('click', () => {
 			isPanicActive = false;
 			isHoverGlanceActive = !isHoverGlanceActive;
-			toggleGlanceBtn.innerHTML = isHoverGlanceActive ? '<span>🔒</span> Re-Mask Screen' : '<span>👁️</span> Reveal All';
+			toggleGlanceBtn.innerHTML = isHoverGlanceActive
+				? `${ICONS.lock} Re-Mask Screen`
+				: `${ICONS.eye} Reveal All`;
 			if (inputEl) renderSimulatedScreen(inputEl.value);
 		});
 	}
@@ -190,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		panicBtn.addEventListener('click', () => {
 			isPanicActive = true;
 			isHoverGlanceActive = false;
-			if (toggleGlanceBtn) toggleGlanceBtn.innerHTML = '<span>👁️</span> Reveal All';
+			if (toggleGlanceBtn) toggleGlanceBtn.innerHTML = `${ICONS.eye} Reveal All`;
 			renderSimulatedScreen('');
 		});
 	}
@@ -209,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const savedTheme = localStorage.getItem('confitext-web-theme');
 	if (savedTheme) {
 		document.documentElement.setAttribute('data-theme', savedTheme);
-		if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+		if (themeBtn) themeBtn.innerHTML = savedTheme === 'dark' ? ICONS.moon : ICONS.sun;
 	}
 
 	if (themeBtn) {
@@ -218,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 			document.documentElement.setAttribute('data-theme', newTheme);
 			localStorage.setItem('confitext-web-theme', newTheme);
-			themeBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+			themeBtn.innerHTML = newTheme === 'dark' ? ICONS.moon : ICONS.sun;
 		});
 	}
 
@@ -229,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		mobileMenuBtn.addEventListener('click', () => {
 			const isOpen = mobileNavDrawer.classList.toggle('is-open');
 			mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-			mobileMenuBtn.textContent = isOpen ? '✕' : '☰';
+			mobileMenuBtn.innerHTML = isOpen ? ICONS.close : ICONS.menu;
 			if (navigator.vibrate) {
 				try { navigator.vibrate(10); } catch (_) {}
 			}
@@ -239,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			link.addEventListener('click', () => {
 				mobileNavDrawer.classList.remove('is-open');
 				mobileMenuBtn.setAttribute('aria-expanded', 'false');
-				mobileMenuBtn.textContent = '☰';
+				mobileMenuBtn.innerHTML = ICONS.menu;
 			});
 		});
 	}
