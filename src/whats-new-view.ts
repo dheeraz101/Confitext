@@ -21,7 +21,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.5.1";
+		return "What's New in Confitext v2.6.0";
 	}
 
 	getIcon(): string {
@@ -36,70 +36,70 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.5.1' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.0' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.5.1", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.6.0", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 2.5.1 brings refinements across documentation, version consistency, and stability improvements throughout the plugin.'
+			text: 'Your thoughts. Your screen. Your code. Version 2.6.0 introduces un-nested full-width settings cards, vertically stacked mobile trigger buttons, full Gboard suggestion animations for words of any length, Cupertino web loading, and high-quality Apple HIG vector icons.'
 		});
 
 		// Feature Grid
 		const grid = container.createDiv({ cls: 'confitext-wn-grid' });
 
-		// Card 1: Platform-Specific Settings Filtering
-		const cardPlatform = grid.createDiv({ cls: 'confitext-wn-card' });
-		const hPlatform = cardPlatform.createDiv({ cls: 'confitext-wn-card-header' });
-		hPlatform.createSpan({ text: '📱', cls: 'confitext-wn-card-icon' });
-		hPlatform.createEl('h3', { text: 'Platform-Specific Settings Filtering' });
-		cardPlatform.createEl('p', {
-			text: 'Settings are now intelligently filtered by device. Desktop-only features (hover peek, tab header actions, multi-monitor blur, Esc peek) are hidden on mobile, while touch-only controls (haptic feedback, 26px corner insets) are hidden on PC.'
+		// Card 1: Full-Width Settings Card Architecture
+		const cardLayout = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hLayout = cardLayout.createDiv({ cls: 'confitext-wn-card-header' });
+		hLayout.createSpan({ text: '▢', cls: 'confitext-wn-card-icon' });
+		hLayout.createEl('h3', { text: 'Full-Width Settings Card Architecture' });
+		cardLayout.createEl('p', {
+			text: 'Eliminated outer card nesting so settings cards utilize full viewport width. Sub-sections (Global Words, Active Note Words, Custom Patterns) now live in their own standalone cards with comfortable edge clearances.'
 		});
 
-		// Card 2: Mobile Predictive Keyboard Animations
+		// Card 2: Mobile Trigger Rhythm Vertical Stack
+		const cardTrigger = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hTrigger = cardTrigger.createDiv({ cls: 'confitext-wn-card-header' });
+		hTrigger.createSpan({ text: '☰', cls: 'confitext-wn-card-icon' });
+		hTrigger.createEl('h3', { text: 'Mobile Trigger Rhythm Vertical Stack' });
+		cardTrigger.createEl('p', {
+			text: 'Mask trigger options (Per Word, Per Line, Per Paragraph) now stack vertically on phone screens with 44px touch targets and an Apple HIG redesigned hints explanation card.'
+		});
+
+		// Card 3: Universal Keyboard Suggestion Animations
 		const cardSuggest = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hSuggest = cardSuggest.createDiv({ cls: 'confitext-wn-card-header' });
-		hSuggest.createSpan({ text: '✨', cls: 'confitext-wn-card-icon' });
-		hSuggest.createEl('h3', { text: 'Predictive Keyboard Suggestion Animations' });
+		hSuggest.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
+		hSuggest.createEl('h3', { text: 'Universal Word Suggestion Animations' });
 		cardSuggest.createEl('p', {
-			text: 'Tapping autocomplete suggestions on mobile virtual keyboards (Gboard, iOS QuickType) now triggers smooth matrix scramble animations without requiring trailing space delimiters.'
+			text: 'Tapping autocomplete suggestions on virtual keyboards (Gboard, iOS QuickType) now triggers smooth matrix scramble animations for both short and long words, including replacements with auto-trailing spaces.'
 		});
 
-		// Card 3: Caret Click Line Reveal Fix
-		const cardClick = grid.createDiv({ cls: 'confitext-wn-card' });
-		const hClick = cardClick.createDiv({ cls: 'confitext-wn-card-header' });
-		hClick.createSpan({ text: '🎯', cls: 'confitext-wn-card-icon' });
-		hClick.createEl('h3', { text: 'Caret Line Click Reveal Defect Resolved' });
-		cardClick.createEl('p', {
-			text: 'Resolved the issue where clicking directly on a line or masked word caused it to stay hidden until space was pressed. Clicking anywhere on a masked word now reveals it immediately in cleartext.'
+		// Card 4: Apple HIG Vector Icons
+		const cardIcons = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hIcons = cardIcons.createDiv({ cls: 'confitext-wn-card-header' });
+		hIcons.createSpan({ text: '◈', cls: 'confitext-wn-card-icon' });
+		hIcons.createEl('h3', { text: 'Apple HIG Vector Iconography' });
+		cardIcons.createEl('p', {
+			text: 'Replaced standard platform emojis across the plugin and website with crisp, high-DPI Apple SF Symbols-inspired vector SVGs.'
 		});
 
-		// Card 4: Official Live GitHub Pages Website & Documentation
+		// Card 5: Fast-Scroll Compositor Containment
+		const cardScroll = grid.createDiv({ cls: 'confitext-wn-card' });
+		const hScroll = cardScroll.createDiv({ cls: 'confitext-wn-card-header' });
+		hScroll.createSpan({ text: '⚡', cls: 'confitext-wn-card-icon' });
+		hScroll.createEl('h3', { text: 'Fast-Scroll Compositor Containment' });
+		cardScroll.createEl('p', {
+			text: 'Added CSS compositor layout/style containment and min-height constraints to eliminate momentary black screen flashes during rapid scrolling on mobile.'
+		});
+
+		// Card 6: Cupertino Web Loading & Mobile Scroll Fix
 		const cardWeb = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hWeb = cardWeb.createDiv({ cls: 'confitext-wn-card-header' });
-		hWeb.createSpan({ text: '🌐', cls: 'confitext-wn-card-icon' });
-		hWeb.createEl('h3', { text: 'Official Website Live on GitHub Pages' });
+		hWeb.createSpan({ text: '↗', cls: 'confitext-wn-card-icon' });
+		hWeb.createEl('h3', { text: 'Cupertino Web Loader & Mobile Scroll Fix' });
 		cardWeb.createEl('p', {
-			text: 'Confitext now features an official Apple HIG-inspired website and interactive documentation suite live at dheeraz101.github.io/Confitext with dark/light themes, mobile nav drawer, and live privacy studio.'
-		});
-
-		// Card 5: Hold Esc to Peek Cleartext
-		const cardEsc = grid.createDiv({ cls: 'confitext-wn-card' });
-		const hEsc = cardEsc.createDiv({ cls: 'confitext-wn-card-header' });
-		hEsc.createSpan({ text: '⌨️', cls: 'confitext-wn-card-icon' });
-		hEsc.createEl('h3', { text: 'Hold Esc to Peek (macOS & Windows)' });
-		cardEsc.createEl('p', {
-			text: 'Press and hold the physical Escape key for an instant momentary glance at your notes. Releasing Escape immediately restores privacy masking, with focus-loss protection on Alt-Tab / Cmd-Tab.'
-		});
-
-		// Card 6: Apple HIG Typography & Bullet Dividers
-		const cardTypo = grid.createDiv({ cls: 'confitext-wn-card' });
-		const hTypo = cardTypo.createDiv({ cls: 'confitext-wn-card-header' });
-		hTypo.createSpan({ text: '💎', cls: 'confitext-wn-card-icon' });
-		hTypo.createEl('h3', { text: 'Apple HIG Bullet Divider Typography' });
-		cardTypo.createEl('p', {
-			text: 'Replaced hyphens with refined Apple bullet symbols (•) across all status indicators, headers, badges, and documentation for a premium typographic aesthetic.'
+			text: 'Official documentation and website now feature an Apple Cupertino loading spinner, zero horizontal mobile overflow, and sleek custom selection styling.'
 		});
 
 		// Actions Bar
@@ -107,7 +107,7 @@ export class WhatsNewView extends ItemView {
 
 		const settingsBtn = actionsBar.createEl('button', {
 			cls: 'confitext-sandbox-btn confitext-btn-primary',
-			text: '⚙️ Open Confitext Settings'
+			text: 'Open Confitext Settings'
 		});
 		settingsBtn.addEventListener('click', () => {
 			const extendedApp = this.app as unknown as { setting?: { open(): void; openTabById(id: string): void } };

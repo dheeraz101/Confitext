@@ -24,6 +24,7 @@ import {
 	resolveGlyphPalette
 } from './glyphs';
 import { DURATION_MAP } from './animation';
+import { createAppleIconEl } from './icons';
 
 export class ConfitextSettingTab extends PluginSettingTab {
 	plugin: ConfitextPlugin;
@@ -204,9 +205,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		const actionGroup = statusCard.createDiv({ cls: 'confitext-island-actions' });
 
 		const toggleModeBtn = actionGroup.createEl('button', {
-			cls: 'confitext-btn confitext-btn-secondary',
-			text: mode === 'masking' ? '👁️ Reveal All' : '🔒 Mask All'
+			cls: 'confitext-btn confitext-btn-secondary'
 		});
+		createAppleIconEl(toggleModeBtn, mode === 'masking' ? 'eye' : 'lock', 14);
+		toggleModeBtn.createSpan({ text: mode === 'masking' ? ' Reveal All' : ' Mask All' });
 		toggleModeBtn.addEventListener('click', () => {
 			if (this.plugin.currentMode === 'masking') {
 				this.plugin.setMode('revealed');
@@ -217,9 +219,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		});
 
 		const panicBtn = actionGroup.createEl('button', {
-			cls: 'confitext-btn confitext-btn-panic',
-			text: '⚡ Panic Conceal'
+			cls: 'confitext-btn confitext-btn-panic'
 		});
+		createAppleIconEl(panicBtn, 'bolt', 14);
+		panicBtn.createSpan({ text: ' Panic Conceal' });
 		panicBtn.title = 'Instantly mask all text and clear active selections';
 		panicBtn.addEventListener('click', () => {
 			this.plugin.panicHide();
@@ -227,17 +230,19 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		});
 
 		const whatsNewBtn = actionGroup.createEl('button', {
-			cls: 'confitext-btn confitext-btn-ghost',
-			text: "What's New"
+			cls: 'confitext-btn confitext-btn-ghost'
 		});
+		createAppleIconEl(whatsNewBtn, 'sparkles', 14);
+		whatsNewBtn.createSpan({ text: " What's New" });
 		whatsNewBtn.addEventListener('click', () => {
 			void this.plugin.openWhatsNewTab();
 		});
 
 		const websiteBtn = actionGroup.createEl('button', {
-			cls: 'confitext-btn confitext-btn-ghost',
-			text: '🌐 Website'
+			cls: 'confitext-btn confitext-btn-ghost'
 		});
+		createAppleIconEl(websiteBtn, 'globe', 14);
+		websiteBtn.createSpan({ text: ' Website' });
 		websiteBtn.title = 'Open official Confitext website and interactive documentation';
 		websiteBtn.addEventListener('click', () => {
 			window.open('https://dheeraz101.github.io/Confitext/', '_blank');
@@ -275,20 +280,26 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		const controls = card.createDiv({ cls: 'confitext-sandbox-controls' });
 
 		const scrambleBtn = controls.createEl('button', {
-			cls: 'confitext-btn confitext-btn-primary',
-			text: '▶ Trigger Scramble Test'
+			cls: 'confitext-btn confitext-btn-primary'
 		});
+		createAppleIconEl(scrambleBtn, 'bolt', 13);
+		scrambleBtn.createSpan({ text: ' Trigger Scramble Test' });
 		scrambleBtn.addEventListener('click', () => {
 			this.triggerSandboxScramble();
 		});
 
 		const revealBtn = controls.createEl('button', {
-			cls: 'confitext-btn confitext-btn-secondary',
-			text: this.sandboxRevealed ? '🔒 Mask Preview' : '👁️ Reveal Preview'
+			cls: 'confitext-btn confitext-btn-secondary'
 		});
+		const updateRevealBtnText = () => {
+			revealBtn.empty();
+			createAppleIconEl(revealBtn, this.sandboxRevealed ? 'lock' : 'eye', 13);
+			revealBtn.createSpan({ text: this.sandboxRevealed ? ' Mask Preview' : ' Reveal Preview' });
+		};
+		updateRevealBtnText();
 		revealBtn.addEventListener('click', () => {
 			this.sandboxRevealed = !this.sandboxRevealed;
-			revealBtn.setText(this.sandboxRevealed ? '🔒 Mask Preview' : '👁️ Reveal Preview');
+			updateRevealBtnText();
 			this.updateSandboxDisplay();
 		});
 
@@ -428,10 +439,10 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	private renderRedactionStrategyCard(containerEl: HTMLElement): void {
 		this.createSectionHeader(containerEl, 'Redaction Strategy & Targeted Words', 'STRATEGY', 'badge-strategy');
 
-		const card = containerEl.createDiv({ cls: 'confitext-card' });
+		const optionsCard = containerEl.createDiv({ cls: 'confitext-card' });
 
 		// Segmented Control for Masking Scope
-		const scopeSetting = new Setting(card)
+		const scopeSetting = new Setting(optionsCard)
 			.setName('Masking scope')
 			.setDesc('Choose between continuous full-screen privacy or selective redaction of sensitive terms.')
 			.addDropdown(drop =>
@@ -451,7 +462,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		scopeSetting.setClass('confitext-setting-item');
 		scopeSetting.setClass('confitext-setting-stacked');
 
-		new Setting(card)
+		new Setting(optionsCard)
 			.setName('Match case sensitive')
 			.setDesc('When enabled, targeted words must match exact letter casing.')
 			.addToggle(toggle =>
@@ -467,9 +478,9 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setClass('confitext-setting-toggle');
 
 		// ----------------------------------------------------
-		// Global Remembered Masked Words Manager
+		// Global Remembered Masked Words Manager (Standalone Full-Width Card)
 		// ----------------------------------------------------
-		const globalSection = card.createDiv({ cls: 'confitext-token-manager' });
+		const globalSection = containerEl.createDiv({ cls: 'confitext-card confitext-token-card' });
 		const globalHeader = globalSection.createDiv({ cls: 'confitext-token-header' });
 		globalHeader.createSpan({ cls: 'token-title', text: 'Global Remembered Words' });
 		globalHeader.createSpan({
@@ -522,7 +533,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		} else {
 			for (const word of this.plugin.settings.globalMaskedWords) {
 				const chip = chipsContainer.createDiv({ cls: 'confitext-word-chip' });
-				chip.createSpan({ cls: 'chip-icon', text: '🔒' });
+				createAppleIconEl(chip, 'lock', 12, 'chip-icon');
 				chip.createSpan({ cls: 'chip-text', text: word });
 				const removeBtn = chip.createSpan({ cls: 'chip-remove', text: '×' });
 				removeBtn.title = `Remove "${word}"`;
@@ -552,9 +563,9 @@ export class ConfitextSettingTab extends PluginSettingTab {
 		}
 
 		// ----------------------------------------------------
-		// Active Note Frontmatter Words Manager
+		// Active Note Frontmatter Words Manager (Standalone Full-Width Card)
 		// ----------------------------------------------------
-		const noteSection = card.createDiv({ cls: 'confitext-token-manager note-level' });
+		const noteSection = containerEl.createDiv({ cls: 'confitext-card confitext-token-card note-level' });
 		const activeFile = this.app.workspace.getActiveFile();
 
 		const noteHeader = noteSection.createDiv({ cls: 'confitext-token-header' });
@@ -616,7 +627,7 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			} else {
 				for (const word of noteWords) {
 					const chip = noteChipsContainer.createDiv({ cls: 'confitext-word-chip chip-note' });
-					chip.createSpan({ cls: 'chip-icon', text: '📄' });
+					createAppleIconEl(chip, 'document', 12, 'chip-icon');
 					chip.createSpan({ cls: 'chip-text', text: word });
 					const removeBtn = chip.createSpan({ cls: 'chip-remove', text: '×' });
 					removeBtn.title = `Remove "${word}" from note`;
@@ -643,9 +654,9 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	private renderSensitiveShieldCard(containerEl: HTMLElement): void {
 		this.createSectionHeader(containerEl, 'Sensitive Data Shield & Pattern Masking', 'SHIELD', 'badge-shield');
 
-		const card = containerEl.createDiv({ cls: 'confitext-card' });
+		const optionsCard = containerEl.createDiv({ cls: 'confitext-card' });
 
-		new Setting(card)
+		new Setting(optionsCard)
 			.setName('Enable sensitive data shield')
 			.setDesc('Automatically detect and shield credentials, personal identifiers, and tokens across your notes.')
 			.addToggle(toggle =>
@@ -662,10 +673,9 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			.setClass('confitext-setting-toggle');
 
 		if (this.plugin.settings.enablePatternMasking) {
-			const grid = card.createDiv({ cls: 'confitext-switch-grid' });
+			const grid = optionsCard.createDiv({ cls: 'confitext-switch-grid' });
 
-			new Setting(grid)
-				.setName('✉️ Email addresses')
+			const emailSetting = new Setting(grid)
 				.setDesc('Mask addresses like name@domain.com')
 				.addToggle(toggle =>
 					toggle.setValue(this.plugin.settings.maskEmails).onChange(async val => {
@@ -673,12 +683,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.dispatchSettingsToEditors();
 					})
-				)
-				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-toggle');
+				);
+			emailSetting.setClass('confitext-setting-item');
+			emailSetting.setClass('confitext-setting-toggle');
+			emailSetting.nameEl.empty();
+			createAppleIconEl(emailSetting.nameEl, 'envelope', 14);
+			emailSetting.nameEl.createSpan({ text: ' Email addresses', cls: 'confitext-setting-title-text' });
 
-			new Setting(grid)
-				.setName('🔑 API keys & developer secrets')
+			const apiSetting = new Setting(grid)
 				.setDesc('Shield OpenAI (sk-...), GitHub (ghp_...), AWS, and Bearer tokens')
 				.addToggle(toggle =>
 					toggle.setValue(this.plugin.settings.maskApiKeys).onChange(async val => {
@@ -686,12 +698,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.dispatchSettingsToEditors();
 					})
-				)
-				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-toggle');
+				);
+			apiSetting.setClass('confitext-setting-item');
+			apiSetting.setClass('confitext-setting-toggle');
+			apiSetting.nameEl.empty();
+			createAppleIconEl(apiSetting.nameEl, 'key', 14);
+			apiSetting.nameEl.createSpan({ text: ' API keys & developer secrets', cls: 'confitext-setting-title-text' });
 
-			new Setting(grid)
-				.setName('💳 Payment card numbers')
+			const cardSetting = new Setting(grid)
 				.setDesc('Conceal 13–19 digit grouped card numbers')
 				.addToggle(toggle =>
 					toggle.setValue(this.plugin.settings.maskCreditCards).onChange(async val => {
@@ -699,12 +713,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.dispatchSettingsToEditors();
 					})
-				)
-				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-toggle');
+				);
+			cardSetting.setClass('confitext-setting-item');
+			cardSetting.setClass('confitext-setting-toggle');
+			cardSetting.nameEl.empty();
+			createAppleIconEl(cardSetting.nameEl, 'creditcard', 14);
+			cardSetting.nameEl.createSpan({ text: ' Payment card numbers', cls: 'confitext-setting-title-text' });
 
-			new Setting(grid)
-				.setName('📞 Phone numbers')
+			const phoneSetting = new Setting(grid)
 				.setDesc('Shield domestic and international phone numbers')
 				.addToggle(toggle =>
 					toggle.setValue(this.plugin.settings.maskPhoneNumbers).onChange(async val => {
@@ -712,12 +728,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.dispatchSettingsToEditors();
 					})
-				)
-				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-toggle');
+				);
+			phoneSetting.setClass('confitext-setting-item');
+			phoneSetting.setClass('confitext-setting-toggle');
+			phoneSetting.nameEl.empty();
+			createAppleIconEl(phoneSetting.nameEl, 'phone', 14);
+			phoneSetting.nameEl.createSpan({ text: ' Phone numbers', cls: 'confitext-setting-title-text' });
 
-			new Setting(grid)
-				.setName('🌐 IPv4 network addresses')
+			const ipSetting = new Setting(grid)
 				.setDesc('Mask internal and external IP addresses')
 				.addToggle(toggle =>
 					toggle.setValue(this.plugin.settings.maskIpAddresses).onChange(async val => {
@@ -725,12 +743,15 @@ export class ConfitextSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.dispatchSettingsToEditors();
 					})
-				)
-				.setClass('confitext-setting-item')
-				.setClass('confitext-setting-toggle');
+				);
+			ipSetting.setClass('confitext-setting-item');
+			ipSetting.setClass('confitext-setting-toggle');
+			ipSetting.nameEl.empty();
+			createAppleIconEl(ipSetting.nameEl, 'network', 14);
+			ipSetting.nameEl.createSpan({ text: ' IPv4 network addresses', cls: 'confitext-setting-title-text' });
 
-			// Custom Regex Patterns section
-			const customRegexSection = card.createDiv({ cls: 'confitext-custom-regex-section' });
+			// Custom Regex Patterns section (Standalone Full-Width Card)
+			const customRegexSection = containerEl.createDiv({ cls: 'confitext-card confitext-custom-regex-card' });
 			customRegexSection.createSpan({ cls: 'token-title', text: 'Custom Regular Expression Patterns' });
 			customRegexSection.createEl('p', {
 				cls: 'confitext-card-desc',
@@ -867,35 +888,39 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		const triggerSetting = new Setting(card)
 			.setName('Mask trigger rhythm')
-			.setDesc('Select when visual masking triggers: as you type words, when moving to a new line, or after completing a paragraph block.');
+			.setDesc('Choose when visual masking triggers: per word, per line, or per paragraph block.');
 		triggerSetting.setClass('confitext-setting-item');
 		triggerSetting.setClass('confitext-setting-stacked');
 
 		// Apple HIG Segmented Control
 		const segControl = triggerSetting.controlEl.createDiv({ cls: 'confitext-segmented-control' });
-		const triggerModes: { id: MaskTriggerMode; label: string; desc: string }[] = [
+		const triggerModes: { id: MaskTriggerMode; label: string; icon: string; desc: string }[] = [
 			{
 				id: 'word',
 				label: 'Per Word',
-				desc: 'Masks immediately as you complete each word with Space or punctuation.'
+				icon: '◉',
+				desc: 'Masks immediately as words are completed with Space, punctuation, or predictive suggestions.'
 			},
 			{
 				id: 'line',
 				label: 'Per Line',
-				desc: 'Keeps the active line readable while typing; masks when moving cursor to another line.'
+				icon: '⏎',
+				desc: 'Keeps current line readable while typing; masks when moving caret to another line.'
 			},
 			{
 				id: 'paragraph',
 				label: 'Per Paragraph',
-				desc: 'Keeps the block readable; masks once you press Enter twice for a blank line gap.'
+				icon: '¶',
+				desc: 'Keeps paragraph readable; masks once you press Enter twice for a blank line gap.'
 			}
 		];
 
 		for (const m of triggerModes) {
 			const btn = segControl.createEl('button', {
-				cls: `confitext-segment-btn${currentTriggerMode === m.id ? ' active' : ''}`,
-				text: m.label
+				cls: `confitext-segment-btn${currentTriggerMode === m.id ? ' active' : ''}`
 			});
+			btn.createSpan({ cls: 'segment-icon', text: `${m.icon} ` });
+			btn.createSpan({ text: m.label });
 			btn.title = m.desc;
 			btn.addEventListener('click', () => {
 				if (this.plugin.settings.maskTriggerMode === m.id) return;
@@ -908,14 +933,16 @@ export class ConfitextSettingTab extends PluginSettingTab {
 			});
 		}
 
-		// Explanatory copy card for all 3 trigger modes with active highlight
+		// Redesigned hints card for all 3 trigger modes with active highlight
 		const triggerDescBox = card.createDiv({ cls: 'confitext-trigger-desc-box' });
 		for (const m of triggerModes) {
 			const item = triggerDescBox.createDiv({
 				cls: `confitext-trigger-desc-item${currentTriggerMode === m.id ? ' is-active' : ''}`
 			});
-			item.createSpan({ cls: 'trigger-badge', text: m.label });
-			item.createSpan({ cls: 'trigger-text', text: m.desc });
+			const itemHeader = item.createDiv({ cls: 'trigger-item-header' });
+			itemHeader.createSpan({ cls: 'trigger-icon', text: m.icon });
+			itemHeader.createSpan({ cls: 'trigger-badge', text: m.label });
+			item.createDiv({ cls: 'trigger-text', text: m.desc });
 		}
 
 		new Setting(card)
@@ -1638,8 +1665,8 @@ export class ConfitextSettingTab extends PluginSettingTab {
 
 		const noticeBox = containerEl.createDiv({ cls: 'confitext-card confitext-security-card' });
 		const headerRow = noticeBox.createDiv({ cls: 'security-header-row' });
-		headerRow.createSpan({ cls: 'security-icon', text: '🛡️' });
-		headerRow.createDiv({ cls: 'security-title', text: '100% Local Execution • Zero Telemetry' });
+		createAppleIconEl(headerRow, 'shield-check', 18, 'security-icon');
+		headerRow.createDiv({ cls: 'security-title', text: ' 100% Local Execution • Zero Telemetry' });
 
 		noticeBox.createEl('p', {
 			cls: 'security-desc',

@@ -13,13 +13,20 @@
 	<meta property="og:url" content="https://dheeraz101.github.io/Confitext/">
 </head>
 <body>
+	<!-- Apple Cupertino Loading Spinner -->
+	<div class="cupertino-loader" id="cupertino-loader" aria-label="Loading Confitext">
+		<div class="cupertino-spinner"></div>
+	</div>
+
 	<div class="bg-ambient-glow"></div>
 
 	<!-- 1. Apple Global Navigation Bar -->
 	<header class="navbar">
 		<div class="nav-container">
 			<a href="index.html" class="nav-brand">
-				<div class="nav-brand-logo">⚡</div>
+				<div class="nav-brand-logo">
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+				</div>
 				<span>Confitext</span>
 			</a>
 			<ul class="nav-links">
@@ -32,7 +39,9 @@
 				<li><a href="terms.html">Terms</a></li>
 			</ul>
 			<div class="nav-actions">
-				<button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">🌙</button>
+				<button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+				</button>
 				<a href="https://github.com/dheeraz101/Confitext" class="btn-nav-cta" target="_blank" rel="noopener noreferrer">GitHub</a>
 				<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">☰</button>
 			</div>
@@ -55,7 +64,7 @@
 		<!-- 2. Apple Hero Section -->
 		<section class="hero-section">
 			<div class="hero-eyebrow">
-				<span>⚡</span> Confitext 2.5.1 &bull; Visual Privacy Veil
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Confitext 2.6.0 &bull; Visual Privacy Veil
 			</div>
 			<h1 class="hero-title">Your thoughts. Your screen.<br>Your code.</h1>
 			<p class="hero-subtitle">
@@ -63,7 +72,8 @@
 			</p>
 			<div class="hero-actions">
 				<a href="obsidian://show-plugin?id=confitext" class="btn-apple-primary">
-					<span>⬇️</span> Install for Obsidian
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M12 5v14"/><polyline points="19 12 12 19 5 12"/></svg>
+					Install for Obsidian
 				</a>
 				<a href="#studio" class="btn-apple-link">
 					Try Live Playground <span class="chevron">›</span>
@@ -109,17 +119,20 @@
 					<div class="studio-controls-bar">
 						<div class="studio-btn-group">
 							<button class="studio-btn" id="btn-hold-esc" title="Press and hold to glance peek (also works with physical Escape key on keyboard!)">
-								<span>⌨️</span> Hold Esc to Peek
+								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><rect width="20" height="14" x="2" y="4" rx="2"/><line x1="6" x2="6" y1="8" y2="8"/><line x1="10" x2="10" y1="8" y2="8"/><line x1="14" x2="14" y1="8" y2="8"/><line x1="18" x2="18" y1="8" y2="8"/><line x1="6" x2="6" y1="12" y2="12"/><line x1="18" x2="18" y1="12" y2="12"/><line x1="9" x2="15" y1="12" y2="12"/></svg>
+								Hold Esc to Peek
 							</button>
 							<button class="studio-btn" id="btn-toggle-glance">
-								<span>👁️</span> Reveal All
+								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+								Reveal All
 							</button>
 							<button class="studio-btn studio-btn-danger" id="btn-panic-hide">
-								<span>⚡</span> Panic Conceal
+								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+								Panic Conceal
 							</button>
 						</div>
 
-						<div style="display:flex; align-items:center; gap:8px;">
+						<div class="studio-palette-wrap" style="display:flex; align-items:center; gap:8px;">
 							<label for="glyph-palette-select" style="font-size:0.78rem; color:var(--text-tertiary); font-weight:600;">Glyph Palette:</label>
 							<select id="glyph-palette-select" class="studio-palette-select">
 								<option value="matrix">Matrix Code (0 1 ░ ⌁ ⵙ)</option>
@@ -217,7 +230,9 @@
 				<!-- Mac & PC Card -->
 				<div class="platform-card">
 					<div class="platform-header">
-						<div class="platform-icon-box">🖥️</div>
+						<div class="platform-icon-box">
+							<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+						</div>
 						<div>
 							<div class="platform-title">macOS & Windows PC Pro</div>
 							<div style="font-size:0.8rem; color:var(--accent-apple-blue); font-weight:600;">Workstation Precision</div>
@@ -246,7 +261,9 @@
 				<!-- iOS & Android Card -->
 				<div class="platform-card">
 					<div class="platform-header">
-						<div class="platform-icon-box">📱</div>
+						<div class="platform-icon-box">
+							<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="3"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+						</div>
 						<div>
 							<div class="platform-title">iOS & Android Touch Shield</div>
 							<div style="font-size:0.8rem; color:var(--accent-matrix); font-weight:600;">Touch & Curved Display Comfort</div>
@@ -285,11 +302,26 @@
 					Confitext is free, open-source software built for users who value discretion without complexity. No tracking accounts, no cloud sync lock-in, and zero server communication.
 				</p>
 				<div class="trust-badges-grid">
-					<div class="trust-badge-pill">🛡️ 100% Local Execution</div>
-					<div class="trust-badge-pill">⚡ Zero Outbound Telemetry</div>
-					<div class="trust-badge-pill">📜 MIT Open-Source License</div>
-					<div class="trust-badge-pill">🚀 An YABP Initiative</div>
-					<div class="trust-badge-pill">⚖️ GDPR & CCPA Compliant</div>
+					<div class="trust-badge-pill">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+						100% Local Execution
+					</div>
+					<div class="trust-badge-pill">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+						Zero Outbound Telemetry
+					</div>
+					<div class="trust-badge-pill">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+						MIT Open-Source License
+					</div>
+					<div class="trust-badge-pill">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+						An YABP Initiative
+					</div>
+					<div class="trust-badge-pill">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg>
+						GDPR & CCPA Compliant
+					</div>
 				</div>
 			</div>
 		</section>

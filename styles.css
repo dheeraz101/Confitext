@@ -157,6 +157,8 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	padding: 0.5rem 0.5rem 2.5rem 0.5rem;
 	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
 	color: var(--text-normal);
+	contain: layout style;
+	min-height: 100vh;
 }
 
 /* Pulse Keyframes */
@@ -245,7 +247,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 
 .confitext-island-left {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 12px;
 }
 
@@ -254,6 +256,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	height: 10px;
 	border-radius: 50%;
 	flex-shrink: 0;
+	margin-top: 4px;
 }
 
 .confitext-pulse-dot.pulse-green {
@@ -389,6 +392,7 @@ body.confitext-battery-saver .confitext-glyph.confitext-settling,
 	padding: 1.25rem 1.4rem;
 	margin-bottom: 1.5rem;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+	contain: content;
 }
 
 .confitext-card-desc {
@@ -1241,47 +1245,60 @@ body.confitext-ligatures .confitext-glyph,
 }
 
 .confitext-trigger-desc-box {
-	background: var(--background-secondary);
+	background: var(--background-primary);
 	border: 1px solid var(--background-modifier-border);
-	border-radius: 8px;
-	padding: 10px 14px;
-	margin: 0.5rem 0 1rem 0;
+	border-radius: 10px;
+	padding: 12px 14px;
+	margin: 0.75rem 0 1rem 0;
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 8px;
 }
 
 .confitext-trigger-desc-item {
 	display: flex;
-	align-items: baseline;
-	gap: 8px;
-	font-size: 0.82rem;
-	color: var(--text-muted);
-	opacity: 0.65;
-	transition: opacity 0.15s ease, color 0.15s ease;
+	flex-direction: column;
+	gap: 4px;
+	padding: 8px 12px;
+	border-radius: 8px;
+	border: 1px solid transparent;
+	background: transparent;
+	transition: all 0.15s ease;
 }
 
 .confitext-trigger-desc-item.is-active {
-	opacity: 1;
-	color: var(--text-normal);
-	font-weight: 500;
+	background: rgba(101, 245, 154, 0.08);
+	border-color: rgba(101, 245, 154, 0.3);
 }
 
-.confitext-trigger-desc-item .trigger-badge {
+.trigger-item-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.trigger-icon {
+	font-size: 0.85rem;
+	color: var(--confitext-color);
+}
+
+.trigger-badge {
 	font-family: var(--font-monospace, monospace);
 	font-size: 0.72rem;
 	font-weight: 700;
-	padding: 1px 6px;
-	border-radius: 4px;
-	background: var(--background-modifier-form-field);
-	border: 1px solid var(--background-modifier-border);
-	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-normal);
 }
 
-.confitext-trigger-desc-item.is-active .trigger-badge {
-	background: rgba(101, 245, 154, 0.15);
-	border-color: rgba(101, 245, 154, 0.4);
-	color: var(--confitext-color);
+.trigger-text {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	line-height: 1.4;
+}
+
+.confitext-trigger-desc-item.is-active .trigger-text {
+	color: var(--text-normal);
 }
 
 /* =========================================================================
@@ -1910,6 +1927,32 @@ body.is-mobile .confitext-card .setting-item-control {
 	gap: 12px;
 }
 
+/* Mobile Segmented Control: Stack trigger rhythm buttons vertically */
+body.is-phone .confitext-segmented-control,
+body.is-android .confitext-segmented-control,
+body.is-mobile .confitext-segmented-control {
+	flex-direction: column;
+	width: 100%;
+	gap: 6px;
+	padding: 6px;
+	margin-left: 0;
+	box-sizing: border-box;
+}
+
+body.is-phone .confitext-segment-btn,
+body.is-android .confitext-segment-btn,
+body.is-mobile .confitext-segment-btn {
+	width: 100%;
+	min-height: 44px;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+	padding: 10px 14px;
+	font-size: 0.88rem;
+	border-radius: 8px;
+	box-sizing: border-box;
+}
+
 /* Ensure text inside setting info wraps comfortably with generous side breathing room */
 body.is-phone .confitext-settings-pane .setting-item-info,
 body.is-android .confitext-settings-pane .setting-item-info,
@@ -2078,5 +2121,38 @@ body.is-mobile .confitext-footer-card {
 	margin-top: 1.25rem;
 	margin-bottom: 3rem;
 	border-radius: 20px;
+}
+
+/* Apple HIG Vector Icon Utilities */
+.confitext-icon-wrapper {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	vertical-align: middle;
+	line-height: 1;
+}
+
+.confitext-apple-icon {
+	display: inline-block;
+	vertical-align: middle;
+	flex-shrink: 0;
+}
+
+.confitext-setting-title-text {
+	vertical-align: middle;
+	margin-left: 2px;
+}
+
+/* Standalone Token Cards & Custom Regex Cards */
+.confitext-token-card,
+.confitext-custom-regex-card {
+	margin-top: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.confitext-token-card .confitext-card-desc,
+.confitext-custom-regex-card .confitext-card-desc {
+	margin-top: 0.35rem;
+	margin-bottom: 0.85rem;
 }
 

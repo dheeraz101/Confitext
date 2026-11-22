@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.6.0] - 2026-11-22
+
+### Added
+- **Full-Width Un-Nested Settings Architecture**:
+  - Removed enclosing big cards so individual setting controls utilize full width without nested padding squishing text or components against curved card corners.
+  - Promoted "Global Remembered Words", "Active Note Words", and "Custom Regular Expression Patterns" to their own dedicated full-width cards with generous edge clearances.
+- **Mobile Mask Trigger Rhythm Vertical Stack**:
+  - Automatically transforms the 3-option segmented control (Per Word, Per Line, Per Paragraph) into a full-width vertical stack on phone screens with 44px touch targets.
+  - Redesigned the hints explanation card with clean Apple HIG symbols (`◉`, `⏎`, `¶`) and active mode highlight tint.
+- **Universal Mobile Keyboard Suggestion Scramble Animations**:
+  - Enhanced prediction detection in `editor-extension.ts` to trigger scramble animations for both short and long suggestions from Gboard and iOS QuickType, including prefix replacements and auto-appended space delimiters.
+- **Apple HIG Vector Iconography**:
+  - Replaced standard platform emojis with a lightweight, high-DPI Apple SF Symbols-inspired SVG vector icon library across settings buttons, chips, headers, and the website.
+- **Apple Cupertino Web Loading Spinner**:
+  - Integrated a sleek Apple-style radial loading spinner on initial page load for the documentation and landing site.
+- **Fast-Scroll Compositor Containment**:
+  - Added CSS layout/style containment and min-height constraints to prevent black screen flashing during rapid scroll on mobile.
+- **Website Mobile Horizontal Overflow Elimination**:
+  - Fixed ambient glow and container boundaries, eliminating side scrolling and unwanted black space on small phone viewports.
+  - Added high-contrast Apple HIG blue link styling and custom `::selection` theme styling.
+
+---
+
 ## [2.5.1] - 2026-11-22
 
 ### Changed

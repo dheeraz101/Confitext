@@ -103,6 +103,22 @@ function attachWordHoverListeners() {
 	});
 }
 
+// Dismiss Apple Cupertino Loading Spinner when components ready
+window.addEventListener('load', () => {
+	const loader = document.getElementById('cupertino-loader');
+	if (loader) {
+		loader.classList.add('is-hidden');
+		setTimeout(() => loader.remove(), 400);
+	}
+});
+setTimeout(() => {
+	const loader = document.getElementById('cupertino-loader');
+	if (loader) {
+		loader.classList.add('is-hidden');
+		setTimeout(() => loader.remove(), 400);
+	}
+}, 1200);
+
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
 	const inputEl = document.getElementById('playground-input');
