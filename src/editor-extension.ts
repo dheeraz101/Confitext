@@ -66,7 +66,7 @@ export class ConfitextViewPlugin implements PluginValue {
 
 		// Lift instant startup privacy veil once initial decorations mount
 		if (typeof document !== 'undefined' && document.body?.classList.contains('confitext-veil')) {
-			requestAnimationFrame(() => {
+			window.requestAnimationFrame(() => {
 				document.body?.classList.remove('confitext-veil');
 			});
 		}

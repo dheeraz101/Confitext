@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.6.3] - 2026-11-22
+
+### Fixed
+- **Obsidian Community Review Final Polish**:
+  - Eliminated static inline style assignments in `src/icons.ts` (`obsidianmd/no-static-styles-assignment`), migrating all icon styling directly to the `.confitext-apple-icon` CSS class.
+  - Switched from global `requestAnimationFrame` to `window.requestAnimationFrame` in `src/editor-extension.ts` for popout window compatibility.
+  - Implemented `getSettingDefinitions()` on `ConfitextSettingTab` to support Obsidian 1.13.0+ declarative settings search indexing.
+
+---
+
 ## [2.6.2] - 2026-11-22
 
 ### Fixed

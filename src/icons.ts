@@ -99,7 +99,6 @@ export function createAppleIconEl(
 			svgEl.setAttribute('class', `confitext-apple-icon ${className}`.trim());
 			svgEl.setAttribute('width', String(size));
 			svgEl.setAttribute('height', String(size));
-			svgEl.setAttribute('style', 'vertical-align:middle; display:inline-block;');
 			span.appendChild(document.importNode(svgEl, true));
 		}
 	} catch {

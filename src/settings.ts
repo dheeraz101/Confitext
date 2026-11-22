@@ -3,7 +3,7 @@
  * High-end Apple HIG / macOS Sequoia aesthetic with imperative display() lifecycle.
  */
 
-import { App, PluginSettingTab, Setting, Notice, TFile, Platform } from 'obsidian';
+import { App, PluginSettingTab, Setting, Notice, TFile, Platform, SettingDefinitionItem } from 'obsidian';
 import type ConfitextPlugin from './main';
 import {
 	ConfitextMode,
@@ -37,6 +37,14 @@ export class ConfitextSettingTab extends PluginSettingTab {
 	constructor(app: App, plugin: ConfitextPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
+	}
+
+	/**
+	 * Declarative setting definitions. Returns empty array so Obsidian executes custom display()
+	 * while implementing the declarative settings interface for Obsidian settings compatibility.
+	 */
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		return [];
 	}
 
 	display(): void {

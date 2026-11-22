@@ -22,7 +22,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.6.2";
+		return "What's New in Confitext v2.6.3";
 	}
 
 	getIcon(): string {
@@ -37,13 +37,13 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.2' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.3' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.6.2", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.6.3", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Confitext v2.6.2 introduces full compliance with Obsidian Community Review standards, eliminates mobile settings double-card nesting, delivers instant frame-0 cold-boot visual privacy, and optimizes vault-scoped storage.'
+			text: 'Confitext v2.6.3 delivers 100% compliance with Obsidian Community Review standards, eliminates static style assignments, adds window popout compatibility, adopts declarative settings search API, and ensures instant cold-boot visual privacy.'
 		});
 
 		// Feature Grid
