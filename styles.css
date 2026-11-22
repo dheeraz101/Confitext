@@ -1882,6 +1882,8 @@ body.is-mobile .confitext-card {
 	width: 100%;
 	overflow: hidden;
 	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 /* Ensure first and last children of ANY card never touch the circular corner curvature */

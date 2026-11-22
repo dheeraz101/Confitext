@@ -82,6 +82,11 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+	-webkit-tap-highlight-color: transparent;
+}
+
+*:focus:not(:focus-visible) {
+	outline: none;
 }
 
 html {
@@ -128,10 +133,19 @@ a {
 	color: var(--accent-apple-blue);
 	text-decoration: none;
 	transition: color 0.15s ease;
+	overflow-wrap: break-word;
+	word-break: break-word;
 }
 
 a:hover {
 	text-decoration: underline;
+}
+
+code {
+	font-family: var(--font-mono);
+	font-size: 0.9em;
+	overflow-wrap: break-word;
+	word-break: break-word;
 }
 
 /* Background Ambient Lighting */
@@ -623,7 +637,10 @@ a:hover {
 
 .confitext-interactive-word.is-revealed {
 	color: var(--text-primary);
-	background: rgba(41, 151, 255, 0.2);
+	background: rgba(101, 245, 154, 0.12);
+	border-radius: 4px;
+	padding: 1px 3px;
+	box-shadow: 0 0 8px rgba(0, 255, 136, 0.18);
 }
 
 /* Type Input Area */
