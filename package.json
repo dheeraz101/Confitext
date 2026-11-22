@@ -1,6 +1,6 @@
 {
   "name": "confitext",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "An animated, Matrix-inspired visual masking layer for private-feeling writing.",
   "main": "main.js",
   "scripts": {

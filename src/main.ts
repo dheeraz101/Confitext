@@ -41,14 +41,18 @@ export default class ConfitextPlugin extends Plugin {
 	private isEscPeeking = false;
 
 	async onload(): Promise<void> {
-		// 0. Synchronous instant startup: read fast local cache to eliminate startup plain-text exposure
+		// 0. Synchronous instant startup: read fast vault-unique cache to eliminate startup plain-text exposure
 		let fastSettings: ConfitextSettings = DEFAULT_SETTINGS;
 		try {
-			if (typeof localStorage !== 'undefined') {
-				const cached = localStorage.getItem('confitext-cached-settings');
-				if (cached) {
-					fastSettings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(cached));
-				}
+			const vaultApp = this.app as unknown as {
+				loadLocalStorage?: (key: string) => string | null;
+			};
+			const cached = typeof vaultApp.loadLocalStorage === 'function'
+				? vaultApp.loadLocalStorage('confitext-cached-settings')
+				: null;
+			if (cached) {
+				const parsed = JSON.parse(cached) as Partial<ConfitextSettings>;
+				fastSettings = Object.assign({}, DEFAULT_SETTINGS, parsed);
 			}
 		} catch {
 			fastSettings = DEFAULT_SETTINGS;
@@ -57,13 +61,18 @@ export default class ConfitextPlugin extends Plugin {
 
 		let cachedMode = fastSettings.defaultMode || 'masking';
 		try {
-			if (typeof localStorage !== 'undefined') {
-				const m = localStorage.getItem('confitext-cached-mode') as ConfitextMode | null;
-				if (m && (m === 'masking' || m === 'revealed' || m === 'paused')) {
-					cachedMode = m;
-				}
+			const vaultApp = this.app as unknown as {
+				loadLocalStorage?: (key: string) => string | null;
+			};
+			const m = typeof vaultApp.loadLocalStorage === 'function'
+				? (vaultApp.loadLocalStorage('confitext-cached-mode') as ConfitextMode | null)
+				: null;
+			if (m && (m === 'masking' || m === 'revealed' || m === 'paused')) {
+				cachedMode = m;
 			}
-		} catch {}
+		} catch {
+			/* ignore mode cache read error */
+		}
 		this.currentMode = cachedMode;
 
 		// Initialize StateField initial state provider SYNCHRONOUSLY before registering extensions
@@ -79,9 +88,18 @@ export default class ConfitextPlugin extends Plugin {
 		// 2. Register Reading View Markdown Post-Processor SYNCHRONOUSLY (Preview Mode)
 		this.registerMarkdownPostProcessor(createPreviewMaskProcessor(this));
 
-		// Immediate pre-render visual privacy styling
+		// Immediate pre-render visual privacy styling & cold-boot veil
 		this.applyBodyClasses();
 		this.applyCssVariables();
+		if (this.currentMode === 'masking' && this.settings.enabled && typeof document !== 'undefined' && document.body) {
+			document.body.classList.add('confitext-veil');
+			// Failsafe timeout to ensure veil lifts even if no editor mounts
+			window.setTimeout(() => {
+				if (typeof document !== 'undefined' && document.body) {
+					document.body.classList.remove('confitext-veil');
+				}
+			}, 350);
+		}
 
 		// Immediate dispatch to any views already mounted during cold boot
 		this.dispatchModeToEditors();
@@ -436,15 +454,20 @@ export default class ConfitextPlugin extends Plugin {
 	}
 
 	/**
-	 * Synchronously caches current settings and mode to localStorage for zero-latency startup
+	 * Synchronously caches current settings and mode to vault storage for zero-latency startup
 	 */
 	cacheSettingsSynchronously(): void {
 		try {
-			if (typeof localStorage !== 'undefined') {
-				localStorage.setItem('confitext-cached-settings', JSON.stringify(this.settings));
-				localStorage.setItem('confitext-cached-mode', this.currentMode);
+			const vaultApp = this.app as unknown as {
+				saveLocalStorage?: (key: string, data: string) => void;
+			};
+			if (typeof vaultApp.saveLocalStorage === 'function') {
+				vaultApp.saveLocalStorage('confitext-cached-settings', JSON.stringify(this.settings));
+				vaultApp.saveLocalStorage('confitext-cached-mode', this.currentMode);
 			}
-		} catch {}
+		} catch {
+			/* ignore cache write error */
+		}
 	}
 
 	/**
@@ -455,7 +478,9 @@ export default class ConfitextPlugin extends Plugin {
 		if (typeof navigator !== 'undefined' && 'vibrate' in navigator && typeof navigator.vibrate === 'function') {
 			try {
 				navigator.vibrate(pattern);
-			} catch {}
+			} catch {
+				/* ignore vibration error */
+			}
 		}
 	}
 

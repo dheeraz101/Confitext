@@ -22,7 +22,7 @@ export class WhatsNewView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "What's New in Confitext v2.6.1";
+		return "What's New in Confitext v2.6.2";
 	}
 
 	getIcon(): string {
@@ -37,43 +37,43 @@ export class WhatsNewView extends ItemView {
 		// Header Hero Card
 		const hero = container.createDiv({ cls: 'confitext-wn-hero' });
 		const badgeRow = hero.createDiv({ cls: 'confitext-wn-badge-row' });
-		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.1' });
+		badgeRow.createSpan({ cls: 'confitext-pill confitext-pill-active', text: 'CONFITEXT v2.6.2' });
 		badgeRow.createSpan({ cls: 'confitext-pill', text: 'RELEASE NOTES' });
 
-		hero.createEl('h1', { text: "What's New in Confitext v2.6.1", cls: 'confitext-wn-title' });
+		hero.createEl('h1', { text: "What's New in Confitext v2.6.2", cls: 'confitext-wn-title' });
 		hero.createEl('p', {
 			cls: 'confitext-wn-subtitle',
-			text: 'Your thoughts. Your screen. Your code. Version 2.6.0 introduces un-nested full-width settings cards, vertically stacked mobile trigger buttons, full Gboard suggestion animations for words of any length, Cupertino web loading, and high-quality Apple HIG vector icons.'
+			text: 'Confitext v2.6.2 introduces full compliance with Obsidian Community Review standards, eliminates mobile settings double-card nesting, delivers instant frame-0 cold-boot visual privacy, and optimizes vault-scoped storage.'
 		});
 
 		// Feature Grid
 		const grid = container.createDiv({ cls: 'confitext-wn-grid' });
 
-		// Card 1: Full-Width Settings Card Architecture
+		// Card 1: Obsidian Review Compliance & Clean DOM
 		const cardLayout = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hLayout = cardLayout.createDiv({ cls: 'confitext-wn-card-header' });
-		createAppleIconEl(hLayout, 'display', 16, 'confitext-wn-card-icon');
-		hLayout.createEl('h3', { text: 'Full-Width Settings Card Architecture' });
+		createAppleIconEl(hLayout, 'shield-check', 16, 'confitext-wn-card-icon');
+		hLayout.createEl('h3', { text: 'Community Review Compliance' });
 		cardLayout.createEl('p', {
-			text: 'Eliminated outer card nesting so settings cards utilize full viewport width. Sub-sections (Global Words, Active Note Words, Custom Patterns) now live in their own standalone cards with comfortable edge clearances.'
+			text: 'Achieved strict compliance with Obsidian review guidelines: 100% elimination of innerHTML/outerHTML, safe vault-unique App#loadLocalStorage caching, and removal of expensive :has CSS selectors.'
 		});
 
-		// Card 2: Mobile Trigger Rhythm Vertical Stack
+		// Card 2: Un-Nested Mobile Settings Architecture
 		const cardTrigger = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hTrigger = cardTrigger.createDiv({ cls: 'confitext-wn-card-header' });
-		createAppleIconEl(hTrigger, 'sliders', 16, 'confitext-wn-card-icon');
-		hTrigger.createEl('h3', { text: 'Mobile Trigger Rhythm Vertical Stack' });
+		createAppleIconEl(hTrigger, 'iphone', 16, 'confitext-wn-card-icon');
+		hTrigger.createEl('h3', { text: 'Standalone Full-Width Mobile Cards' });
 		cardTrigger.createEl('p', {
-			text: 'Mask trigger options (Per Word, Per Line, Per Paragraph) now stack vertically on phone screens with 44px touch targets and an Apple HIG redesigned hints explanation card.'
+			text: 'Eliminated outer card wrappers on phone screens. Individual settings now render as independent, full-width Apple iOS-style inset grouped cards with comfortable edge clearances.'
 		});
 
-		// Card 3: Universal Keyboard Suggestion Animations
+		// Card 3: Instant Cold-Boot Masking & Privacy Veil
 		const cardSuggest = grid.createDiv({ cls: 'confitext-wn-card' });
 		const hSuggest = cardSuggest.createDiv({ cls: 'confitext-wn-card-header' });
-		createAppleIconEl(hSuggest, 'keyboard', 16, 'confitext-wn-card-icon');
-		hSuggest.createEl('h3', { text: 'Universal Word Suggestion Animations' });
+		createAppleIconEl(hSuggest, 'eye-slash', 16, 'confitext-wn-card-icon');
+		hSuggest.createEl('h3', { text: 'Instant Cold-Boot Masking' });
 		cardSuggest.createEl('p', {
-			text: 'Tapping autocomplete suggestions on virtual keyboards (Gboard, iOS QuickType) now triggers smooth matrix scramble animations for both short and long words, including replacements with auto-trailing spaces.'
+			text: 'Eliminated cleartext glimpses during app cold start on mobile and desktop using a hardware-accelerated privacy veil and bounded frame-0 initial decoration mounting.'
 		});
 
 		// Card 4: Apple HIG Vector Icons
@@ -82,7 +82,7 @@ export class WhatsNewView extends ItemView {
 		createAppleIconEl(hIcons, 'sparkles', 16, 'confitext-wn-card-icon');
 		hIcons.createEl('h3', { text: 'Apple HIG Vector Iconography' });
 		cardIcons.createEl('p', {
-			text: 'Replaced standard platform emojis across the plugin and website with crisp, high-DPI Apple SF Symbols-inspired vector SVGs.'
+			text: 'Replaced standard platform emojis across the plugin and website with crisp, high-DPI Apple SF Symbols-inspired vector SVGs rendered safely through DOMParser.'
 		});
 
 		// Card 5: Fast-Scroll Compositor Containment

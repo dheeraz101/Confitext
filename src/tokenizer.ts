@@ -412,7 +412,7 @@ export function findTargetedTokens(
  * Regex matching words: Unicode letters, digits, and allowed internal apostrophes/hyphens.
  * e.g. "Matrix", "don't", "state-of-the-art", "2026"
  */
-const WORD_REGEX = /[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu;
+const WORD_REGEX = /[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu;
 
 /**
  * Tokenizes text within [sliceFrom, sliceTo] into WordTokens.

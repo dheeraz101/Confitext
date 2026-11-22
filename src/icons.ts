@@ -78,18 +78,8 @@ const ICONS: Record<AppleIconName, string> = {
 };
 
 /**
- * Returns raw SVG string for an Apple HIG icon.
- */
-export function getAppleIconSvg(name: AppleIconName, size = 16, className = ''): string {
-	const raw = ICONS[name] || ICONS.shield;
-	return raw.replace(
-		'<svg',
-		`<svg class="confitext-apple-icon ${className}" width="${size}" height="${size}" style="vertical-align:middle; display:inline-block;"`
-	);
-}
-
-/**
- * Creates an inline SVG element using Obsidian's DOM helper and appends it to containerEl.
+ * Creates an inline SVG element without innerHTML and appends it to containerEl.
+ * Uses DOMParser and document.importNode to comply with Obsidian Community Review guidelines.
  */
 export function createAppleIconEl(
 	containerEl: HTMLElement,
@@ -98,8 +88,22 @@ export function createAppleIconEl(
 	className = ''
 ): HTMLElement {
 	const span = containerEl.createSpan({
-		cls: `confitext-icon-wrapper ${className}`
+		cls: `confitext-icon-wrapper ${className}`.trim()
 	});
-	span.innerHTML = getAppleIconSvg(name, size, className);
+	const raw = ICONS[name] || ICONS.shield;
+	try {
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(raw, 'image/svg+xml');
+		const svgEl = doc.documentElement;
+		if (svgEl) {
+			svgEl.setAttribute('class', `confitext-apple-icon ${className}`.trim());
+			svgEl.setAttribute('width', String(size));
+			svgEl.setAttribute('height', String(size));
+			svgEl.setAttribute('style', 'vertical-align:middle; display:inline-block;');
+			span.appendChild(document.importNode(svgEl, true));
+		}
+	} catch {
+		/* ignore svg parse error */
+	}
 	return span;
 }

@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [2.6.2] - 2026-11-22
+
+### Fixed
+- **Obsidian Community Review Compliance**:
+  - Eliminated all direct `innerHTML` and `outerHTML` assignments in `src/icons.ts`; SVGs are now parsed securely via `DOMParser` and mounted using `document.importNode`.
+  - Replaced direct `localStorage` calls in `src/main.ts` with Obsidian's recommended vault-scoped `this.app.loadLocalStorage` and `this.app.saveLocalStorage` APIs.
+  - Removed all `:has` pseudo-class selectors in `styles.css` to prevent broad selector invalidation and performance warnings.
+  - Removed unnecessary regex escape characters `\-` in `src/editor-extension.ts` and `src/tokenizer.ts` (`['’-]`).
+  - Added explicit type casting for settings cache hydration (`as Partial<ConfitextSettings>`) and annotated empty catch blocks.
+- **Mobile Settings Cards Un-Nesting**:
+  - Eliminated the double-card nesting hierarchy on mobile viewports (`body.is-phone`, `body.is-mobile`, `body.is-android`) by stripping outer card containers so individual setting items render as standalone full-width Apple iOS-style inset cards.
+- **Instant Cold-Boot Visual Privacy Veil**:
+  - Resolved initial launch cleartext glimpse on Android and desktop by deploying a hardware-accelerated privacy veil (`confitext-veil`) immediately on cold boot before CodeMirror layout measurement completes.
+  - Added bounded initial decoration range `Math.min(docText.length, 6000)` on frame 0 to eliminate startup JS thread latency on large documents.
+- **Release Packaging**:
+  - Strict adherence to Obsidian release requirements: GitHub releases now upload exclusively `main.js`, `manifest.json`, and `styles.css` without extra `.zip` archives.
+
+---
+
 ## [2.6.1] - 2026-11-22
 
 ### Added

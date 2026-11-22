@@ -17,14 +17,15 @@
 }
 
 /* Instant Cold-Boot Startup & Pre-Render Visual Privacy Veil
-   Protects unmasked text lines before CodeMirror widgets mount */
-body.confitext-active.confitext-scope-all .cm-editor:not(.confitext-note-excluded) .cm-line:not(:has(.confitext-glyph)),
-body.confitext-active.confitext-scope-all .markdown-preview-view:not(.confitext-note-excluded) .markdown-rendered > *:not(:has(.confitext-glyph)):not(pre):not(code):not(.frontmatter) {
-	filter: blur(8px);
-	opacity: 0.25;
+   Protects unmasked text lines before CodeMirror widgets mount.
+   Avoids :has pseudo-class to prevent broad selector invalidation warnings. */
+body.confitext-veil .cm-editor:not(.confitext-note-excluded),
+body.confitext-veil .markdown-preview-view:not(.confitext-note-excluded) {
+	filter: blur(12px);
+	opacity: 0.15;
 	user-select: none;
 	pointer-events: none;
-	transition: filter 0.14s ease, opacity 0.14s ease;
+	transition: filter 0.12s ease-out, opacity 0.12s ease-out;
 }
 
 body.confitext-revealed .cm-editor .cm-line,
@@ -1481,11 +1482,9 @@ body.confitext-ligatures .confitext-glyph,
 
 	/* Toggle Switch Rows Stay Horizontal (True iOS Settings Look with Edge Insets) */
 	.confitext-card .confitext-setting-toggle,
-	.confitext-card .setting-item:has(.checkbox-container),
 	.confitext-settings-pane .confitext-setting-toggle,
-	.confitext-settings-pane .setting-item:has(.checkbox-container),
-	body.is-mobile .confitext-settings-pane .setting-item:has(.checkbox-container),
-	body.is-phone .confitext-settings-pane .setting-item:has(.checkbox-container) {
+	body.is-mobile .confitext-settings-pane .confitext-setting-toggle,
+	body.is-phone .confitext-settings-pane .confitext-setting-toggle {
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
@@ -1497,9 +1496,7 @@ body.confitext-ligatures .confitext-glyph,
 	}
 
 	.confitext-card .confitext-setting-toggle .setting-item-info,
-	.confitext-card .setting-item:has(.checkbox-container) .setting-item-info,
-	.confitext-settings-pane .confitext-setting-toggle .setting-item-info,
-	.confitext-settings-pane .setting-item:has(.checkbox-container) .setting-item-info {
+	.confitext-settings-pane .confitext-setting-toggle .setting-item-info {
 		flex: 1 1 auto;
 		min-width: 0;
 		padding-left: 2px;
@@ -1508,9 +1505,7 @@ body.confitext-ligatures .confitext-glyph,
 	}
 
 	.confitext-card .confitext-setting-toggle .setting-item-control,
-	.confitext-card .setting-item:has(.checkbox-container) .setting-item-control,
-	.confitext-settings-pane .confitext-setting-toggle .setting-item-control,
-	.confitext-settings-pane .setting-item:has(.checkbox-container) .setting-item-control {
+	.confitext-settings-pane .confitext-setting-toggle .setting-item-control {
 		flex: 0 0 auto;
 		width: auto;
 		padding-right: 2px;
@@ -1871,13 +1866,34 @@ body.is-mobile .confitext-settings-pane {
 	box-sizing: border-box;
 }
 
-/* Inset Grouped Circular Corner Cards: Generous 24px-26px horizontal padding */
-body.is-phone .confitext-card,
-body.is-android .confitext-card,
-body.is-mobile .confitext-card {
-	border-radius: 22px;
-	padding: 24px 26px;
-	margin: 0 0 18px 0;
+/* On mobile/phones: Un-nest setting cards!
+   Remove outer enclosing card border and background from standard sections so individual setting items
+   stand as independent, full-width Apple iOS-style setting cards without card-in-card nesting */
+body.is-phone .confitext-card:not(.confitext-hero-card):not(.confitext-sandbox-card):not(.confitext-security-card),
+body.is-android .confitext-card:not(.confitext-hero-card):not(.confitext-sandbox-card):not(.confitext-security-card),
+body.is-mobile .confitext-card:not(.confitext-hero-card):not(.confitext-sandbox-card):not(.confitext-security-card) {
+	background: transparent;
+	border: none;
+	padding: 0;
+	margin: 0 0 14px 0;
+	box-shadow: none;
+	border-radius: 0;
+	width: 100%;
+}
+
+/* Standalone container cards (Hero, Sandbox, Security notice) retain their dedicated card styling */
+body.is-phone .confitext-hero-card,
+body.is-android .confitext-hero-card,
+body.is-mobile .confitext-hero-card,
+body.is-phone .confitext-sandbox-card,
+body.is-android .confitext-sandbox-card,
+body.is-mobile .confitext-sandbox-card,
+body.is-phone .confitext-security-card,
+body.is-android .confitext-security-card,
+body.is-mobile .confitext-security-card {
+	border-radius: 20px;
+	padding: 20px 22px;
+	margin: 0 0 16px 0;
 	box-sizing: border-box;
 	width: 100%;
 	overflow: hidden;
@@ -1886,31 +1902,18 @@ body.is-mobile .confitext-card {
 	backface-visibility: hidden;
 }
 
-/* Ensure first and last children of ANY card never touch the circular corner curvature */
-body.is-phone .confitext-card > :first-child,
-body.is-android .confitext-card > :first-child,
-body.is-mobile .confitext-card > :first-child {
-	margin-top: 2px;
-	padding-top: 4px;
+/* Card description styling on mobile */
+body.is-phone .confitext-card-desc,
+body.is-android .confitext-card-desc,
+body.is-mobile .confitext-card-desc {
+	padding: 0 4px 10px 4px;
+	margin: 0 0 6px 0;
+	font-size: 13px;
+	line-height: 1.45;
+	color: var(--text-muted);
 }
 
-body.is-phone .confitext-card > :last-child,
-body.is-android .confitext-card > :last-child,
-body.is-mobile .confitext-card > :last-child {
-	margin-bottom: 2px;
-	padding-bottom: 4px;
-	border-bottom: none;
-}
-
-/* Card description padding clearance away from curved corners */
-body.is-phone .confitext-card .confitext-card-desc,
-body.is-android .confitext-card .confitext-card-desc,
-body.is-mobile .confitext-card .confitext-card-desc {
-	padding: 2px 14px 6px 14px;
-	margin: 0 0 14px 0;
-}
-
-/* Internal setting-item padding & clearances so controls never collide with curved corners */
+/* Mobile individual setting item cards: full width, generous padding, gentle shadow, Apple HIG rounded corners */
 body.is-phone .confitext-settings-pane .setting-item,
 body.is-android .confitext-settings-pane .setting-item,
 body.is-mobile .confitext-settings-pane .setting-item,
@@ -1919,8 +1922,16 @@ body.is-android .confitext-card .setting-item,
 body.is-mobile .confitext-card .setting-item {
 	margin-left: 0;
 	margin-right: 0;
-	padding: 16px 22px;
+	margin-bottom: 12px;
+	padding: 16px 18px;
+	border-radius: 16px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
 	box-sizing: border-box;
+	width: 100%;
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 body.is-phone .confitext-settings-pane .setting-item:first-child,

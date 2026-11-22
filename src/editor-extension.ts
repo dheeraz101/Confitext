@@ -63,9 +63,20 @@ export class ConfitextViewPlugin implements PluginValue {
 			this.animationManager,
 			state.filePath
 		);
+
+		// Lift instant startup privacy veil once initial decorations mount
+		if (typeof document !== 'undefined' && document.body?.classList.contains('confitext-veil')) {
+			requestAnimationFrame(() => {
+				document.body?.classList.remove('confitext-veil');
+			});
+		}
 	}
 
 	update(update: ViewUpdate): void {
+		if (typeof document !== 'undefined' && document.body?.classList.contains('confitext-veil')) {
+			document.body.classList.remove('confitext-veil');
+		}
+
 		const state: ConfitextEditorState =
 			update.state.field(confitextStateField, false) || initialEditorState;
 
@@ -98,7 +109,7 @@ export class ConfitextViewPlugin implements PluginValue {
 
 					if (triggerMode === 'word') {
 						const trimmedWord = insertedStr.trim();
-						const wordInsideMatch = insertedStr.match(/^[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/u);
+						const wordInsideMatch = insertedStr.match(/^[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/u);
 
 						// Case 1: The inserted string contains or starts with a word (e.g. keyboard suggestion, autocomplete, paste)
 						// Handles both short and long words, with or without trailing delimiters from Gboard/iOS keyboard.
@@ -140,7 +151,7 @@ export class ConfitextViewPlugin implements PluginValue {
 						) {
 							// Look backwards from fromB to find the completed word
 							const textBefore = fullDoc.slice(0, fromB);
-							const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*$/u);
+							const wordMatch = textBefore.match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*$/u);
 							if (wordMatch && wordMatch.index !== undefined) {
 								const word = wordMatch[0];
 								const wordFrom = wordMatch.index;

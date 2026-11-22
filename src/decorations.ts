@@ -124,9 +124,10 @@ export function buildMaskDecorations(
 	}
 
 	// Safe mobile & initial layout fallback: if visibleRanges has not yet been measured by CodeMirror
-	// (e.g. during app startup on mobile), immediately mask the document to prevent cleartext exposure flash.
+	// (e.g. during app startup on mobile), immediately mask the initial viewport to prevent cleartext exposure flash
+	// while preventing JS thread freeze on long documents.
 	if (mergedRanges.length === 0 && docText.length > 0) {
-		mergedRanges.push({ from: 0, to: docText.length });
+		mergedRanges.push({ from: 0, to: Math.min(docText.length, 6000) });
 	}
 
 	// Precompute/retrieve syntax exclusions once per document update pass
